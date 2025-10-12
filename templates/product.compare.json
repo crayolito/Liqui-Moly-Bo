@@ -1,0 +1,55 @@
+{
+  "sections": {
+    "main-product-compare": {
+      "type": "main-product-compare",
+      "blocks": {
+        "price": {
+          "type": "price",
+          "settings": {
+            "heading": "Price"
+          }
+        },
+        "vendor": {
+          "type": "vendor",
+          "settings": {
+            "heading": "Vendor"
+          }
+        },
+        "rating": {
+          "type": "rating",
+          "settings": {
+            "heading": "Rating"
+          }
+        },
+        "sku": {
+          "type": "sku",
+          "settings": {
+            "heading": "SKU"
+          }
+        },
+        "stock_availability": {
+          "type": "stock_availability",
+          "settings": {
+            "heading": "Stock availability"
+          }
+        }
+      },
+      "block_order": [
+        "price",
+        "vendor",
+        "rating",
+        "sku",
+        "stock_availability"
+      ],
+      "settings": {
+        "show_headings": true,
+        "product_header_image_ratio": "square",
+        "product_header_add_to_cart_button": "add_to_cart",
+        "product_header_show_quantity": true
+      }
+    }
+  },
+  "order": [
+    "main-product-compare"
+  ]
+}
