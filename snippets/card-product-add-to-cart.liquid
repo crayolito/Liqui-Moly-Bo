@@ -80,8 +80,8 @@
                   -%}
                     <span>{{ 'products.product.backorder' | t }}</span>
                   {%- else -%}
-                    {% render 'icons', icon: 'add-to-cart' %}
-                    <span>{{ 'products.product.add_to_cart' | t }}</span>
+                    {% render 'icons', icon: 'cart' %}
+                    <span>Agregar</span>
                   {%- endif -%}
                 {%- else -%}
                   <span>{{ 'products.product.availability.out_of_stock' | t }}</span>

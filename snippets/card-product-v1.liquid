@@ -55,7 +55,7 @@
   {% capture card_product_badges_visible %}{% render 'card-product-badges-visible', product: card_product %}{% endcapture %}
 
   <product-card
-    class="card card-product {% if featured_media == nil %} card-no-media{% endif %} {{ class }}"
+    class="card card-product card-product-v1 {% if featured_media == nil %} card-no-media{% endif %} {{ class }}"
     data-product-id="{{ card_product.id }}"
   >
     {% if settings.product_compare_enabled and show_compare %}
@@ -174,18 +174,11 @@
 
     {% unless settings.catalog_enabled %}
       <div class="card-footer">
-        {% comment %}
-          <div class="card-footer-intro {% if settings.products_hide_empty_star_rating %}product-rating-hide-empty{% endif %}">
-            {%- if show_stock -%}
-              {% render 'product-availability-listing', product: card_product %}
-            {%- endif -%}
-            {%- liquid
-              if show_rating
-                render 'product-rating-widget', product: card_product, new_window: new_window
-              endif
-            -%}
+        {%- if show_stock -%}
+          <div class="card-footer-intro">
+            {% render 'product-availability-listing', product: card_product %}
           </div>
-        {% endcomment %}
+        {%- endif -%}
 
         {%- capture login_for_price -%}{%- render 'price-get-login-for-price', product: card_product -%}{%- endcapture -%}
         {%- assign login_for_price = login_for_price | strip -%}
@@ -221,17 +214,11 @@
 
     {% unless settings.catalog_enabled %}
       <div class="card-footer">
-        {% comment %}
-          <div class="card-footer-intro {% if settings.products_hide_empty_star_rating %}product-rating-hide-empty{% endif %}">
-            <div class="badge-stock badge-stock-in">
-              <span class="badge-stock-dot"></span> {{ 'products.product.availability.in_stock' | t }}
-            </div>
-
-            {%- if show_rating -%}
-              {% render 'rating', product: card_product %}
-            {% endif %}
+        <div class="card-footer-intro">
+          <div class="badge-stock badge-stock-in">
+            <span class="badge-stock-dot"></span> {{ 'products.product.availability.in_stock' | t }}
           </div>
-        {% endcomment %}
+        </div>
 
         {%- capture login_for_price -%}{%- render 'price-get-login-for-price', product: card_product -%}{%- endcapture -%}
         {%- assign login_for_price = login_for_price | strip -%}
