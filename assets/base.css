@@ -259,34 +259,42 @@ Table of contents
 
 *:focus-visible {
   outline-offset: 0.3rem;
-  outline: 0.2rem solid color-mix(in srgb, rgba(var(--color-foreground)), transparent 15%);
-  box-shadow:
-    0 0 0 0.3rem color-mix(in srgb, rgba(var(--color-background)), transparent 50%),
-    0 0 0.85rem 0.4rem color-mix(in srgb, rgba(var(--color-foreground)), transparent 70%);
+  outline: 0.2rem solid
+    color-mix(in srgb, rgba(var(--color-foreground)), transparent 15%);
+  box-shadow: 0 0 0 0.3rem
+      color-mix(in srgb, rgba(var(--color-background)), transparent 50%),
+    0 0 0.85rem 0.4rem
+      color-mix(in srgb, rgba(var(--color-foreground)), transparent 70%);
 }
 
 /* Fallback - for browsers that don't support :focus-visible, a fallback is set for :focus */
 .focused {
-  outline: 0.2rem solid color-mix(in srgb, rgba(var(--color-foreground)), transparent 15%);
+  outline: 0.2rem solid
+    color-mix(in srgb, rgba(var(--color-foreground)), transparent 15%);
   outline-offset: 0.3rem;
-  box-shadow:
-    0 0 0 0.3rem color-mix(in srgb, rgba(var(--color-background)), transparent 50%),
-    0 0 0.85rem 0.4rem color-mix(in srgb, rgba(var(--color-foreground)), transparent 70%);
+  box-shadow: 0 0 0 0.3rem
+      color-mix(in srgb, rgba(var(--color-background)), transparent 50%),
+    0 0 0.85rem 0.4rem
+      color-mix(in srgb, rgba(var(--color-foreground)), transparent 70%);
 }
 
 /*
   Focus ring - inset
 */
 .focus-inset:focus-visible {
-  outline: 0.2rem solid color-mix(in srgb, rgba(var(--color-foreground)), transparent 15%);
+  outline: 0.2rem solid
+    color-mix(in srgb, rgba(var(--color-foreground)), transparent 15%);
   outline-offset: -0.2rem;
-  box-shadow: 0 0 0.2rem 0 color-mix(in srgb, rgba(var(--color-foreground)), transparent 70%);
+  box-shadow: 0 0 0.2rem 0
+    color-mix(in srgb, rgba(var(--color-foreground)), transparent 70%);
 }
 
 .focused.focus-inset {
-  outline: 0.2rem solid color-mix(in srgb, rgba(var(--color-foreground)), transparent 15%);
+  outline: 0.2rem solid
+    color-mix(in srgb, rgba(var(--color-foreground)), transparent 15%);
   outline-offset: -0.2rem;
-  box-shadow: 0 0 0.2rem 0 color-mix(in srgb, rgba(var(--color-foreground)), transparent 70%);
+  box-shadow: 0 0 0.2rem 0
+    color-mix(in srgb, rgba(var(--color-foreground)), transparent 70%);
 }
 
 /*
@@ -299,19 +307,23 @@ Table of contents
 }
 
 .focus-offset:focus-visible {
-  outline: 0.2rem solid color-mix(in srgb, rgba(var(--color-foreground)), transparent 15%);
+  outline: 0.2rem solid
+    color-mix(in srgb, rgba(var(--color-foreground)), transparent 15%);
   outline-offset: 1rem;
-  box-shadow:
-    0 0 0 0.3rem color-mix(in srgb, rgba(var(--color-background)), transparent 50%),
-    0 0 0.85rem 0.4rem color-mix(in srgb, rgba(var(--color-foreground)), transparent 70%);
+  box-shadow: 0 0 0 0.3rem
+      color-mix(in srgb, rgba(var(--color-background)), transparent 50%),
+    0 0 0.85rem 0.4rem
+      color-mix(in srgb, rgba(var(--color-foreground)), transparent 70%);
 }
 
 .focus-offset.focused {
-  outline: 0.2rem solid color-mix(in srgb, rgba(var(--color-foreground)), transparent 15%);
+  outline: 0.2rem solid
+    color-mix(in srgb, rgba(var(--color-foreground)), transparent 15%);
   outline-offset: 1rem;
-  box-shadow:
-    0 0 0 0.3rem color-mix(in srgb, rgba(var(--color-background)), transparent 50%),
-    0 0 0.85rem 0.4rem color-mix(in srgb, rgba(var(--color-foreground)), transparent 70%);
+  box-shadow: 0 0 0 0.3rem
+      color-mix(in srgb, rgba(var(--color-background)), transparent 50%),
+    0 0 0.85rem 0.4rem
+      color-mix(in srgb, rgba(var(--color-foreground)), transparent 70%);
 }
 
 [tabindex="-1"]:focus {
@@ -878,7 +890,8 @@ textarea:focus-visible,
 select:hover,
 select:focus-visible {
   outline: 0;
-  box-shadow: 0 0 0 calc(0.1rem + var(--inputs-border-width)) rgba(var(--color-inputs-foreground));
+  box-shadow: 0 0 0 calc(0.1rem + var(--inputs-border-width))
+    rgba(var(--color-inputs-foreground));
 }
 
 input[type="file"] {
@@ -891,12 +904,8 @@ select {
   background-clip: padding-box;
   background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
     linear-gradient(135deg, currentColor 50%, transparent 50%);
-  background-position:
-    calc(100% - 20px) 50%,
-    calc(100% - 15px) 50%;
-  background-size:
-    5px 5px,
-    5px 5px;
+  background-position: calc(100% - 20px) 50%, calc(100% - 15px) 50%;
+  background-size: 5px 5px, 5px 5px;
   background-repeat: no-repeat;
   background-color: rgba(var(--color-inputs-background));
   color: rgba(var(--color-inputs-foreground));
@@ -947,12 +956,8 @@ select[multiple] {
   transition: box-shadow 0.18s ease;
   background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
     linear-gradient(135deg, currentColor 50%, transparent 50%);
-  background-position:
-    calc(100% - 20px) 50%,
-    calc(100% - 15px) 50%;
-  background-size:
-    5px 5px,
-    5px 5px;
+  background-position: calc(100% - 20px) 50%, calc(100% - 15px) 50%;
+  background-size: 5px 5px, 5px 5px;
   background-repeat: no-repeat;
   max-width: 100%;
   font-family: var(--font-body-family);
@@ -970,7 +975,8 @@ select[multiple] {
 .select-custom label:hover,
 .select-custom label:focus-visible {
   outline: 0;
-  box-shadow: 0 0 0 calc(0.1rem + var(--inputs-border-width)) rgba(var(--color-foreground));
+  box-shadow: 0 0 0 calc(0.1rem + var(--inputs-border-width))
+    rgba(var(--color-foreground));
 }
 
 .input-group {
@@ -1235,8 +1241,16 @@ button,
 }
 
 .button.loading .button-overlay-spinner [class^="spinner"] {
-  border-color: color-mix(in srgb, rgba(var(--color-button-text)), transparent 65%);
-  border-top-color: color-mix(in srgb, rgba(var(--color-button-text)), transparent 25%);
+  border-color: color-mix(
+    in srgb,
+    rgba(var(--color-button-text)),
+    transparent 65%
+  );
+  border-top-color: color-mix(
+    in srgb,
+    rgba(var(--color-button-text)),
+    transparent 25%
+  );
 }
 
 .button-secondary {
@@ -1256,8 +1270,16 @@ button,
 }
 
 .button-secondary.loading .button-overlay-spinner [class^="spinner"] {
-  border-color: color-mix(in srgb, rgba(var(--color-secondary-button-text)), transparent 65%);
-  border-top-color: color-mix(in srgb, rgba(var(--color-secondary-button-text)), transparent 25%);
+  border-color: color-mix(
+    in srgb,
+    rgba(var(--color-secondary-button-text)),
+    transparent 65%
+  );
+  border-top-color: color-mix(
+    in srgb,
+    rgba(var(--color-secondary-button-text)),
+    transparent 25%
+  );
 }
 
 .setting-buttons-outline .button-secondary:not(.button-solid) {
@@ -1268,14 +1290,12 @@ button,
 .button-tertiary {
   background: rgba(var(--color-aux-background));
   color: rgba(var(--color-aux-foreground));
-  box-shadow:
-    0 0 0 0.1rem rgba(var(--color-aux-border)),
+  box-shadow: 0 0 0 0.1rem rgba(var(--color-aux-border)),
     0 2px 0 rgba(var(--color-aux-box-shadow));
 }
 
 .button-tertiary:hover {
-  box-shadow:
-    0 0 0 0.2rem rgba(var(--color-aux-border)),
+  box-shadow: 0 0 0 0.2rem rgba(var(--color-aux-border)),
     0 2px 0 rgba(var(--color-aux-box-shadow));
 }
 
@@ -1291,7 +1311,11 @@ button,
 
 .button-outline.loading .button-overlay-spinner [class^="spinner"] {
   border-color: color-mix(in srgb, rgba(var(--color-button)), transparent 50%);
-  border-top-color: color-mix(in srgb, rgba(var(--color-button)), transparent 5%);
+  border-top-color: color-mix(
+    in srgb,
+    rgba(var(--color-button)),
+    transparent 5%
+  );
 }
 
 .button-outline:disabled {
@@ -1314,8 +1338,7 @@ button,
 }
 
 .button-form-input:hover {
-  box-shadow:
-    0 0 0 0.2rem rgba(var(--color-inputs-border)),
+  box-shadow: 0 0 0 0.2rem rgba(var(--color-inputs-border)),
     0 2px 0 rgba(var(--color-inputs-box-shadow));
 }
 
@@ -1326,7 +1349,8 @@ button,
 .button-form-input:hover,
 .button-form-input:focus-visible {
   outline: 0;
-  box-shadow: 0 0 0 calc(0.1rem + var(--inputs-border-width)) rgba(var(--color-foreground));
+  box-shadow: 0 0 0 calc(0.1rem + var(--inputs-border-width))
+    rgba(var(--color-foreground));
 }
 
 .button-text-link {
@@ -1380,7 +1404,8 @@ button.shopify-payment-button__button--unbranded:hover:not([disabled]) {
   color: rgba(var(--color-button));
 }
 
-.setting-buttons-outline button.shopify-payment-button__button--unbranded:hover:not([disabled]) {
+.setting-buttons-outline
+  button.shopify-payment-button__button--unbranded:hover:not([disabled]) {
   background-color: transparent;
 }
 
@@ -1394,13 +1419,17 @@ button.shopify-payment-button__button--unbranded:hover:not([disabled]) {
 
 shopify-accelerated-checkout {
   --shopify-accelerated-checkout-button-block-size: 44px;
-  --shopify-accelerated-checkout-button-border-radius: calc(var(--buttons-radius) * 1.5);
+  --shopify-accelerated-checkout-button-border-radius: calc(
+    var(--buttons-radius) * 1.5
+  );
 }
 
 shopify-accelerated-checkout-cart {
   --shopify-accelerated-checkout-button-block-size: 48px;
   --shopify-accelerated-checkout-button-inline-size: 48px;
-  --shopify-accelerated-checkout-button-border-radius: calc(var(--buttons-radius) * 1.5);
+  --shopify-accelerated-checkout-button-border-radius: calc(
+    var(--buttons-radius) * 1.5
+  );
   --shopify-accelerated-checkout-inline-alignment: end;
 }
 
@@ -1638,8 +1667,13 @@ shopify-accelerated-checkout-cart {
 .spinner-sm,
 .spinner-xs {
   display: inline-block;
-  border: 0 solid color-mix(in srgb, rgba(var(--color-accent-1)), transparent 65%);
-  border-top-color: color-mix(in srgb, rgba(var(--color-accent-1)), transparent 12.5%);
+  border: 0 solid
+    color-mix(in srgb, rgba(var(--color-accent-1)), transparent 65%);
+  border-top-color: color-mix(
+    in srgb,
+    rgba(var(--color-accent-1)),
+    transparent 12.5%
+  );
   border-radius: 100%;
   animation: rotator 0.8s infinite linear;
 }
@@ -1983,7 +2017,10 @@ shopify-accelerated-checkout-cart {
   margin: 0;
 }
 
-.page-layout-with-sidebar-drawer .page-layout-sidebar-drawer-footer > * > .button {
+.page-layout-with-sidebar-drawer
+  .page-layout-sidebar-drawer-footer
+  > *
+  > .button {
   display: block;
   text-align: center;
 }
@@ -1994,7 +2031,9 @@ shopify-accelerated-checkout-cart {
   }
 }
 
-.page-layout-sidebar-drawer-open .page-layout-with-sidebar-drawer .page-layout-sidebar {
+.page-layout-sidebar-drawer-open
+  .page-layout-with-sidebar-drawer
+  .page-layout-sidebar {
   transform: translateX(0);
 }
 
@@ -2159,7 +2198,7 @@ shopify-accelerated-checkout-cart {
   }
 
   .grid-4-col-desktop .grid-item {
-    width: calc(25% - var(--grid-desktop-horizontal-spacing) * 3 / 4);
+    width: calc(22% - var(--grid-desktop-horizontal-spacing) * 3 / 4);
   }
 
   .grid-3-col-desktop .grid-item {
@@ -2247,7 +2286,8 @@ shopify-accelerated-checkout-cart {
   }
 
   .setting-card-product-unboxed .product-grid.grid-2-col {
-    gap: var(--grid-mobile-vertical-spacing) var(--grid-mobile-horizontal-spacing);
+    gap: var(--grid-mobile-vertical-spacing)
+      var(--grid-mobile-horizontal-spacing);
   }
 
   .product-grid.grid-2-col .grid-item {
@@ -2835,7 +2875,9 @@ div.shopify-policy__container {
 }
 
 .navigation-announcement-bar > .navigation-item:hover > a,
-.navigation-announcement-bar.navigation-menu > .navigation-item:focus-within > a {
+.navigation-announcement-bar.navigation-menu
+  > .navigation-item:focus-within
+  > a {
   text-decoration: underline;
   color: rgba(var(--color-accent-1));
 }
@@ -2853,7 +2895,9 @@ div.shopify-policy__container {
 }
 
 .navigation-announcement-bar.navigation-menu .navigation-sub-menu,
-.navigation-announcement-bar.navigation-menu > li:first-child > .navigation-sub-menu {
+.navigation-announcement-bar.navigation-menu
+  > li:first-child
+  > .navigation-sub-menu {
   padding: 1rem 0;
   margin-inline-start: 2rem;
   margin-top: 0.5rem;
@@ -3392,8 +3436,7 @@ predictive-search:not([loading]) .predictive-search-status-loading {
 }
 
 button.head-slot-nav-mobile-link {
-  box-shadow:
-    inset 0 0 0 1px rgba(var(--color-border)),
+  box-shadow: inset 0 0 0 1px rgba(var(--color-border)),
     0 2px 0 rgba(var(--color-box-shadow));
   background-color: rgba(var(--color-background));
   background: none;
@@ -3407,16 +3450,13 @@ button.head-slot-nav-mobile-link {
 }
 
 .head-slot-nav-mobile-link:active {
-  box-shadow:
-    inset 0 0 0 1px rgba(var(--color-border)),
+  box-shadow: inset 0 0 0 1px rgba(var(--color-border)),
     0 2px 0 rgba(var(--color-box-shadow));
   background-color: rgba(var(--color-background));
 }
 
 .head-slot-nav-mobile-link [class^="icon-state"] {
-  transition:
-    transform 0.25s ease,
-    opacity 0.25s ease;
+  transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
 .head-slot-nav-mobile-link .icon-state-secondary {
@@ -3517,11 +3557,8 @@ button.head-slot-nav-mobile-link {
   .main-nav-toggle {
     display: block;
     margin: 0;
-    transition:
-      opacity 0.15s ease-in-out,
-      max-width 0.15s ease-in-out,
-      margin 0.15s ease-in-out,
-      visibility 0s linear 0.15s;
+    transition: opacity 0.15s ease-in-out, max-width 0.15s ease-in-out,
+      margin 0.15s ease-in-out, visibility 0s linear 0.15s;
     opacity: 0;
     visibility: hidden;
     max-width: 0;
@@ -3532,18 +3569,14 @@ button.head-slot-nav-mobile-link {
     opacity: 1;
     visibility: visible;
     max-width: 44px;
-    transition:
-      opacity 0.15s ease-in-out,
-      max-width 0.15s ease-in-out,
-      margin 0.15s ease-in-out,
-      visibility 0s linear 0s;
+    transition: opacity 0.15s ease-in-out, max-width 0.15s ease-in-out,
+      margin 0.15s ease-in-out, visibility 0s linear 0s;
     margin-inline-end: 0;
   }
 }
 
 .button-main-nav-toggle {
-  box-shadow:
-    inset 0 0 0 1px rgba(var(--color-border)),
+  box-shadow: inset 0 0 0 1px rgba(var(--color-border)),
     0 2px 0 rgba(var(--color-box-shadow));
   background: none;
   border: 0;
@@ -3560,9 +3593,7 @@ button.head-slot-nav-mobile-link {
 }
 
 .button-main-nav-toggle [class^="icon-state"] {
-  transition:
-    transform 0.25s ease,
-    opacity 0.25s ease;
+  transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
 .button-main-nav-toggle .icon-state-expand {
@@ -3584,9 +3615,7 @@ button.head-slot-nav-mobile-link {
     display: block;
     max-height: var(--navigation-height);
     opacity: 1;
-    transition:
-      max-height 0.15s ease-in-out,
-      opacity 0.15s ease-in-out;
+    transition: max-height 0.15s ease-in-out, opacity 0.15s ease-in-out;
   }
 }
 
@@ -3635,9 +3664,7 @@ button.head-slot-nav-mobile-link {
   z-index: 55;
   visibility: hidden;
   opacity: 0;
-  transition:
-    transform 0.25s ease 0.2s,
-    opacity 0.25s ease 0.2s,
+  transition: transform 0.25s ease 0.2s, opacity 0.25s ease 0.2s,
     visibility 0s ease 0.35s;
   transform: translate(0, 10px);
   margin-inline-start: -1.5rem;
@@ -4027,7 +4054,9 @@ button.head-slot-nav-mobile-link {
   border-radius: var(--border-radius-base);
 }
 
-.mega-menu-column-feature-grid-compact .mega-menu-feature .mega-menu-feature-media {
+.mega-menu-column-feature-grid-compact
+  .mega-menu-feature
+  .mega-menu-feature-media {
   height: 7rem;
   object-fit: cover;
   margin: 0;
@@ -4041,12 +4070,18 @@ button.head-slot-nav-mobile-link {
   width: 90%;
 }
 
-.mega-menu-column-feature-grid-compact .mega-menu-feature-content .mega-menu-feature-heading,
-.mega-menu-column-feature-grid-compact .mega-menu-feature-content .mega-menu-feature-text {
+.mega-menu-column-feature-grid-compact
+  .mega-menu-feature-content
+  .mega-menu-feature-heading,
+.mega-menu-column-feature-grid-compact
+  .mega-menu-feature-content
+  .mega-menu-feature-text {
   color: var(--color-base-white);
 }
 
-.mega-menu-column-feature-grid-compact .mega-menu-feature-content .mega-menu-feature-text {
+.mega-menu-column-feature-grid-compact
+  .mega-menu-feature-content
+  .mega-menu-feature-text {
   font-size: calc(var(--font-body-scale) * 1.3rem);
 }
 
@@ -4070,11 +4105,8 @@ button.head-slot-nav-mobile-link {
   opacity: 0;
   pointer-events: none;
   will-change: transform;
-  transition:
-    opacity 0.25s ease-in-out,
-    transform 0.25s ease-in-out,
-    visibility 0.25s ease-in-out,
-    max-height 0s linear 0.25s;
+  transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out,
+    visibility 0.25s ease-in-out, max-height 0s linear 0.25s;
 }
 
 .header-search-display-hide .mobile-menu,
@@ -4086,10 +4118,8 @@ button.head-slot-nav-mobile-link {
   opacity: 1;
   visibility: visible;
   transform: scale(1);
-  transition:
-    opacity 0.4s cubic-bezier(0, 1, 0.4, 1),
-    transform 0.4s cubic-bezier(0.18, 1.25, 0.4, 1),
-    visibility 0.4s linear;
+  transition: opacity 0.4s cubic-bezier(0, 1, 0.4, 1),
+    transform 0.4s cubic-bezier(0.18, 1.25, 0.4, 1), visibility 0.4s linear;
   pointer-events: auto;
 }
 
@@ -4343,7 +4373,8 @@ button.head-slot-nav-mobile-link {
   align-items: center;
 }
 
-.rotating-text-carousel:not(.flickity-enabled) .rotating-text-item:not(:first-child) {
+.rotating-text-carousel:not(.flickity-enabled)
+  .rotating-text-item:not(:first-child) {
   display: none;
 }
 
@@ -4650,8 +4681,7 @@ button.head-slot-nav-mobile-link {
   height: 4.2rem;
   width: 15.5rem;
   flex: none;
-  box-shadow:
-    0 0 0 1px rgba(var(--color-inputs-border)),
+  box-shadow: 0 0 0 1px rgba(var(--color-inputs-border)),
     0 2px 0 rgba(var(--color-inputs-box-shadow));
   background-color: rgba(var(--color-inputs-background));
   border-radius: var(--border-radius-base);
@@ -4702,7 +4732,8 @@ button.head-slot-nav-mobile-link {
 .quantity-input .quantity-input-field:focus-visible {
   z-index: 1;
   outline-offset: 0.3rem;
-  box-shadow: 0 0 0 calc(0.1rem + var(--inputs-border-width)) rgba(var(--color-inputs-foreground));
+  box-shadow: 0 0 0 calc(0.1rem + var(--inputs-border-width))
+    rgba(var(--color-inputs-foreground));
 }
 
 .quantity-input .quantity-input-field::-webkit-outer-spin-button,
@@ -4879,9 +4910,7 @@ button.head-slot-nav-mobile-link {
 }
 
 .dropdown-modal .dropdown-modal-toggle + div {
-  transition:
-    transform 0.25s ease 0s,
-    opacity 0.25s ease 0s,
+  transition: transform 0.25s ease 0s, opacity 0.25s ease 0s,
     visibility 0s ease 0.35s;
   transform: translate(0, 10px);
   visibility: hidden;
