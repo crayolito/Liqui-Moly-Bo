@@ -10,6 +10,10 @@
 
 /* MÓVIL: Imagen mínimo 100x100px centrada */
 @media (max-width: 749px) {
+  .price-sale-inline {
+    gap: 0 !important;
+  }
+
   .card-product-v1 .card-media {
     min-height: 100px;
   }
@@ -54,10 +58,6 @@
 
 .price-sale s {
   margin-bottom: 0 !important;
-}
-
-.price-sale-inline {
-  gap: 0 !important;
 }
 
 .card {

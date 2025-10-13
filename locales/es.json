@@ -107,7 +107,7 @@
       "view_full_details": "Visualizar todos los detalles",
       "countdown_hidden_note": "Este bloque ha expirado y se ocultará a los clientes.",
       "price": {
-        "from_price_html": "<span class=\"sup\">De</span> {{ price }}",
+        "from_price_html": "{{ price }}",
         "regular_price": "Precio regular",
         "sale_price": "Precio de venta",
         "unit_price": "Precio por unidad",
