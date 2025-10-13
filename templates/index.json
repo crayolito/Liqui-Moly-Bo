@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "slideshow_WXrdKP": {
@@ -50,7 +59,10 @@
           }
         }
       },
-      "block_order": ["slide_XXmaeB", "slide_3Cfxjz"],
+      "block_order": [
+        "slide_XXmaeB",
+        "slide_3Cfxjz"
+      ],
       "name": "t:sections.slideshow.blocks.slide.presets.name",
       "settings": {
         "auto_rotate": true,
@@ -73,27 +85,39 @@
       "blocks": {
         "collection_K9d7VW": {
           "type": "collection",
-          "settings": { "collection": "aceites-de-motor" }
+          "settings": {
+            "collection": "aceites-de-motor"
+          }
         },
         "collection_GaWMjP": {
           "type": "collection",
-          "settings": { "collection": "aceites-hidraulicos" }
+          "settings": {
+            "collection": "aceites-hidraulicos"
+          }
         },
         "collection_EXdwD3": {
           "type": "collection",
-          "settings": { "collection": "aceites-para-engranajes" }
+          "settings": {
+            "collection": "aceites-para-engranajes"
+          }
         },
         "collection_9DCQFM": {
           "type": "collection",
-          "settings": { "collection": "aditivos-de-aceite" }
+          "settings": {
+            "collection": "aditivos-de-aceite"
+          }
         },
         "collection_ULHCkh": {
           "type": "collection",
-          "settings": { "collection": "aditivos-para-combustible" }
+          "settings": {
+            "collection": "aditivos-para-combustible"
+          }
         },
         "collection_GBbwnV": {
           "type": "collection",
-          "settings": { "collection": "mantenimiento" }
+          "settings": {
+            "collection": "mantenimiento"
+          }
         }
       },
       "block_order": [
@@ -217,7 +241,7 @@
             "heading_size": "md",
             "collection_description": "",
             "button_text": "",
-            "button_type_link": false,
+            "button_type_link": true,
             "button_color_scheme": "background-1",
             "text_color": "#ffffff",
             "box_align": "bottom-left",
@@ -243,7 +267,7 @@
             "heading_size": "md",
             "collection_description": "",
             "button_text": "",
-            "button_type_link": false,
+            "button_type_link": true,
             "button_color_scheme": "background-1",
             "text_color": "#ffffff",
             "box_align": "bottom-left",
@@ -269,7 +293,7 @@
             "heading_size": "md",
             "collection_description": "",
             "button_text": "",
-            "button_type_link": false,
+            "button_type_link": true,
             "button_color_scheme": "background-1",
             "text_color": "#ffffff",
             "box_align": "bottom-left",
@@ -349,7 +373,11 @@
           }
         }
       },
-      "block_order": ["feature_NF8g7g", "feature_9rpRzN", "feature_NTy4FF"],
+      "block_order": [
+        "feature_NF8g7g",
+        "feature_9rpRzN",
+        "feature_NTy4FF"
+      ],
       "name": "t:sections.features.presets.name",
       "settings": {
         "inline": false,
@@ -561,31 +589,59 @@
         },
         "collection-2": {
           "type": "collection",
-          "settings": { "collection": "", "title": "", "link": "" }
+          "settings": {
+            "collection": "",
+            "title": "",
+            "link": ""
+          }
         },
         "collection-3": {
           "type": "collection",
-          "settings": { "collection": "", "title": "", "link": "" }
+          "settings": {
+            "collection": "",
+            "title": "",
+            "link": ""
+          }
         },
         "collection-4": {
           "type": "collection",
-          "settings": { "collection": "", "title": "", "link": "" }
+          "settings": {
+            "collection": "",
+            "title": "",
+            "link": ""
+          }
         },
         "collection-5": {
           "type": "collection",
-          "settings": { "collection": "", "title": "", "link": "" }
+          "settings": {
+            "collection": "",
+            "title": "",
+            "link": ""
+          }
         },
         "collection-6": {
           "type": "collection",
-          "settings": { "collection": "", "title": "", "link": "" }
+          "settings": {
+            "collection": "",
+            "title": "",
+            "link": ""
+          }
         },
         "collection-7": {
           "type": "collection",
-          "settings": { "collection": "", "title": "", "link": "" }
+          "settings": {
+            "collection": "",
+            "title": "",
+            "link": ""
+          }
         },
         "collection-8": {
           "type": "collection",
-          "settings": { "collection": "", "title": "", "link": "" }
+          "settings": {
+            "collection": "",
+            "title": "",
+            "link": ""
+          }
         }
       },
       "block_order": [
@@ -677,10 +733,17 @@
         },
         "button_gDbBe7": {
           "type": "button",
-          "settings": { "button_label": "Button label", "button_link": "" }
+          "settings": {
+            "button_label": "Button label",
+            "button_link": ""
+          }
         }
       },
-      "block_order": ["heading_mnk89D", "text_9kL88a", "button_gDbBe7"],
+      "block_order": [
+        "heading_mnk89D",
+        "text_9kL88a",
+        "button_gDbBe7"
+      ],
       "name": "t:sections.media_with_text.presets.name",
       "settings": {
         "image": "shopify://shop_images/Werkstatt.jpg_1.jpg",
