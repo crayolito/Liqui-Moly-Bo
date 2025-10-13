@@ -67,10 +67,18 @@
     </div>
 
     {% if compare_at_price > price %}
-      <div class="price-sale">
+      <div class="price-sale price-sale-inline">
+        <span class="visually-hidden">{{ 'products.product.price.sale_price' | t }}</span>
+        <span class="price-item price-item-sale">
+          {{ money_price }}
+          {% if settings.price_tax_suffix and cart.taxes_included %}
+            <span class="sup">{{ settings.price_tax_suffix }}</span>
+          {% endif %}
+        </span>
+
         {% unless product.price_varies == false and product.compare_at_price_varies %}
           <span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
-          <span>
+          <span class="price-compare-wrapper">
             {% if discount_badge == true
               and target.compare_at_price > target.price
               and settings.sale_badge_mode != 'none'
@@ -87,15 +95,6 @@
             </s>
           </span>
         {% endunless %}
-
-        <span class="visually-hidden">{{ 'products.product.price.sale_price' | t }}</span>
-        <span class="price-item price-item-sale price-item-last">
-          {{ money_price }}
-
-          {% if settings.price_tax_suffix and cart.taxes_included %}
-            <span class="sup">{{ settings.price_tax_suffix }}</span>
-          {% endif %}
-        </span>
       </div>
     {% endif %}
   </div>
@@ -105,11 +104,8 @@
       <span class="visually-hidden">{{ 'products.product.price.unit_price' | t }}</span>
       {{ product.selected_or_first_available_variant.unit_price | money }}
       <span aria-hidden="true">/</span>
-      <span class="visually-hidden"
-        >&nbsp;{{ 'accessibility.unit_price_separator' | t }}&nbsp;</span
-      >
-      {%- if product.selected_or_first_available_variant.unit_price_measurement.reference_value != 1
-      -%}
+      <span class="visually-hidden">&nbsp;{{ 'accessibility.unit_price_separator' | t }}&nbsp;</span>
+      {%- if product.selected_or_first_available_variant.unit_price_measurement.reference_value != 1 -%}
         {{- product.selected_or_first_available_variant.unit_price_measurement.reference_value -}}
       {%- endif -%}
       {{ product.selected_or_first_available_variant.unit_price_measurement.reference_unit }}

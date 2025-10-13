@@ -116,3 +116,40 @@
 .product-block-price .unit-price {
   font-size: calc(var(--font-body-scale) * 1.3rem);
 }
+
+/* ====================================
+   PRECIO EN LÍNEA HORIZONTAL
+   ==================================== */
+
+.price-sale-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.price-sale-inline .price-item-sale {
+  order: 1; /* Precio de venta primero */
+  display: inline-block;
+  font-weight: var(--font-bolder-weight);
+  color: rgba(var(--color-price-discounted-final));
+}
+
+.price-sale-inline .price-compare-wrapper {
+  order: 2; /* Precio comparado después */
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.price-sale-inline s {
+  font-size: calc(var(--font-body-scale) * 1.2rem);
+  opacity: 0.7;
+}
+
+/* Mobile: mantener en línea pero con menos gap */
+@media (max-width: 749px) {
+  .price-sale-inline {
+    gap: 0.6rem;
+  }
+}

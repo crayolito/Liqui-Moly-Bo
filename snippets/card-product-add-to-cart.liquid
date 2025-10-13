@@ -75,12 +75,12 @@
                 {%- if product.selected_or_first_available_variant.available -%}
                   {%- if is_pre_order -%}
                     <span>{{ 'products.product.pre_order' | t }}</span>
-                  {%- elsif product.selected_or_first_available_variant.inventory_policy
-                      == 'continue'
+                  {%- elsif product.selected_or_first_available_variant.inventory_policy == 'continue'
                     and product.selected_or_first_available_variant.inventory_quantity <= 0
                   -%}
                     <span>{{ 'products.product.backorder' | t }}</span>
                   {%- else -%}
+                    {% render 'icons', icon: 'add-to-cart' %}
                     <span>{{ 'products.product.add_to_cart' | t }}</span>
                   {%- endif -%}
                 {%- else -%}
