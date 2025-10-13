@@ -206,17 +206,9 @@
           </div>
         {%- endif -%}
 
-        {%- capture login_for_price -%}{%- render 'price-get-login-for-price', product: card_product -%}{%- endcapture -%}
-        {%- assign login_for_price = login_for_price | strip -%}
-        {% if login_for_price == 'true' %}
-          {% render 'price-login-for-price' %}
-        {% else %}
-          {% render 'price', product: card_product, discount_badge: false %}
-
-          {%- if show_add_to_cart -%}
-            {% render 'card-product-add-to-cart', product: card_product, event_context: event_context %}
-          {%- endif -%}
-        {% endif %}
+        {%- if show_add_to_cart -%}
+          {% render 'card-product-add-to-cart', product: card_product, event_context: event_context %}
+        {%- endif -%}
       </div>
     {% endunless %}
   </product-card>
