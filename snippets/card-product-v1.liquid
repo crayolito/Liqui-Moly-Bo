@@ -171,7 +171,23 @@
         {% render 'card-product-swatches', product: card_product %}
       {% endif %}
     </div>
+    {% unless settings.catalog_enabled %}
+      <div class="card-footer">
+        <div class="card-footer-intro">
+          <div class="badge-stock badge-stock-in">
+            <span class="badge-stock-dot"></span> {{ 'products.product.availability.in_stock' | t }}
+          </div>
+        </div>
 
+        {%- capture login_for_price -%}{%- render 'price-get-login-for-price', product: card_product -%}{%- endcapture -%}
+        {%- assign login_for_price = login_for_price | strip -%}
+        {% if login_for_price == 'true' %}
+          {% render 'price-login-for-price' %}
+        {% else %}
+          {% render 'price', product: card_product, discount_badge: false %}
+        {% endif %}
+      </div>
+    {% endunless %}
     {% unless settings.catalog_enabled %}
       <div class="card-footer">
         {%- if show_stock -%}
@@ -211,23 +227,5 @@
         <a role="link" aria-disabled="true">{{ 'onboarding.product_title' | t }}</a>
       </h3>
     </div>
-
-    {% unless settings.catalog_enabled %}
-      <div class="card-footer">
-        <div class="card-footer-intro">
-          <div class="badge-stock badge-stock-in">
-            <span class="badge-stock-dot"></span> {{ 'products.product.availability.in_stock' | t }}
-          </div>
-        </div>
-
-        {%- capture login_for_price -%}{%- render 'price-get-login-for-price', product: card_product -%}{%- endcapture -%}
-        {%- assign login_for_price = login_for_price | strip -%}
-        {% if login_for_price == 'true' %}
-          {% render 'price-login-for-price' %}
-        {% else %}
-          {% render 'price', product: card_product, discount_badge: false %}
-        {% endif %}
-      </div>
-    {% endunless %}
   </div>
 {% endif %}
