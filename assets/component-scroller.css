@@ -48,7 +48,10 @@ carousel-slider {
     scroll-snap-align: center;
   }
 
-  .scroller-items-narrow.scroller-tablet .scroller-inner .grid:not(.grid-2-col-tablet) .grid-item {
+  .scroller-items-narrow.scroller-tablet
+    .scroller-inner
+    .grid:not(.grid-2-col-tablet)
+    .grid-item {
     width: calc(23% + 2rem);
     max-width: calc(23% + 2rem);
   }
@@ -62,8 +65,10 @@ carousel-slider {
 @media (max-width: 749px) {
   .scroller-tablet .scroller-inner .grid .grid-item:not(:only-of-type),
   .scroller-inner .grid .grid-item:not(:only-of-type) {
-    width: 85%;
-    max-width: 85%;
+    /* width: 85%;
+    max-width: 85%; */
+    width: 40.5%;
+    max-width: 40.5%;
   }
 
   .scroller-inner .product-grid .grid-item:not(:only-of-type) {
@@ -71,7 +76,10 @@ carousel-slider {
     max-width: 47%;
   }
 
-  .setting-card-product-unboxed .scroller-inner .product-grid .grid-item:not(:only-of-type) {
+  .setting-card-product-unboxed
+    .scroller-inner
+    .product-grid
+    .grid-item:not(:only-of-type) {
     width: 44%;
     max-width: 44%;
   }
@@ -92,7 +100,10 @@ carousel-slider {
     scroll-snap-align: center;
   }
 
-  .scroller-items-narrow.scroller-tablet .scroller-inner .grid .grid-item:not(:only-of-type),
+  .scroller-items-narrow.scroller-tablet
+    .scroller-inner
+    .grid
+    .grid-item:not(:only-of-type),
   .scroller-items-narrow.scroller-inner .grid .grid-item:not(:only-of-type) {
     width: 40%;
     max-width: 40%;
@@ -194,14 +205,20 @@ carousel-slider {
 
 /* Simple collection list override. */
 @media (max-width: 989px) {
-  .section-simple-collections-list .scroller-inner .grid .grid-item:not(:only-of-type) {
+  .section-simple-collections-list
+    .scroller-inner
+    .grid
+    .grid-item:not(:only-of-type) {
     width: 20%;
     max-width: 20%;
   }
 }
 
 @media (max-width: 749px) {
-  .section-simple-collections-list .scroller-inner .grid .grid-item:not(:only-of-type) {
+  .section-simple-collections-list
+    .scroller-inner
+    .grid
+    .grid-item:not(:only-of-type) {
     width: 40%;
     max-width: 40%;
   }

@@ -197,7 +197,7 @@ svg.card-overlay-media {
   font-weight: 700;
   text-transform: uppercase; /* Mayúsculas para mayor impacto */
   letter-spacing: 0.05em; /* Espaciado entre letras */
-  margin: 0 0 1rem;
+  margin: 0 0 -2rem;
   line-height: 1.2;
   word-break: break-word;
   color: inherit;

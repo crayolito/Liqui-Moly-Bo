@@ -121,20 +121,30 @@
     {%- endunless -%}
 
     {%- unless button == false -%}
-      <a
-        class="{% if settings.button_type_link %}button-text-link{% else %}button color-button-{{ settings.button_color_scheme }}{% endif %}"
-        {% if collection.url == blank %}
-          role="link" aria-disabled="true"
-        {% else %}
-          href="{{ collection.url }}"
-        {% endif %}
-      >
-        {% if button_text != blank %}
-          {{ button_text }}
-        {% else %}
-          {{ 'general.collection.shop_collection' | t: title: collection.title }}
-        {% endif %}
-      </a>
+      {%- liquid
+        # Determinar el texto del botón
+        assign texto_boton = button_text
+        if texto_boton == blank
+          assign texto_boton = 'general.collection.shop_collection' | t: title: collection.title
+        endif
+
+        # Solo mostrar el botón si hay un texto
+        assign mostrar_boton = true
+        if texto_boton != blank and texto_boton != ''
+          assign mostrar_boton = true
+        endif
+      -%}
+      {% if mostrar_boton %}
+        <a
+          class="{% if settings.button_type_link %}button-text-link{% else %}button color-button-{{ settings.button_color_scheme }}{% endif %}"
+          {% if collection.url == blank %}
+            role="link" aria-disabled="true"
+          {% else %}
+            href="{{ collection.url }}"
+          {% endif %}
+        >
+        </a>
+      {% endif %}
     {%- endunless -%}
   </div>
 
