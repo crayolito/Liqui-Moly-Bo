@@ -196,11 +196,11 @@
                     endif
                   %}
                   <div class="grid-item">
-                    {% render 'card-product',
+                    {% render 'card-product-v1',
                       card_product: product,
-                      show_vendor: section.settings.show_vendor,
-                      show_stock: section.settings.show_stock,
-                      show_rating: section.settings.show_rating,
+                      show_vendor: false,
+                      show_stock: false,
+                      show_rating: false,
                       show_add_to_cart: settings.products_show_add_to_cart,
                       mobile_two_columns: mobile_two_columns,
                       event_context: 'FeaturedCollectionSection',
@@ -210,11 +210,11 @@
                 {% else %}
                   {% for i in (1..section.settings.products_to_show) %}
                     <div class="grid-item">
-                      {% render 'card-product',
+                      {% render 'card-product-v1',
                         card_product: null,
-                        show_vendor: section.settings.show_vendor,
-                        show_stock: section.settings.show_stock,
-                        show_rating: section.settings.show_rating,
+                        show_vendor: false,
+                        show_stock: false,
+                        show_rating: false,
                         show_add_to_cart: settings.products_show_add_to_cart,
                         mobile_two_columns: mobile_two_columns,
                         event_context: 'FeaturedCollectionSection'
