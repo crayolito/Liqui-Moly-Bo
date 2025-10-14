@@ -1,396 +1,465 @@
 {% comment %}
   =====================================================
-  SECTION: Dual Images (Dos Imágenes Responsivas)
+  SECCIÓN: Imágenes Duales (Dos Imágenes Responsivas)
   PROPÓSITO: Mostrar 2 imágenes con enlaces opcionales
-  LAYOUT: Row en desktop, Column en mobile
-  AUTOR: Shopify Developer
+  LAYOUT: Row en desktop/tablet, Column solo en mobile
+  AUTOR: Desarrollador Shopify
   ÚLTIMA ACTUALIZACIÓN: 2024-10-15
   =====================================================
 {% endcomment %}
 
 {%- liquid
-    # Configuración de la section
-    assign section_id = 'dual-images-' | append: section.id
-    assign container_class = 'dual-images-container'
-    
-    # Clases CSS para responsive
-    assign desktop_class = 'dual-images-row'
-    assign mobile_class = 'dual-images-column'
-  -%}
-  
-  <section 
-    id="{{ section_id }}" 
-    class="dual-images-section"
-    data-section-id="{{ section.id }}"
-  >
-    <div class="{{ container_class }} {{ desktop_class }} {{ mobile_class }}">
-      
-      {% comment %} IMAGEN 1 {% endcomment %}
-      <div class="dual-image-item dual-image-item--1">
-        {%- liquid
-          # Imagen para desktop/tablet
-          assign desktop_image = section.settings.image_1_desktop
-          # Imagen para mobile
-          assign mobile_image = section.settings.image_1_mobile
-          # Fallback: si no hay mobile, usa desktop
-          unless mobile_image
-            assign mobile_image = desktop_image
-          endunless
-          
-          # Link opcional
-          assign link_1 = section.settings.link_1
-          assign link_text_1 = section.settings.link_text_1 | default: 'Ver más'
-        -%}
-        
-        {% if link_1 != blank %}
-          <a 
-            href="{{ link_1 }}" 
-            class="dual-image-link"
-            aria-label="{{ link_text_1 | escape }}"
+  # Configuración de la sección
+  assign section_id = 'imagenes-duales-' | append: section.id
+  assign container_class = 'contenedor-imagenes-duales'
+
+  # Configuraciones de espaciado desde el admin
+  assign padding_superior = section.settings.padding_superior | default: 40
+  assign padding_inferior = section.settings.padding_inferior | default: 40
+  assign espacio_entre_imagenes = section.settings.espacio_entre_imagenes | default: 20
+
+  # Altura configurable
+  assign altura_desktop = section.settings.altura_desktop | default: 400
+  assign altura_mobile = section.settings.altura_mobile | default: 300
+-%}
+
+<section
+  id="{{ section_id }}"
+  class="seccion-imagenes-duales"
+  data-section-id="{{ section.id }}"
+  style="
+    --padding-superior: {{ padding_superior }}px;
+    --padding-inferior: {{ padding_inferior }}px;
+    --espacio-imagenes: {{ espacio_entre_imagenes }}px;
+    --altura-desktop: {{ altura_desktop }}px;
+    --altura-mobile: {{ altura_mobile }}px;
+  "
+>
+  <div class="{{ container_class }}">
+    {% comment %} IMAGEN 1 {% endcomment %}
+    <div class="item-imagen item-imagen--1">
+      {%- liquid
+        # Imagen para desktop/tablet
+        assign imagen_desktop = section.settings.imagen_1_desktop
+        # Imagen para mobile
+        assign imagen_mobile = section.settings.imagen_1_mobile
+        # Fallback: si no hay mobile, usa desktop
+        unless imagen_mobile
+          assign imagen_mobile = imagen_desktop
+        endunless
+
+        # Enlace opcional
+        assign enlace_1 = section.settings.enlace_1
+        assign texto_enlace_1 = section.settings.texto_enlace_1 | default: 'Ver más'
+      -%}
+
+      {% if enlace_1 != blank %}
+        <a
+          href="{{ enlace_1 }}"
+          class="enlace-imagen"
+          aria-label="{{ texto_enlace_1 | escape }}"
+        >
+      {% endif %}
+
+      <div class="envoltorio-imagen">
+        {% comment %} Imagen para Desktop/Tablet {% endcomment %}
+        {% if imagen_desktop %}
+          <img
+            src="{{ imagen_desktop | image_url: width: 800 }}"
+            srcset="
+              {{ imagen_desktop | image_url: width: 400 }} 400w,
+              {{ imagen_desktop | image_url: width: 600 }} 600w,
+              {{ imagen_desktop | image_url: width: 800 }} 800w,
+              {{ imagen_desktop | image_url: width: 1200 }} 1200w
+            "
+            sizes="(max-width: 767px) 100vw, 50vw"
+            alt="{{ imagen_desktop.alt | default: section.settings.alt_imagen_1 | escape }}"
+            class="imagen-dual imagen-dual--desktop"
+            width="{{ imagen_desktop.width }}"
+            height="{{ imagen_desktop.height }}"
+            loading="lazy"
+          >
+        {% else %}
+          {% comment %} Placeholder si no hay imagen {% endcomment %}
+          <div class="placeholder-imagen imagen-dual--desktop">
+            <span>Imagen 1 Desktop</span>
+          </div>
+        {% endif %}
+
+        {% comment %} Imagen para Mobile (solo si es diferente) {% endcomment %}
+        {% if imagen_mobile and imagen_mobile.id != imagen_desktop.id %}
+          <img
+            src="{{ imagen_mobile | image_url: width: 600 }}"
+            srcset="
+              {{ imagen_mobile | image_url: width: 300 }} 300w,
+              {{ imagen_mobile | image_url: width: 400 }} 400w,
+              {{ imagen_mobile | image_url: width: 600 }} 600w
+            "
+            sizes="100vw"
+            alt="{{ imagen_mobile.alt | default: section.settings.alt_imagen_1 | escape }}"
+            class="imagen-dual imagen-dual--mobile"
+            width="{{ imagen_mobile.width }}"
+            height="{{ imagen_mobile.height }}"
+            loading="lazy"
           >
         {% endif %}
-        
-        <div class="dual-image-wrapper">
-          {% comment %} Imagen para Desktop/Tablet {% endcomment %}
-          {% if desktop_image %}
-            <img 
-              src="{{ desktop_image | image_url: width: 800 }}"
-              srcset="
-                {{ desktop_image | image_url: width: 400 }} 400w,
-                {{ desktop_image | image_url: width: 600 }} 600w,
-                {{ desktop_image | image_url: width: 800 }} 800w,
-                {{ desktop_image | image_url: width: 1200 }} 1200w
-              "
-              sizes="(max-width: 767px) 100vw, 50vw"
-              alt="{{ desktop_image.alt | default: section.settings.image_1_alt | escape }}"
-              class="dual-image dual-image--desktop"
-              width="{{ desktop_image.width }}"
-              height="{{ desktop_image.height }}"
-              loading="lazy"
-            >
-          {% else %}
-            {% comment %} Placeholder si no hay imagen {% endcomment %}
-            <div class="dual-image-placeholder dual-image--desktop">
-              <span>Imagen 1 Desktop</span>
-            </div>
-          {% endif %}
-          
-          {% comment %} Imagen para Mobile (solo si es diferente) {% endcomment %}
-          {% if mobile_image and mobile_image.id != desktop_image.id %}
-            <img 
-              src="{{ mobile_image | image_url: width: 600 }}"
-              srcset="
-                {{ mobile_image | image_url: width: 300 }} 300w,
-                {{ mobile_image | image_url: width: 400 }} 400w,
-                {{ mobile_image | image_url: width: 600 }} 600w
-              "
-              sizes="100vw"
-              alt="{{ mobile_image.alt | default: section.settings.image_1_alt | escape }}"
-              class="dual-image dual-image--mobile"
-              width="{{ mobile_image.width }}"
-              height="{{ mobile_image.height }}"
-              loading="lazy"
-            >
-          {% endif %}
-        </div>
-        
-        {% if link_1 != blank %}
-          </a>
-        {% endif %}
       </div>
-      
-      {% comment %} IMAGEN 2 {% endcomment %}
-      <div class="dual-image-item dual-image-item--2">
-        {%- liquid
-          # Imagen para desktop/tablet
-          assign desktop_image_2 = section.settings.image_2_desktop
-          # Imagen para mobile
-          assign mobile_image_2 = section.settings.image_2_mobile
-          # Fallback: si no hay mobile, usa desktop
-          unless mobile_image_2
-            assign mobile_image_2 = desktop_image_2
-          endunless
-          
-          # Link opcional
-          assign link_2 = section.settings.link_2
-          assign link_text_2 = section.settings.link_text_2 | default: 'Ver más'
-        -%}
-        
-        {% if link_2 != blank %}
-          <a 
-            href="{{ link_2 }}" 
-            class="dual-image-link"
-            aria-label="{{ link_text_2 | escape }}"
-          >
-        {% endif %}
-        
-        <div class="dual-image-wrapper">
-          {% comment %} Imagen para Desktop/Tablet {% endcomment %}
-          {% if desktop_image_2 %}
-            <img 
-              src="{{ desktop_image_2 | image_url: width: 800 }}"
-              srcset="
-                {{ desktop_image_2 | image_url: width: 400 }} 400w,
-                {{ desktop_image_2 | image_url: width: 600 }} 600w,
-                {{ desktop_image_2 | image_url: width: 800 }} 800w,
-                {{ desktop_image_2 | image_url: width: 1200 }} 1200w
-              "
-              sizes="(max-width: 767px) 100vw, 50vw"
-              alt="{{ desktop_image_2.alt | default: section.settings.image_2_alt | escape }}"
-              class="dual-image dual-image--desktop"
-              width="{{ desktop_image_2.width }}"
-              height="{{ desktop_image_2.height }}"
-              loading="lazy"
-            >
-          {% else %}
-            {% comment %} Placeholder si no hay imagen {% endcomment %}
-            <div class="dual-image-placeholder dual-image--desktop">
-              <span>Imagen 2 Desktop</span>
-            </div>
-          {% endif %}
-          
-          {% comment %} Imagen para Mobile (solo si es diferente) {% endcomment %}
-          {% if mobile_image_2 and mobile_image_2.id != desktop_image_2.id %}
-            <img 
-              src="{{ mobile_image_2 | image_url: width: 600 }}"
-              srcset="
-                {{ mobile_image_2 | image_url: width: 300 }} 300w,
-                {{ mobile_image_2 | image_url: width: 400 }} 400w,
-                {{ mobile_image_2 | image_url: width: 600 }} 600w
-              "
-              sizes="100vw"
-              alt="{{ mobile_image_2.alt | default: section.settings.image_2_alt | escape }}"
-              class="dual-image dual-image--mobile"
-              width="{{ mobile_image_2.width }}"
-              height="{{ mobile_image_2.height }}"
-              loading="lazy"
-            >
-          {% endif %}
-        </div>
-        
-        {% if link_2 != blank %}
-          </a>
-        {% endif %}
-      </div>
-      
+
+      {% if enlace_1 != blank %}
+        </a>
+      {% endif %}
     </div>
-  </section>
-  
-  {% comment %} CSS Embedded - Nivel 2 (Con buenas prácticas) {% endcomment %}
-  <style>
-    /* ===== VARIABLES CSS ===== */
-    .dual-images-section {
-      --dual-gap: 0px;
-      --dual-height-desktop: 400px;
-      --dual-height-mobile: 300px;
-      --dual-transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    {% comment %} IMAGEN 2 {% endcomment %}
+    <div class="item-imagen item-imagen--2">
+      {%- liquid
+        # Imagen para desktop/tablet
+        assign imagen_desktop_2 = section.settings.imagen_2_desktop
+        # Imagen para mobile
+        assign imagen_mobile_2 = section.settings.imagen_2_mobile
+        # Fallback: si no hay mobile, usa desktop
+        unless imagen_mobile_2
+          assign imagen_mobile_2 = imagen_desktop_2
+        endunless
+
+        # Enlace opcional
+        assign enlace_2 = section.settings.enlace_2
+        assign texto_enlace_2 = section.settings.texto_enlace_2 | default: 'Ver más'
+      -%}
+
+      {% if enlace_2 != blank %}
+        <a
+          href="{{ enlace_2 }}"
+          class="enlace-imagen"
+          aria-label="{{ texto_enlace_2 | escape }}"
+        >
+      {% endif %}
+
+      <div class="envoltorio-imagen">
+        {% comment %} Imagen para Desktop/Tablet {% endcomment %}
+        {% if imagen_desktop_2 %}
+          <img
+            src="{{ imagen_desktop_2 | image_url: width: 800 }}"
+            srcset="
+              {{ imagen_desktop_2 | image_url: width: 400 }} 400w,
+              {{ imagen_desktop_2 | image_url: width: 600 }} 600w,
+              {{ imagen_desktop_2 | image_url: width: 800 }} 800w,
+              {{ imagen_desktop_2 | image_url: width: 1200 }} 1200w
+            "
+            sizes="(max-width: 767px) 100vw, 50vw"
+            alt="{{ imagen_desktop_2.alt | default: section.settings.alt_imagen_2 | escape }}"
+            class="imagen-dual imagen-dual--desktop"
+            width="{{ imagen_desktop_2.width }}"
+            height="{{ imagen_desktop_2.height }}"
+            loading="lazy"
+          >
+        {% else %}
+          {% comment %} Placeholder si no hay imagen {% endcomment %}
+          <div class="placeholder-imagen imagen-dual--desktop">
+            <span>Imagen 2 Desktop</span>
+          </div>
+        {% endif %}
+
+        {% comment %} Imagen para Mobile (solo si es diferente) {% endcomment %}
+        {% if imagen_mobile_2 and imagen_mobile_2.id != imagen_desktop_2.id %}
+          <img
+            src="{{ imagen_mobile_2 | image_url: width: 600 }}"
+            srcset="
+              {{ imagen_mobile_2 | image_url: width: 300 }} 300w,
+              {{ imagen_mobile_2 | image_url: width: 400 }} 400w,
+              {{ imagen_mobile_2 | image_url: width: 600 }} 600w
+            "
+            sizes="100vw"
+            alt="{{ imagen_mobile_2.alt | default: section.settings.alt_imagen_2 | escape }}"
+            class="imagen-dual imagen-dual--mobile"
+            width="{{ imagen_mobile_2.width }}"
+            height="{{ imagen_mobile_2.height }}"
+            loading="lazy"
+          >
+        {% endif %}
+      </div>
+
+      {% if enlace_2 != blank %}
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% comment %} CSS Mejorado - Nivel 2 (Con configuraciones) {% endcomment %}
+<style>
+  /* ===== SECCIÓN BASE ===== */
+  .seccion-imagenes-duales {
+    padding-top: var(--padding-superior);
+    padding-bottom: var(--padding-inferior);
+    width: 100%;
+  }
+
+  /* ===== CONTENEDOR PRINCIPAL ===== */
+  .contenedor-imagenes-duales {
+    display: flex;
+    flex-direction: row; /* Por defecto ROW para desktop/tablet */
+    gap: var(--espacio-imagenes);
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* ===== ITEMS DE IMAGEN ===== */
+  .item-imagen {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .envoltorio-imagen {
+    width: 100%;
+    height: var(--altura-desktop);
+    position: relative;
+    overflow: hidden;
+    background: #f8f8f8; /* Color de fondo mientras carga */
+  }
+
+  /* ===== ESTILOS DE IMAGEN ===== */
+  .imagen-dual {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* ESTIRA la imagen para llenar todo el contenedor */
+    object-position: center;
+    display: block;
+    transition: transform 0.3s ease, filter 0.3s ease;
+  }
+
+  /* ===== CONTROL DE VISIBILIDAD POR DISPOSITIVO ===== */
+  .imagen-dual--mobile {
+    display: none;
+  }
+
+  .imagen-dual--desktop {
+    display: block;
+  }
+
+  /* ===== PLACEHOLDERS ===== */
+  .placeholder-imagen {
+    width: 100%;
+    height: 100%;
+    background: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 14px;
+    border: 2px dashed #ddd;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  /* ===== ENLACES INTERACTIVOS ===== */
+  .enlace-imagen {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    position: relative;
+  }
+
+  .enlace-imagen:hover .imagen-dual {
+    transform: scale(1.02);
+    filter: brightness(1.05);
+  }
+
+  .enlace-imagen:focus {
+    outline: 3px solid #005fcc;
+    outline-offset: 2px;
+  }
+
+  /* ===== RESPONSIVE: SOLO MOBILE = COLUMN ===== */
+  @media screen and (max-width: 767px) {
+    .contenedor-imagenes-duales {
+      flex-direction: column; /* SOLO en mobile cambia a column */
     }
-    
-    /* ===== CONTAINER BASE ===== */
-    .dual-images-container {
-      display: flex;
-      gap: var(--dual-gap);
-      width: 100%;
-      max-width: 100%;
+
+    .envoltorio-imagen {
+      height: var(--altura-mobile);
     }
-    
-    /* ===== LAYOUT RESPONSIVO ===== */
-    .dual-images-row {
-      flex-direction: row;
-    }
-    
-    .dual-images-column {
-      flex-direction: column;
-    }
-    
-    /* ===== ITEMS DE IMAGEN ===== */
-    .dual-image-item {
-      flex: 1;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .dual-image-wrapper {
-      width: 100%;
-      height: var(--dual-height-desktop);
-      position: relative;
-      overflow: hidden;
-    }
-    
-    /* ===== ESTILOS DE IMAGEN ===== */
-    .dual-image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      display: block;
-      transition: var(--dual-transition);
-    }
-    
-    /* ===== MOSTRAR/OCULTAR POR DISPOSITIVO ===== */
-    .dual-image--mobile {
+
+    /* Intercambio de imágenes en mobile */
+    .imagen-dual--desktop {
       display: none;
     }
-    
-    .dual-image--desktop {
+
+    .imagen-dual--mobile {
       display: block;
     }
-    
-    /* ===== PLACEHOLDERS ===== */
-    .dual-image-placeholder {
-      width: 100%;
-      height: 100%;
-      background: #f5f5f5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #666;
-      font-size: 14px;
-      border: 2px dashed #ddd;
-    }
-    
-    /* ===== LINKS INTERACTIVOS ===== */
-    .dual-image-link {
+
+    /* Si no hay imagen mobile específica, muestra la desktop */
+    .item-imagen:not(:has(.imagen-dual--mobile)) .imagen-dual--desktop {
       display: block;
-      width: 100%;
-      height: 100%;
-      text-decoration: none;
-      position: relative;
     }
-    
-    .dual-image-link:hover .dual-image {
-      transform: scale(1.05);
-    }
-    
-    .dual-image-link:focus {
-      outline: 2px solid #005fcc;
-      outline-offset: 2px;
-    }
-    
-    /* ===== RESPONSIVE BREAKPOINTS ===== */
-    
-    /* Tablet */
-    @media screen and (max-width: 1024px) {
-      .dual-image-wrapper {
-        height: calc(var(--dual-height-desktop) * 0.8);
-      }
-    }
-    
-    /* Mobile */
-    @media screen and (max-width: 767px) {
-      .dual-images-row {
-        flex-direction: column;
-      }
-      
-      .dual-image-wrapper {
-        height: var(--dual-height-mobile);
-      }
-      
-      .dual-image--desktop {
-        display: none;
-      }
-      
-      .dual-image--mobile {
-        display: block;
-      }
-      
-      /* Si no hay imagen mobile, muestra la desktop */
-      .dual-image-item:not(:has(.dual-image--mobile)) .dual-image--desktop {
-        display: block;
-      }
-    }
-    
-    /* ===== ACCESIBILIDAD ===== */
-    @media (prefers-reduced-motion: reduce) {
-      .dual-image {
-        transition: none;
-      }
-      
-      .dual-image-link:hover .dual-image {
-        transform: none;
-      }
-    }
-  </style>
-  
-  {% schema %}
-  {
-    "name": "Dual Images",
-    "tag": "section",
-    "class": "section-dual-images",
-    "settings": [
-      {
-        "type": "header",
-        "content": "Imagen 1"
-      },
-      {
-        "type": "image_picker",
-        "id": "image_1_desktop",
-        "label": "Imagen 1 - Desktop/Tablet",
-        "info": "Recomendado: 800x400px o superior"
-      },
-      {
-        "type": "image_picker", 
-        "id": "image_1_mobile",
-        "label": "Imagen 1 - Mobile (opcional)",
-        "info": "Si no seleccionas, se usará la imagen de desktop"
-      },
-      {
-        "type": "text",
-        "id": "image_1_alt",
-        "label": "Texto alternativo imagen 1",
-        "info": "Importante para SEO y accesibilidad"
-      },
-      {
-        "type": "url",
-        "id": "link_1",
-        "label": "Enlace imagen 1 (opcional)"
-      },
-      {
-        "type": "text",
-        "id": "link_text_1",
-        "label": "Texto del enlace 1",
-        "default": "Ver más",
-        "info": "Para lectores de pantalla"
-      },
-      {
-        "type": "header",
-        "content": "Imagen 2"
-      },
-      {
-        "type": "image_picker",
-        "id": "image_2_desktop", 
-        "label": "Imagen 2 - Desktop/Tablet",
-        "info": "Recomendado: 800x400px o superior"
-      },
-      {
-        "type": "image_picker",
-        "id": "image_2_mobile",
-        "label": "Imagen 2 - Mobile (opcional)", 
-        "info": "Si no seleccionas, se usará la imagen de desktop"
-      },
-      {
-        "type": "text",
-        "id": "image_2_alt",
-        "label": "Texto alternativo imagen 2",
-        "info": "Importante para SEO y accesibilidad"
-      },
-      {
-        "type": "url",
-        "id": "link_2", 
-        "label": "Enlace imagen 2 (opcional)"
-      },
-      {
-        "type": "text",
-        "id": "link_text_2",
-        "label": "Texto del enlace 2",
-        "default": "Ver más",
-        "info": "Para lectores de pantalla"
-      }
-    ],
-    "presets": [
-      {
-        "name": "Dual Images"
-      }
-    ]
   }
-  {% endschema %}
+
+  /* ===== TABLETS - MANTIENE ROW ===== */
+  @media screen and (min-width: 768px) and (max-width: 1024px) {
+    .envoltorio-imagen {
+      height: calc(var(--altura-desktop) * 0.85);
+    }
+  }
+
+  /* ===== ACCESIBILIDAD ===== */
+  @media (prefers-reduced-motion: reduce) {
+    .imagen-dual {
+      transition: none;
+    }
+
+    .enlace-imagen:hover .imagen-dual {
+      transform: none;
+      filter: none;
+    }
+  }
+
+  /* ===== MEJORAS DE PERFORMANCE ===== */
+  .imagen-dual {
+    will-change: transform;
+  }
+
+  .enlace-imagen:not(:hover) .imagen-dual {
+    will-change: auto;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Imágenes Duales",
+  "tag": "section",
+  "class": "section-imagenes-duales",
+  "settings": [
+    {
+      "type": "header",
+      "content": "⚙️ Configuración General"
+    },
+    {
+      "type": "range",
+      "id": "padding_superior",
+      "label": "Espaciado superior (px)",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "default": 40,
+      "info": "Espacio arriba de toda la sección"
+    },
+    {
+      "type": "range",
+      "id": "padding_inferior",
+      "label": "Espaciado inferior (px)",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "default": 40,
+      "info": "Espacio debajo de toda la sección"
+    },
+    {
+      "type": "range",
+      "id": "espacio_entre_imagenes",
+      "label": "Espacio entre imágenes (px)",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "default": 20,
+      "info": "Separación entre las dos imágenes"
+    },
+    {
+      "type": "range",
+      "id": "altura_desktop",
+      "label": "Altura en Desktop (px)",
+      "min": 200,
+      "max": 800,
+      "step": 50,
+      "default": 400,
+      "info": "Altura de las imágenes en pantallas grandes"
+    },
+    {
+      "type": "range",
+      "id": "altura_mobile",
+      "label": "Altura en Mobile (px)",
+      "min": 150,
+      "max": 500,
+      "step": 25,
+      "default": 300,
+      "info": "Altura de las imágenes en móviles"
+    },
+    {
+      "type": "header",
+      "content": "🖼️ Imagen 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "imagen_1_desktop",
+      "label": "Imagen 1 - Desktop/Tablet",
+      "info": "Recomendado: 800x400px o superior"
+    },
+    {
+      "type": "image_picker",
+      "id": "imagen_1_mobile",
+      "label": "Imagen 1 - Mobile (opcional)",
+      "info": "Si no seleccionas, se usará la imagen de desktop"
+    },
+    {
+      "type": "text",
+      "id": "alt_imagen_1",
+      "label": "Texto alternativo imagen 1",
+      "info": "Importante para SEO y accesibilidad"
+    },
+    {
+      "type": "url",
+      "id": "enlace_1",
+      "label": "Enlace imagen 1 (opcional)",
+      "info": "Productos: /products/nombre | Colecciones: /collections/nombre"
+    },
+    {
+      "type": "text",
+      "id": "texto_enlace_1",
+      "label": "Descripción del enlace 1",
+      "default": "Ver más",
+      "info": "Para lectores de pantalla"
+    },
+    {
+      "type": "header",
+      "content": "🖼️ Imagen 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "imagen_2_desktop",
+      "label": "Imagen 2 - Desktop/Tablet",
+      "info": "Recomendado: 800x400px o superior"
+    },
+    {
+      "type": "image_picker",
+      "id": "imagen_2_mobile",
+      "label": "Imagen 2 - Mobile (opcional)",
+      "info": "Si no seleccionas, se usará la imagen de desktop"
+    },
+    {
+      "type": "text",
+      "id": "alt_imagen_2",
+      "label": "Texto alternativo imagen 2",
+      "info": "Importante para SEO y accesibilidad"
+    },
+    {
+      "type": "url",
+      "id": "enlace_2",
+      "label": "Enlace imagen 2 (opcional)",
+      "info": "Productos: /products/nombre | Colecciones: /collections/nombre"
+    },
+    {
+      "type": "text",
+      "id": "texto_enlace_2",
+      "label": "Descripción del enlace 2",
+      "default": "Ver más",
+      "info": "Para lectores de pantalla"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Imágenes Duales"
+    }
+  ]
+}
+{% endschema %}
