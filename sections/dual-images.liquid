@@ -11,7 +11,13 @@
 {%- liquid
   # Configuración de la sección
   assign section_id = 'imagenes-duales-' | append: section.id
-  assign container_class = 'contenedor-imagenes-duales'
+
+  # Clase de contenedor: full-width o container limitado
+  if section.settings.full_width
+    assign container_class = 'contenedor-imagenes-duales contenedor-imagenes-duales--full-width'
+  else
+    assign container_class = 'container contenedor-imagenes-duales'
+  endif
 
   # Configuraciones de espaciado desde el admin
   assign padding_superior = section.settings.padding_superior | default: 40
@@ -19,7 +25,7 @@
   assign espacio_entre_imagenes = section.settings.espacio_entre_imagenes | default: 20
 
   # Altura configurable
-  assign altura_desktop = section.settings.altura_desktop | default: 400
+  assign altura_desktop = section.settings.altura_desktop | default: 150
   assign altura_mobile = section.settings.altura_mobile | default: 300
 -%}
 
@@ -36,157 +42,159 @@
   "
 >
   <div class="{{ container_class }}">
-    {% comment %} IMAGEN 1 {% endcomment %}
-    <div class="item-imagen item-imagen--1">
-      {%- liquid
-        # Imagen para desktop/tablet
-        assign imagen_desktop = section.settings.imagen_1_desktop
-        # Imagen para mobile
-        assign imagen_mobile = section.settings.imagen_1_mobile
-        # Fallback: si no hay mobile, usa desktop
-        unless imagen_mobile
-          assign imagen_mobile = imagen_desktop
-        endunless
+    <div class="imagenes-wrapper">
+      {% comment %} IMAGEN 1 {% endcomment %}
+      <div class="item-imagen item-imagen--1">
+        {%- liquid
+          # Imagen para desktop/tablet
+          assign imagen_desktop = section.settings.imagen_1_desktop
+          # Imagen para mobile
+          assign imagen_mobile = section.settings.imagen_1_mobile
+          # Fallback: si no hay mobile, usa desktop
+          unless imagen_mobile
+            assign imagen_mobile = imagen_desktop
+          endunless
 
-        # Enlace opcional
-        assign enlace_1 = section.settings.enlace_1
-        assign texto_enlace_1 = section.settings.texto_enlace_1 | default: 'Ver más'
-      -%}
+          # Enlace opcional
+          assign enlace_1 = section.settings.enlace_1
+          assign texto_enlace_1 = section.settings.texto_enlace_1 | default: 'Ver más'
+        -%}
 
-      {% if enlace_1 != blank %}
-        <a
-          href="{{ enlace_1 }}"
-          class="enlace-imagen"
-          aria-label="{{ texto_enlace_1 | escape }}"
-        >
-      {% endif %}
-
-      <div class="envoltorio-imagen">
-        {% comment %} Imagen para Desktop/Tablet {% endcomment %}
-        {% if imagen_desktop %}
-          <img
-            src="{{ imagen_desktop | image_url: width: 800 }}"
-            srcset="
-              {{ imagen_desktop | image_url: width: 400 }} 400w,
-              {{ imagen_desktop | image_url: width: 600 }} 600w,
-              {{ imagen_desktop | image_url: width: 800 }} 800w,
-              {{ imagen_desktop | image_url: width: 1200 }} 1200w
-            "
-            sizes="(max-width: 767px) 100vw, 50vw"
-            alt="{{ imagen_desktop.alt | default: section.settings.alt_imagen_1 | escape }}"
-            class="imagen-dual imagen-dual--desktop"
-            width="{{ imagen_desktop.width }}"
-            height="{{ imagen_desktop.height }}"
-            loading="lazy"
-          >
-        {% else %}
-          {% comment %} Placeholder si no hay imagen {% endcomment %}
-          <div class="placeholder-imagen imagen-dual--desktop">
-            <span>Imagen 1 Desktop</span>
-          </div>
-        {% endif %}
-
-        {% comment %} Imagen para Mobile (solo si es diferente) {% endcomment %}
-        {% if imagen_mobile and imagen_mobile.id != imagen_desktop.id %}
-          <img
-            src="{{ imagen_mobile | image_url: width: 600 }}"
-            srcset="
-              {{ imagen_mobile | image_url: width: 300 }} 300w,
-              {{ imagen_mobile | image_url: width: 400 }} 400w,
-              {{ imagen_mobile | image_url: width: 600 }} 600w
-            "
-            sizes="100vw"
-            alt="{{ imagen_mobile.alt | default: section.settings.alt_imagen_1 | escape }}"
-            class="imagen-dual imagen-dual--mobile"
-            width="{{ imagen_mobile.width }}"
-            height="{{ imagen_mobile.height }}"
-            loading="lazy"
+        {% if enlace_1 != blank %}
+          <a
+            href="{{ enlace_1 }}"
+            class="enlace-imagen"
+            aria-label="{{ texto_enlace_1 | escape }}"
           >
         {% endif %}
-      </div>
 
-      {% if enlace_1 != blank %}
-        </a>
-      {% endif %}
-    </div>
+        <div class="envoltorio-imagen">
+          {% comment %} Imagen para Desktop/Tablet {% endcomment %}
+          {% if imagen_desktop %}
+            <img
+              src="{{ imagen_desktop | image_url: width: 800 }}"
+              srcset="
+                {{ imagen_desktop | image_url: width: 400 }} 400w,
+                {{ imagen_desktop | image_url: width: 600 }} 600w,
+                {{ imagen_desktop | image_url: width: 800 }} 800w,
+                {{ imagen_desktop | image_url: width: 1200 }} 1200w
+              "
+              sizes="(max-width: 767px) 100vw, 50vw"
+              alt="{{ imagen_desktop.alt | default: section.settings.alt_imagen_1 | escape }}"
+              class="imagen-dual imagen-dual--desktop"
+              width="{{ imagen_desktop.width }}"
+              height="{{ imagen_desktop.height }}"
+              loading="lazy"
+            >
+          {% else %}
+            {% comment %} Placeholder si no hay imagen {% endcomment %}
+            <div class="placeholder-imagen imagen-dual--desktop">
+              <span>Imagen 1 Desktop</span>
+            </div>
+          {% endif %}
 
-    {% comment %} IMAGEN 2 {% endcomment %}
-    <div class="item-imagen item-imagen--2">
-      {%- liquid
-        # Imagen para desktop/tablet
-        assign imagen_desktop_2 = section.settings.imagen_2_desktop
-        # Imagen para mobile
-        assign imagen_mobile_2 = section.settings.imagen_2_mobile
-        # Fallback: si no hay mobile, usa desktop
-        unless imagen_mobile_2
-          assign imagen_mobile_2 = imagen_desktop_2
-        endunless
+          {% comment %} Imagen para Mobile (solo si es diferente) {% endcomment %}
+          {% if imagen_mobile and imagen_mobile.id != imagen_desktop.id %}
+            <img
+              src="{{ imagen_mobile | image_url: width: 600 }}"
+              srcset="
+                {{ imagen_mobile | image_url: width: 300 }} 300w,
+                {{ imagen_mobile | image_url: width: 400 }} 400w,
+                {{ imagen_mobile | image_url: width: 600 }} 600w
+              "
+              sizes="100vw"
+              alt="{{ imagen_mobile.alt | default: section.settings.alt_imagen_1 | escape }}"
+              class="imagen-dual imagen-dual--mobile"
+              width="{{ imagen_mobile.width }}"
+              height="{{ imagen_mobile.height }}"
+              loading="lazy"
+            >
+          {% endif %}
+        </div>
 
-        # Enlace opcional
-        assign enlace_2 = section.settings.enlace_2
-        assign texto_enlace_2 = section.settings.texto_enlace_2 | default: 'Ver más'
-      -%}
-
-      {% if enlace_2 != blank %}
-        <a
-          href="{{ enlace_2 }}"
-          class="enlace-imagen"
-          aria-label="{{ texto_enlace_2 | escape }}"
-        >
-      {% endif %}
-
-      <div class="envoltorio-imagen">
-        {% comment %} Imagen para Desktop/Tablet {% endcomment %}
-        {% if imagen_desktop_2 %}
-          <img
-            src="{{ imagen_desktop_2 | image_url: width: 800 }}"
-            srcset="
-              {{ imagen_desktop_2 | image_url: width: 400 }} 400w,
-              {{ imagen_desktop_2 | image_url: width: 600 }} 600w,
-              {{ imagen_desktop_2 | image_url: width: 800 }} 800w,
-              {{ imagen_desktop_2 | image_url: width: 1200 }} 1200w
-            "
-            sizes="(max-width: 767px) 100vw, 50vw"
-            alt="{{ imagen_desktop_2.alt | default: section.settings.alt_imagen_2 | escape }}"
-            class="imagen-dual imagen-dual--desktop"
-            width="{{ imagen_desktop_2.width }}"
-            height="{{ imagen_desktop_2.height }}"
-            loading="lazy"
-          >
-        {% else %}
-          {% comment %} Placeholder si no hay imagen {% endcomment %}
-          <div class="placeholder-imagen imagen-dual--desktop">
-            <span>Imagen 2 Desktop</span>
-          </div>
-        {% endif %}
-
-        {% comment %} Imagen para Mobile (solo si es diferente) {% endcomment %}
-        {% if imagen_mobile_2 and imagen_mobile_2.id != imagen_desktop_2.id %}
-          <img
-            src="{{ imagen_mobile_2 | image_url: width: 600 }}"
-            srcset="
-              {{ imagen_mobile_2 | image_url: width: 300 }} 300w,
-              {{ imagen_mobile_2 | image_url: width: 400 }} 400w,
-              {{ imagen_mobile_2 | image_url: width: 600 }} 600w
-            "
-            sizes="100vw"
-            alt="{{ imagen_mobile_2.alt | default: section.settings.alt_imagen_2 | escape }}"
-            class="imagen-dual imagen-dual--mobile"
-            width="{{ imagen_mobile_2.width }}"
-            height="{{ imagen_mobile_2.height }}"
-            loading="lazy"
-          >
+        {% if enlace_1 != blank %}
+          </a>
         {% endif %}
       </div>
 
-      {% if enlace_2 != blank %}
-        </a>
-      {% endif %}
+      {% comment %} IMAGEN 2 {% endcomment %}
+      <div class="item-imagen item-imagen--2">
+        {%- liquid
+          # Imagen para desktop/tablet
+          assign imagen_desktop_2 = section.settings.imagen_2_desktop
+          # Imagen para mobile
+          assign imagen_mobile_2 = section.settings.imagen_2_mobile
+          # Fallback: si no hay mobile, usa desktop
+          unless imagen_mobile_2
+            assign imagen_mobile_2 = imagen_desktop_2
+          endunless
+
+          # Enlace opcional
+          assign enlace_2 = section.settings.enlace_2
+          assign texto_enlace_2 = section.settings.texto_enlace_2 | default: 'Ver más'
+        -%}
+
+        {% if enlace_2 != blank %}
+          <a
+            href="{{ enlace_2 }}"
+            class="enlace-imagen"
+            aria-label="{{ texto_enlace_2 | escape }}"
+          >
+        {% endif %}
+
+        <div class="envoltorio-imagen">
+          {% comment %} Imagen para Desktop/Tablet {% endcomment %}
+          {% if imagen_desktop_2 %}
+            <img
+              src="{{ imagen_desktop_2 | image_url: width: 800 }}"
+              srcset="
+                {{ imagen_desktop_2 | image_url: width: 400 }} 400w,
+                {{ imagen_desktop_2 | image_url: width: 600 }} 600w,
+                {{ imagen_desktop_2 | image_url: width: 800 }} 800w,
+                {{ imagen_desktop_2 | image_url: width: 1200 }} 1200w
+              "
+              sizes="(max-width: 767px) 100vw, 50vw"
+              alt="{{ imagen_desktop_2.alt | default: section.settings.alt_imagen_2 | escape }}"
+              class="imagen-dual imagen-dual--desktop"
+              width="{{ imagen_desktop_2.width }}"
+              height="{{ imagen_desktop_2.height }}"
+              loading="lazy"
+            >
+          {% else %}
+            {% comment %} Placeholder si no hay imagen {% endcomment %}
+            <div class="placeholder-imagen imagen-dual--desktop">
+              <span>Imagen 2 Desktop</span>
+            </div>
+          {% endif %}
+
+          {% comment %} Imagen para Mobile (solo si es diferente) {% endcomment %}
+          {% if imagen_mobile_2 and imagen_mobile_2.id != imagen_desktop_2.id %}
+            <img
+              src="{{ imagen_mobile_2 | image_url: width: 600 }}"
+              srcset="
+                {{ imagen_mobile_2 | image_url: width: 300 }} 300w,
+                {{ imagen_mobile_2 | image_url: width: 400 }} 400w,
+                {{ imagen_mobile_2 | image_url: width: 600 }} 600w
+              "
+              sizes="100vw"
+              alt="{{ imagen_mobile_2.alt | default: section.settings.alt_imagen_2 | escape }}"
+              class="imagen-dual imagen-dual--mobile"
+              width="{{ imagen_mobile_2.width }}"
+              height="{{ imagen_mobile_2.height }}"
+              loading="lazy"
+            >
+          {% endif %}
+        </div>
+
+        {% if enlace_2 != blank %}
+          </a>
+        {% endif %}
+      </div>
     </div>
   </div>
 </section>
 
-{% comment %} CSS Mejorado - Nivel 2 (Con configuraciones) {% endcomment %}
+{% comment %} CSS Mejorado - Respeta max-width del proyecto {% endcomment %}
 <style>
   /* ===== SECCIÓN BASE ===== */
   .seccion-imagenes-duales {
@@ -195,13 +203,19 @@
     width: 100%;
   }
 
-  /* ===== CONTENEDOR PRINCIPAL ===== */
-  .contenedor-imagenes-duales {
+  /* ===== WRAPPER INTERNO ===== */
+  /* Este es el que controla el layout flex */
+  .imagenes-wrapper {
     display: flex;
     flex-direction: row; /* Por defecto ROW para desktop/tablet */
     gap: var(--espacio-imagenes);
     width: 100%;
+  }
+
+  /* ===== CLASE FULL-WIDTH (opcional) ===== */
+  .contenedor-imagenes-duales--full-width {
     max-width: 100%;
+    padding: 0;
   }
 
   /* ===== ITEMS DE IMAGEN ===== */
@@ -273,7 +287,7 @@
 
   /* ===== RESPONSIVE: SOLO MOBILE = COLUMN ===== */
   @media screen and (max-width: 767px) {
-    .contenedor-imagenes-duales {
+    .imagenes-wrapper {
       flex-direction: column; /* SOLO en mobile cambia a column */
     }
 
@@ -336,6 +350,13 @@
       "content": "⚙️ Configuración General"
     },
     {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Ancho completo",
+      "default": false,
+      "info": "Activar para que ocupe todo el ancho de la pantalla (sin límite)"
+    },
+    {
       "type": "range",
       "id": "padding_superior",
       "label": "Espaciado superior (px)",
@@ -369,10 +390,10 @@
       "type": "range",
       "id": "altura_desktop",
       "label": "Altura en Desktop (px)",
-      "min": 200,
+      "min": 100,
       "max": 800,
       "step": 50,
-      "default": 400,
+      "default": 150,
       "info": "Altura de las imágenes en pantallas grandes"
     },
     {
@@ -458,7 +479,8 @@
   ],
   "presets": [
     {
-      "name": "Imágenes Duales"
+      "name": "Imágenes Duales",
+      "category": "t:sections.all.preset_category.banners"
     }
   ]
 }
