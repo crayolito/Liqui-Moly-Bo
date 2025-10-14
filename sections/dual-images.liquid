@@ -1,7 +1,7 @@
 {% comment %}
   =====================================================
   SECCIÓN: Imágenes Duales (Dos Imágenes Responsivas)
-  PROPÓSITO: Mostrar 2 imágenes con enlaces opcionales
+  PROPÓSITO: Mostrar 2 imágenes con enlaces, overlay y fondos opcionales
   LAYOUT: Row en desktop/tablet, Column solo en mobile
   AUTOR: Desarrollador Shopify
   ÚLTIMA ACTUALIZACIÓN: 2024-10-15
@@ -26,12 +26,48 @@
 
   # Altura configurable
   assign altura_desktop = section.settings.altura_desktop | default: 150
-  assign altura_mobile = section.settings.altura_mobile | default: 300
+  assign altura_mobile = section.settings.altura_mobile | default: 100
+
+  # Bordes redondeados
+  assign usar_bordes = section.settings.usar_bordes_redondeados
 -%}
+
+{% comment %} ESTILOS DINÁMICOS PARA OVERLAY DE CADA IMAGEN {% endcomment %}
+<style>
+  /* ===== OVERLAY IMAGEN 1 ===== */
+  {% if section.settings.overlay_imagen_1 != blank %}
+    #{{ section_id }} .item-imagen--1::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: {{ section.settings.overlay_imagen_1 }};
+      pointer-events: none;
+      z-index: 2;
+    }
+  {% endif %}
+
+  /* ===== OVERLAY IMAGEN 2 ===== */
+  {% if section.settings.overlay_imagen_2 != blank %}
+    #{{ section_id }} .item-imagen--2::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: {{ section.settings.overlay_imagen_2 }};
+      pointer-events: none;
+      z-index: 2;
+    }
+  {% endif %}
+</style>
 
 <section
   id="{{ section_id }}"
-  class="seccion-imagenes-duales"
+  class="seccion-imagenes-duales{% if section.settings.usar_fondo_suave %} color-{{ section.settings.color_scheme }}{% endif %}"
   data-section-id="{{ section.id }}"
   style="
     --padding-superior: {{ padding_superior }}px;
@@ -42,9 +78,9 @@
   "
 >
   <div class="{{ container_class }}">
-    <div class="imagenes-wrapper">
+    <div class="imagenes-wrapper{% if usar_bordes %} imagenes-wrapper--con-bordes{% endif %}">
       {% comment %} IMAGEN 1 {% endcomment %}
-      <div class="item-imagen item-imagen--1">
+      <div class="item-imagen item-imagen--1{% if usar_bordes %} item-imagen--con-bordes{% endif %}">
         {%- liquid
           # Imagen para desktop/tablet
           assign imagen_desktop = section.settings.imagen_1_desktop
@@ -118,7 +154,7 @@
       </div>
 
       {% comment %} IMAGEN 2 {% endcomment %}
-      <div class="item-imagen item-imagen--2">
+      <div class="item-imagen item-imagen--2{% if usar_bordes %} item-imagen--con-bordes{% endif %}">
         {%- liquid
           # Imagen para desktop/tablet
           assign imagen_desktop_2 = section.settings.imagen_2_desktop
@@ -212,6 +248,25 @@
     width: 100%;
   }
 
+  /* ===== BORDES REDONDEADOS OPCIONALES ===== */
+  .imagenes-wrapper--con-bordes {
+    border-radius: var(--border-radius-base);
+    overflow: hidden;
+  }
+
+  .item-imagen--con-bordes {
+    overflow: hidden;
+  }
+
+  /* Bordes en primera y última imagen cuando NO está el wrapper con bordes */
+  .imagenes-wrapper:not(.imagenes-wrapper--con-bordes) .item-imagen--con-bordes:first-child {
+    border-radius: var(--border-radius-base);
+  }
+
+  .imagenes-wrapper:not(.imagenes-wrapper--con-bordes) .item-imagen--con-bordes:last-child {
+    border-radius: var(--border-radius-base);
+  }
+
   /* ===== CLASE FULL-WIDTH (opcional) ===== */
   .contenedor-imagenes-duales--full-width {
     max-width: 100%;
@@ -241,6 +296,8 @@
     object-position: center;
     display: block;
     transition: transform 0.3s ease, filter 0.3s ease;
+    position: relative;
+    z-index: 1;
   }
 
   /* ===== CONTROL DE VISIBILIDAD POR DISPOSITIVO ===== */
@@ -273,6 +330,7 @@
     height: 100%;
     text-decoration: none;
     position: relative;
+    z-index: 3; /* Por encima del overlay */
   }
 
   .enlace-imagen:hover .imagen-dual {
@@ -357,6 +415,13 @@
       "info": "Activar para que ocupe todo el ancho de la pantalla (sin límite)"
     },
     {
+      "type": "checkbox",
+      "id": "usar_bordes_redondeados",
+      "label": "Usar bordes redondeados",
+      "default": true,
+      "info": "Añade bordes redondeados a las imágenes (como otros componentes del tema)"
+    },
+    {
       "type": "range",
       "id": "padding_superior",
       "label": "Espaciado superior (px)",
@@ -400,11 +465,29 @@
       "type": "range",
       "id": "altura_mobile",
       "label": "Altura en Mobile (px)",
-      "min": 150,
+      "min": 100,
       "max": 500,
       "step": 25,
-      "default": 300,
+      "default": 100,
       "info": "Altura de las imágenes en móviles"
+    },
+    {
+      "type": "header",
+      "content": "🎨 Fondo de Sección (Opcional)"
+    },
+    {
+      "type": "checkbox",
+      "id": "usar_fondo_suave",
+      "label": "Usar fondo suave en toda la sección",
+      "default": false,
+      "info": "Añade un fondo de color suave detrás de las imágenes"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Esquema de color",
+      "default": "accent-3",
+      "info": "Solo se aplica si 'Usar fondo suave' está activado"
     },
     {
       "type": "header",
@@ -427,6 +510,13 @@
       "id": "alt_imagen_1",
       "label": "Texto alternativo imagen 1",
       "info": "Importante para SEO y accesibilidad"
+    },
+    {
+      "type": "color_background",
+      "id": "overlay_imagen_1",
+      "label": "Overlay / Capa oscura imagen 1",
+      "info": "Añade un gradiente o color sobre la imagen. Útil para mejorar contraste con texto",
+      "default": "linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.3) 100%)"
     },
     {
       "type": "url",
@@ -462,6 +552,13 @@
       "id": "alt_imagen_2",
       "label": "Texto alternativo imagen 2",
       "info": "Importante para SEO y accesibilidad"
+    },
+    {
+      "type": "color_background",
+      "id": "overlay_imagen_2",
+      "label": "Overlay / Capa oscura imagen 2",
+      "info": "Añade un gradiente o color sobre la imagen. Útil para mejorar contraste con texto",
+      "default": "linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.3) 100%)"
     },
     {
       "type": "url",
