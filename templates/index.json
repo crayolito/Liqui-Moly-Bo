@@ -401,7 +401,7 @@
         "heading_size": "md",
         "subheading": "",
         "collection": "ofertas",
-        "products_to_show": 3,
+        "products_to_show": 12,
         "products": [],
         "show_vendor": true,
         "show_stock": true,
