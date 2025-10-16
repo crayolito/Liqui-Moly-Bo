@@ -342,6 +342,44 @@
         "hide_if_empty": false
       }
     },
+    "featured_collection_v1_fxRN7V": {
+      "type": "featured-collection-v1",
+      "name": "Featured Collection V1",
+      "settings": {
+        "heading": "ARTÍCULOS POPULARES",
+        "heading_size": "md",
+        "subheading": "",
+        "collection": "ofertas",
+        "products_to_show": 12,
+        "products": [],
+        "show_vendor": true,
+        "show_stock": true,
+        "show_rating": false,
+        "product_image_fit": "contain",
+        "show_collection": false,
+        "collection_overlay_background": "linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8) 100%)",
+        "collection_title": "",
+        "collection_description": "",
+        "hide_collection_description": false,
+        "hide_collection_title": false,
+        "hide_collection_button": false,
+        "collection_text_color": "#ffffff",
+        "collection_button_text": "",
+        "collection_button_color_scheme": "",
+        "collection_box_align": "bottom-left",
+        "layout": "slider",
+        "columns": "4",
+        "stack_on_mobile": false,
+        "mobile_columns": "1",
+        "color_scheme": "",
+        "spacing_top": 20,
+        "spacing_bottom": 20,
+        "heading_tag": "h2",
+        "show_on_desktop": true,
+        "show_on_mobile": true,
+        "hide_placeholders": false
+      }
+    },
     "features_qh7R3E": {
       "type": "features",
       "blocks": {
@@ -388,90 +426,6 @@
         "color_scheme": "background-1",
         "spacing_top": 2,
         "spacing_bottom": 0,
-        "show_on_desktop": true,
-        "show_on_mobile": true,
-        "hide_if_empty": false
-      }
-    },
-    "featured_collection_v1_fxRN7V": {
-      "type": "featured-collection-v1",
-      "name": "Featured Collection V1",
-      "settings": {
-        "heading": "ARTÍCULOS POPULARES",
-        "heading_size": "md",
-        "subheading": "",
-        "collection": "ofertas",
-        "products_to_show": 12,
-        "products": [],
-        "show_vendor": true,
-        "show_stock": true,
-        "show_rating": false,
-        "product_image_fit": "contain",
-        "show_collection": false,
-        "collection_overlay_background": "linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8) 100%)",
-        "collection_title": "",
-        "collection_description": "",
-        "hide_collection_description": false,
-        "hide_collection_title": false,
-        "hide_collection_button": false,
-        "collection_text_color": "#ffffff",
-        "collection_button_text": "",
-        "collection_button_color_scheme": "",
-        "collection_box_align": "bottom-left",
-        "layout": "slider",
-        "columns": "4",
-        "stack_on_mobile": false,
-        "mobile_columns": "1",
-        "color_scheme": "",
-        "spacing_top": 20,
-        "spacing_bottom": 20,
-        "heading_tag": "h2",
-        "show_on_desktop": true,
-        "show_on_mobile": true,
-        "hide_placeholders": false
-      }
-    },
-    "media_with_text_VVw63K": {
-      "type": "media-with-text",
-      "blocks": {
-        "heading_mnk89D": {
-          "type": "heading",
-          "settings": {
-            "heading": "Media with text",
-            "heading_size": "md",
-            "heading_tag": "h2"
-          }
-        },
-        "text_9kL88a": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Pair text with media to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
-            "text_size": "md"
-          }
-        },
-        "button_gDbBe7": {
-          "type": "button",
-          "settings": {
-            "button_label": "Button label",
-            "button_link": ""
-          }
-        }
-      },
-      "block_order": [
-        "heading_mnk89D",
-        "text_9kL88a",
-        "button_gDbBe7"
-      ],
-      "name": "t:sections.media_with_text.presets.name",
-      "settings": {
-        "image": "shopify://shop_images/Werkstatt.jpg_1.jpg",
-        "video_url": "",
-        "layout": "media_first",
-        "desktop_content_alignment": "left",
-        "content_color_scheme": "accent-1",
-        "color_scheme": "background-1",
-        "spacing_top": 20,
-        "spacing_bottom": 20,
         "show_on_desktop": true,
         "show_on_mobile": true,
         "hide_if_empty": false
@@ -549,11 +503,57 @@
         "hide_if_empty": false
       }
     },
+    "media_with_text_VVw63K": {
+      "type": "media-with-text",
+      "blocks": {
+        "heading_mnk89D": {
+          "type": "heading",
+          "settings": {
+            "heading": "Media with text",
+            "heading_size": "md",
+            "heading_tag": "h2"
+          }
+        },
+        "text_9kL88a": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Pair text with media to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+            "text_size": "md"
+          }
+        },
+        "button_gDbBe7": {
+          "type": "button",
+          "settings": {
+            "button_label": "Button label",
+            "button_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "heading_mnk89D",
+        "text_9kL88a",
+        "button_gDbBe7"
+      ],
+      "name": "t:sections.media_with_text.presets.name",
+      "settings": {
+        "image": "shopify://shop_images/Werkstatt.jpg_1.jpg",
+        "video_url": "",
+        "layout": "media_first",
+        "desktop_content_alignment": "left",
+        "content_color_scheme": "accent-1",
+        "color_scheme": "background-1",
+        "spacing_top": 20,
+        "spacing_bottom": 20,
+        "show_on_desktop": true,
+        "show_on_mobile": true,
+        "hide_if_empty": false
+      }
+    },
     "featured_collection_v2_xPFzRn": {
       "type": "featured-collection-v2",
       "name": "Featured Collection V2",
       "settings": {
-        "heading": "Productos patrocinados",
+        "heading": "PRODUCTOS PATROCINADOS",
         "heading_size": "md",
         "subheading": "",
         "collection": "productos-populares",
@@ -765,11 +765,11 @@
     "slideshow_WXrdKP",
     "simple_collection_list_NgEQ3P",
     "collection-list-1",
-    "features_qh7R3E",
     "featured_collection_v1_fxRN7V",
-    "media_with_text_VVw63K",
+    "features_qh7R3E",
     "countdown_banner_7rtje4",
     "countdown_banner_TMarGQ",
+    "media_with_text_VVw63K",
     "featured_collection_v2_xPFzRn",
     "countdown_banner_GTnTQH",
     "brands",
