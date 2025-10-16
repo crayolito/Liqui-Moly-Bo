@@ -39,13 +39,13 @@
     </figure>
   {% endif %}
 
-  <h3 class="card-heading typography-body ">
+  <h3 class="card-heading card-heading-bold">
     {% if collection_item %}
       <a href="{{ collection_item.url }}">
-        {{ collection_item.title }}
+        {{ collection_item.title | upcase }}
       </a>
     {% else %}
-      {{ 'onboarding.collection_title' | t }}
+      {{ 'onboarding.collection_title' | t | upcase }}
     {% endif %}
   </h3>
 

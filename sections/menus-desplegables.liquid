@@ -1,0 +1,390 @@
+{% comment %}
+  =====================================================
+  SECCIÓN: Menús Desplegables Responsivos
+  PROPÓSITO: 4 menús en fila (desktop) / columna expandible (móvil)
+  DEPENDENCIAS: CSS nativo, JavaScript vanilla
+  AUTOR: Tu nombre
+  ÚLTIMA ACTUALIZACIÓN: 2024-10-16
+  =====================================================
+{% endcomment %}
+
+{%- liquid
+    # Configuración de la sección desde el editor
+    assign titulo_seccion = section.settings.titulo_seccion
+    assign mostrar_titulo = section.settings.mostrar_titulo
+  -%}
+  
+  <!-- Contenedor principal de la sección -->
+  <div class="menus-desplegables-seccion" id="menus-seccion-{{ section.id }}">
+    
+    <!-- Título opcional de la sección -->
+    {% if mostrar_titulo and titulo_seccion != blank %}
+      <h2 class="menus-titulo-principal">{{ titulo_seccion }}</h2>
+    {% endif %}
+  
+    <!-- Contenedor de los 4 menús -->
+    <div class="menus-contenedor">
+      
+      {% comment %} Iteramos máximo 4 bloques de menú {% endcomment %}
+      {% for bloque in section.blocks limit: 4 %}
+        
+        {% comment %} Obtenemos datos de cada menú {% endcomment %}
+        {%- liquid
+          assign menu_handle = bloque.settings.menu_seleccionado
+          assign titulo_menu = bloque.settings.titulo_personalizado
+          assign menu_obj = linklists[menu_handle]
+          
+          # Si no hay título personalizado, usamos el del menú
+          if titulo_menu == blank and menu_obj
+            assign titulo_menu = menu_obj.title
+          endif
+        -%}
+  
+        <!-- Cada elemento de menú individual -->
+        <div class="menu-item" data-menu-index="{{ forloop.index }}">
+          
+          <!-- Título clickeable (especialmente para móvil) -->
+          <h3 class="menu-titulo" 
+              onclick="toggleMenu({{ forloop.index }})" 
+              role="button" 
+              tabindex="0"
+              aria-expanded="false"
+              aria-controls="menu-contenido-{{ forloop.index }}">
+            
+            {{ titulo_menu | default: 'Menú ' | append: forloop.index }}
+            
+            <!-- Icono de flecha para móvil -->
+            <span class="menu-flecha" aria-hidden="true">▼</span>
+          </h3>
+  
+          <!-- Contenido del menú (enlaces) -->
+          <div class="menu-contenido" 
+               id="menu-contenido-{{ forloop.index }}"
+               aria-hidden="true">
+            
+            {% if menu_obj and menu_obj.links.size > 0 %}
+              <ul class="menu-lista">
+                {% for link in menu_obj.links %}
+                  <li class="menu-link-item">
+                    <a href="{{ link.url }}" class="menu-enlace">
+                      {{ link.title }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <!-- Mensaje cuando no hay menú seleccionado -->
+              <p class="menu-vacio">
+                No hay menú seleccionado para este bloque
+              </p>
+            {% endif %}
+            
+          </div>
+        </div>
+        
+      {% endfor %}
+      
+      {% comment %} Si hay menos de 4 bloques, mostramos placeholders {% endcomment %}
+      {% assign bloques_faltantes = 4 | minus: section.blocks.size %}
+      {% if bloques_faltantes > 0 %}
+        {% for i in (1..bloques_faltantes) %}
+          <div class="menu-item menu-placeholder">
+            <h3 class="menu-titulo">Agregar Menú {{ section.blocks.size | plus: forloop.index }}</h3>
+            <div class="menu-contenido">
+              <p class="menu-vacio">Configura este menú desde el editor de temas</p>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+  
+    </div>
+  </div>
+  
+  <!-- Estilos CSS integrados -->
+  <style>
+    /* =====================================================
+       ESTILOS BASE PARA MENÚS DESPLEGABLES
+       ===================================================== */
+    
+    .menus-desplegables-seccion {
+      /* Espaciado de la sección */
+      padding: 2rem 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+  
+    .menus-titulo-principal {
+      /* Título principal de la sección */
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2rem;
+      color: #333;
+    }
+  
+    .menus-contenedor {
+      /* Contenedor principal flexbox */
+      display: flex;
+      gap: 1rem;
+    }
+  
+    .menu-item {
+      /* Cada elemento de menú */
+      flex: 1; /* Distribuye espacio equitativamente */
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+  
+    .menu-titulo {
+      /* Título de cada menú */
+      margin: 0;
+      padding: 1rem;
+      background: #f8f9fa;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s ease;
+      position: relative;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+  
+    .menu-titulo:hover {
+      background: #e9ecef;
+    }
+  
+    .menu-flecha {
+      /* Flecha indicadora */
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: transform 0.3s ease;
+      display: none; /* Oculta en desktop por defecto */
+    }
+  
+    .menu-contenido {
+      /* Contenido desplegable */
+      padding: 1rem;
+      background: #fff;
+    }
+  
+    .menu-lista {
+      /* Lista de enlaces */
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+  
+    .menu-link-item {
+      /* Cada elemento de la lista */
+      margin-bottom: 0.5rem;
+    }
+  
+    .menu-link-item:last-child {
+      margin-bottom: 0;
+    }
+  
+    .menu-enlace {
+      /* Estilos de enlaces */
+      text-decoration: none;
+      color: #555;
+      display: block;
+      padding: 0.5rem 0;
+      transition: color 0.3s ease;
+      border-bottom: 1px solid transparent;
+    }
+  
+    .menu-enlace:hover {
+      color: #007bff;
+      border-bottom-color: #007bff;
+    }
+  
+    .menu-vacio {
+      /* Mensaje cuando no hay contenido */
+      color: #888;
+      font-style: italic;
+      margin: 0;
+    }
+  
+    .menu-placeholder {
+      /* Placeholder para menús no configurados */
+      opacity: 0.6;
+    }
+  
+    /* =====================================================
+       RESPONSIVE: MÓVIL (768px y menor)
+       ===================================================== */
+    
+    @media (max-width: 768px) {
+      .menus-contenedor {
+        /* Cambia a columna en móvil */
+        flex-direction: column;
+      }
+  
+      .menu-flecha {
+        /* Muestra flecha en móvil */
+        display: block;
+      }
+  
+      .menu-contenido {
+        /* Oculta contenido por defecto en móvil */
+        display: none;
+        padding: 0 1rem 1rem 1rem;
+      }
+  
+      .menu-item.activo .menu-contenido {
+        /* Muestra contenido cuando está activo */
+        display: block;
+      }
+  
+      .menu-item.activo .menu-flecha {
+        /* Rota flecha cuando está activo */
+        transform: translateY(-50%) rotate(180deg);
+      }
+  
+      .menu-titulo {
+        /* Ajusta padding en móvil */
+        padding: 1rem 3rem 1rem 1rem; /* Espacio para la flecha */
+      }
+    }
+  
+    /* =====================================================
+       RESPONSIVE: TABLET (769px - 1024px)
+       ===================================================== */
+    
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .menus-contenedor {
+        /* En tablet podemos hacer 2x2 grid */
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 1rem;
+      }
+    }
+  </style>
+  
+  <!-- JavaScript para funcionalidad móvil -->
+  <script>
+    /* =====================================================
+       JAVASCRIPT PARA MENÚS DESPLEGABLES
+       ===================================================== */
+    
+    function toggleMenu(indiceMenu) {
+      // Solo funciona en móvil (768px o menor)
+      if (window.innerWidth <= 768) {
+        
+        // Encuentra el elemento del menú
+        const menuItem = document.querySelector(`[data-menu-index="${indiceMenu}"]`);
+        const contenido = menuItem.querySelector('.menu-contenido');
+        const titulo = menuItem.querySelector('.menu-titulo');
+        
+        // Toggle de la clase activo
+        menuItem.classList.toggle('activo');
+        
+        // Actualiza aria-expanded para accesibilidad
+        const estaAbierto = menuItem.classList.contains('activo');
+        titulo.setAttribute('aria-expanded', estaAbierto);
+        contenido.setAttribute('aria-hidden', !estaAbierto);
+        
+        // Opcional: Cierra otros menús (comportamiento acordeón)
+        const otrosMenus = document.querySelectorAll('.menu-item:not([data-menu-index="' + indiceMenu + '"])');
+        otrosMenus.forEach(menu => {
+          menu.classList.remove('activo');
+          const otroTitulo = menu.querySelector('.menu-titulo');
+          const otroContenido = menu.querySelector('.menu-contenido');
+          otroTitulo.setAttribute('aria-expanded', 'false');
+          otroContenido.setAttribute('aria-hidden', 'true');
+        });
+      }
+    }
+  
+    // Manejador para redimensionado de ventana
+    window.addEventListener('resize', function() {
+      // Si cambiamos a desktop, muestra todos los contenidos
+      if (window.innerWidth > 768) {
+        const todosMenus = document.querySelectorAll('.menu-item');
+        todosMenus.forEach(menu => {
+          menu.classList.remove('activo');
+          const titulo = menu.querySelector('.menu-titulo');
+          const contenido = menu.querySelector('.menu-contenido');
+          titulo.setAttribute('aria-expanded', 'true');
+          contenido.setAttribute('aria-hidden', 'false');
+        });
+      }
+    });
+  
+    // Soporte para navegación por teclado
+    document.addEventListener('keydown', function(e) {
+      if (e.target.classList.contains('menu-titulo')) {
+        // Enter o Espacio activan el menú
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          const indice = e.target.closest('.menu-item').dataset.menuIndex;
+          toggleMenu(parseInt(indice));
+        }
+      }
+    });
+  </script>
+
+  {% schema %}
+{
+  "name": "Menús Desplegables",
+  "tag": "section",
+  "class": "section-menus-desplegables",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "mostrar_titulo",
+      "label": "Mostrar título de la sección",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "titulo_seccion",
+      "label": "Título de la sección",
+      "default": "Nuestros Menús"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu_block",
+      "name": "Menú",
+      "settings": [
+        {
+          "type": "link_list",
+          "id": "menu_seleccionado",
+          "label": "Seleccionar menú",
+          "info": "Elige el menú que quieres mostrar en esta columna"
+        },
+        {
+          "type": "text",
+          "id": "titulo_personalizado",
+          "label": "Título personalizado (opcional)",
+          "info": "Si está vacío, usará el nombre del menú seleccionado"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Menús Desplegables",
+      "blocks": [
+        {
+          "type": "menu_block"
+        },
+        {
+          "type": "menu_block"
+        },
+        {
+          "type": "menu_block"
+        },
+        {
+          "type": "menu_block"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
