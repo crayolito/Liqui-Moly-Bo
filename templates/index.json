@@ -627,7 +627,7 @@
       "type": "collection-grid",
       "name": "t:sections.collections_grid.preset.name",
       "settings": {
-        "heading": "Collection grid",
+        "heading": "Categorías destacadas",
         "heading_size": "md",
         "subheading": "",
         "link_title": "",
