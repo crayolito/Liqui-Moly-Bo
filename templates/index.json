@@ -397,7 +397,7 @@
       "type": "featured-collection-v1",
       "name": "Featured Collection V1",
       "settings": {
-        "heading": "Featured collection V1",
+        "heading": "ARTÍCULOS POPULARES",
         "heading_size": "md",
         "subheading": "",
         "collection": "ofertas",
@@ -418,7 +418,7 @@
         "collection_button_text": "",
         "collection_button_color_scheme": "",
         "collection_box_align": "bottom-left",
-        "layout": "grid",
+        "layout": "slider",
         "columns": "4",
         "stack_on_mobile": false,
         "mobile_columns": "1",

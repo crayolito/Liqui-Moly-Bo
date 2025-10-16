@@ -1,1 +1,146 @@
-{"name":"t:sections.footer.name","type":"footer","sections":{"footer-features":{"type":"footer-features","blocks":{"feature-1":{"type":"feature","settings":{"icon":"box-2","title":"Envíos a todo el país","text":"<p>Entrega rápida y segura - Productos Liquid Moly originales hasta tu puerta<\/p>"}},"feature-2":{"type":"feature","settings":{"icon":"whatsapp","title":"Consulta y compra por WhatsApp","text":"<p>Asesoramiento técnico inmediato - Compra fácil y segura - ¡Haz click y consulta!<\/p>"}},"feature-3":{"type":"feature","settings":{"icon":"map","title":"Nuestra sucursal principal","text":"<p>¿Quiere saber cómo llegar? Presione click para abrir el mapa y encontrarnos<\/p>"}},"feature-4":{"type":"feature","settings":{"icon":"gift-wrap","title":"Novedades exclusivas","text":"<p>Productos exclusivos para ti - Registrate y entérate primero - Click ya<\/p>"}}},"block_order":["feature-1","feature-2","feature-3","feature-4"],"settings":{"inline":false,"stack_on_mobile":true,"auto_rotate":false,"icon_size":"large","content_color_scheme":"","color_scheme":"background-1","spacing_top":24,"spacing_bottom":26,"show_on_desktop":true,"show_on_mobile":true,"hide_if_empty":false}},"newsletter":{"type":"newsletter","disabled":true,"settings":{"payment_enable":true,"enable_language_selector":false,"enable_country_selector":false,"enable_country_selector_flag":false,"show_social":false,"enable_follow_on_shop":true,"color_scheme":"accent-1","background_overlay_opacity":30,"social_icons_size":32}},"footer":{"type":"footer","blocks":{"text-1":{"type":"text","settings":{"title":"","image":"shopify:\/\/shop_images\/logo.svg","link":"","image_width":110,"text":"<p>Elegida la marca #1 de <br\/>Lubricantes y Aditivos de Alemania,<br\/>presente en más de 150 países, <br\/>¡el especialista alemán! <br\/><br\/>Conozca nuestros productos.<br\/><\/p><p><strong>Contacto <br\/>Email:<\/strong> <a href=\"mailto:info@liquimoly.com\">info@liquimoly.com<\/a><br\/><strong>Teléfono:<\/strong> +591 78452415<\/p>"}},"menu-1":{"type":"menu","settings":{"title":"Ofrecemos","menu":"menu-header-dev"}},"menu-2":{"type":"menu","settings":{"title":"Información","menu":"footer"}},"newsletter_ce4XdC":{"type":"newsletter","settings":{"title":"SUSCRÍBETE NOS COMUNICAREMOS CONTIGO LO MAS ANTES POSIBLE","text":"¡Manténgase al tanto de nuestras novedades y reciba actualizaciones de primera mano sobre nuevos productos y promociones!"}}},"block_order":["text-1","menu-1","menu-2","newsletter_ce4XdC"],"settings":{"payment_enable":true,"enable_language_selector":true,"enable_country_selector":true,"enable_country_selector_flag":true,"show_social":true,"enable_follow_on_shop":true,"color_scheme":"accent-1","background_image":"shopify:\/\/shop_images\/Social_Media_Header_Facebook_cbc7f9e9-426c-4a4e-a90d-ef8bf80fb991.jpg","background_overlay_opacity":75,"social_icons_size":32}}},"order":["footer-features","newsletter","footer"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "footer-features": {
+      "type": "footer-features",
+      "blocks": {
+        "feature-1": {
+          "type": "feature",
+          "settings": {
+            "icon": "box-2",
+            "title": "Envíos a todo el país",
+            "text": "<p>Entrega rápida y segura - Productos Liquid Moly originales hasta tu puerta</p>"
+          }
+        },
+        "feature-2": {
+          "type": "feature",
+          "settings": {
+            "icon": "whatsapp",
+            "title": "Consulta y compra por WhatsApp",
+            "text": "<p>Asesoramiento técnico inmediato - Compra fácil y segura - ¡Haz click y consulta!</p>"
+          }
+        },
+        "feature-3": {
+          "type": "feature",
+          "settings": {
+            "icon": "map",
+            "title": "Nuestra sucursal principal",
+            "text": "<p>¿Quiere saber cómo llegar? Presione click para abrir el mapa y encontrarnos</p>"
+          }
+        },
+        "feature-4": {
+          "type": "feature",
+          "settings": {
+            "icon": "gift-wrap",
+            "title": "Novedades exclusivas",
+            "text": "<p>Productos exclusivos para ti - Registrate y entérate primero - Click ya</p>"
+          }
+        }
+      },
+      "block_order": [
+        "feature-1",
+        "feature-2",
+        "feature-3",
+        "feature-4"
+      ],
+      "disabled": true,
+      "settings": {
+        "inline": false,
+        "stack_on_mobile": true,
+        "auto_rotate": false,
+        "icon_size": "large",
+        "content_color_scheme": "",
+        "color_scheme": "background-1",
+        "spacing_top": 24,
+        "spacing_bottom": 26,
+        "show_on_desktop": true,
+        "show_on_mobile": true,
+        "hide_if_empty": false
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "disabled": true,
+      "settings": {
+        "payment_enable": true,
+        "enable_language_selector": false,
+        "enable_country_selector": false,
+        "enable_country_selector_flag": false,
+        "show_social": false,
+        "enable_follow_on_shop": true,
+        "color_scheme": "accent-1",
+        "background_overlay_opacity": 30,
+        "social_icons_size": 32
+      }
+    },
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "text-1": {
+          "type": "text",
+          "settings": {
+            "title": "",
+            "image": "shopify://shop_images/logo.svg",
+            "link": "",
+            "image_width": 110,
+            "text": "<p>Elegida la marca #1 de <br/>Lubricantes y Aditivos de Alemania,<br/>presente en más de 150 países, <br/>¡el especialista alemán! <br/><br/>Conozca nuestros productos.<br/></p><p><strong>Contacto <br/>Email:</strong> <a href=\"mailto:info@liquimoly.com\">info@liquimoly.com</a><br/><strong>Teléfono:</strong> +591 78452415</p>"
+          }
+        },
+        "menu-1": {
+          "type": "menu",
+          "settings": {
+            "title": "Ofrecemos",
+            "menu": "menu-header-dev"
+          }
+        },
+        "menu-2": {
+          "type": "menu",
+          "settings": {
+            "title": "Información",
+            "menu": "footer"
+          }
+        },
+        "newsletter_ce4XdC": {
+          "type": "newsletter",
+          "settings": {
+            "title": "SUSCRÍBETE NOS COMUNICAREMOS CONTIGO LO MAS ANTES POSIBLE",
+            "text": "¡Manténgase al tanto de nuestras novedades y reciba actualizaciones de primera mano sobre nuevos productos y promociones!"
+          }
+        }
+      },
+      "block_order": [
+        "text-1",
+        "menu-1",
+        "menu-2",
+        "newsletter_ce4XdC"
+      ],
+      "settings": {
+        "payment_enable": true,
+        "enable_language_selector": true,
+        "enable_country_selector": true,
+        "enable_country_selector_flag": true,
+        "show_social": true,
+        "enable_follow_on_shop": true,
+        "color_scheme": "accent-1",
+        "background_image": "shopify://shop_images/Social_Media_Header_Facebook_cbc7f9e9-426c-4a4e-a90d-ef8bf80fb991.jpg",
+        "background_overlay_opacity": 75,
+        "social_icons_size": 32
+      }
+    }
+  },
+  "order": [
+    "footer-features",
+    "newsletter",
+    "footer"
+  ]
+}
