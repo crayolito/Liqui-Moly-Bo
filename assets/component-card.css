@@ -851,13 +851,6 @@ body.product-compare-toggled-on .card-product-compare-actions {
 /* Variation - Card media small
    (Collection grid section)
 =============================================================== */
-.section-collection-grid .card {
-  padding: 0 !important;
-  border-radius: 0 !important; /* Sin bordes por defecto */
-  box-shadow: none !important; /* Sin sombras/bordes */
-  background-color: transparent;
-}
-
 .card-media-sm {
   display: flex;
   flex-direction: column;
@@ -896,12 +889,6 @@ body.product-compare-toggled-on .card-product-compare-actions {
   overflow: hidden;
   flex-shrink: 0; /* No permite que se achique */
   border-radius: 0; /* Sin bordes redondeados */
-}
-
-.card-media-sm:hover .card-media img,
-.card-media-sm:hover .card-media svg {
-  transform: scale(1.08); /* Zoom sutil en la imagen */
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card-media-sm .card-media img,
@@ -985,63 +972,66 @@ body.product-compare-toggled-on .card-product-compare-actions {
   border-radius: 0; /* Imagen sin bordes */
 }
 
-/* Desktop: 6 columnas - última fila */
+/* ============================================
+   BORDER-RADIUS - PRIMERA FILA (Esquinas superiores)
+   ============================================ */
+
+/* Desktop: 6 columnas - primera fila */
 @media (min-width: 990px) {
-  /* Detectar elementos de la última fila - primera columna (esquina inferior izquierda) */
+  /* Primera fila - primera columna (esquina superior izquierda) */
   .section-collection-grid
     .grid-6-col-desktop
-    > .grid-item:nth-last-child(-n + 6):nth-child(6n + 1)
+    > .grid-item:nth-child(-n + 6):nth-child(6n + 1)
     .card-media-sm {
-    border-bottom-left-radius: var(--border-radius-base);
+    border-top-left-radius: var(--border-radius-base);
   }
 
-  /* Detectar elementos de la última fila - última columna (esquina inferior derecha) */
+  /* Primera fila - última columna (esquina superior derecha) */
   .section-collection-grid
     .grid-6-col-desktop
-    > .grid-item:nth-last-child(-n + 6):nth-child(6n)
+    > .grid-item:nth-child(-n + 6):nth-child(6n)
     .card-media-sm {
-    border-bottom-right-radius: var(--border-radius-base);
+    border-top-right-radius: var(--border-radius-base);
   }
 }
 
-/* Tablet: 2 columnas - última fila */
+/* Tablet: 2 columnas - primera fila */
 @media (min-width: 750px) and (max-width: 989px) {
-  /* Última fila - primera columna (impares) */
+  /* Primera fila - primera columna (impar) */
   .section-collection-grid
     .grid-2-col-tablet
-    > .grid-item:nth-last-child(-n + 2):nth-child(2n + 1)
+    > .grid-item:nth-child(-n + 2):nth-child(2n + 1)
     .card-media-sm {
-    border-bottom-left-radius: var(--border-radius-base);
+    border-top-left-radius: var(--border-radius-base);
   }
 
-  /* Última fila - segunda columna (pares) */
+  /* Primera fila - segunda columna (par) */
   .section-collection-grid
     .grid-2-col-tablet
-    > .grid-item:nth-last-child(-n + 2):nth-child(2n)
+    > .grid-item:nth-child(-n + 2):nth-child(2n)
     .card-media-sm {
-    border-bottom-right-radius: var(--border-radius-base);
+    border-top-right-radius: var(--border-radius-base);
   }
 }
 
-/* Mobile: 2 columnas - última fila */
+/* Mobile: 2 columnas - primera fila */
 @media (max-width: 749px) {
-  /* Última fila - primera columna (impares) */
+  /* Primera fila - primera columna (impar) */
   .section-collection-grid
     .grid-2-col
-    > .grid-item:nth-last-child(-n + 2):nth-child(2n + 1)
+    > .grid-item:nth-child(-n + 2):nth-child(2n + 1)
     .card-media-sm {
-    border-bottom-left-radius: var(--border-radius-base);
+    border-top-left-radius: var(--border-radius-base);
   }
 
-  /* Última fila - segunda columna (pares) */
+  /* Primera fila - segunda columna (par) */
   .section-collection-grid
     .grid-2-col
-    > .grid-item:nth-last-child(-n + 2):nth-child(2n)
+    > .grid-item:nth-child(-n + 2):nth-child(2n)
     .card-media-sm {
-    border-bottom-right-radius: var(--border-radius-base);
+    border-top-right-radius: var(--border-radius-base);
   }
 }
-
 /* Grid sin espacios para colecciones */
 .section-collection-grid .grid {
   gap: 0 !important;

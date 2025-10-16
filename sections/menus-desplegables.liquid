@@ -1,338 +1,336 @@
 {% comment %}
   =====================================================
   SECCIÓN: Menús Desplegables Responsivos
-  PROPÓSITO: 4 menús en fila (desktop) / columna expandible (móvil)
-  DEPENDENCIAS: CSS nativo, JavaScript vanilla
+  PROPÓSITO: 3-4 menús en columnas (desktop) / acordeón (móvil)
+  ESTILO: Basado en Link Index - Columns
   AUTOR: Tu nombre
   ÚLTIMA ACTUALIZACIÓN: 2024-10-16
   =====================================================
 {% endcomment %}
 
-{%- liquid
-    # Configuración de la sección desde el editor
-    assign titulo_seccion = section.settings.titulo_seccion
-    assign mostrar_titulo = section.settings.mostrar_titulo
-  -%}
-  
-  <!-- Contenedor principal de la sección -->
-  <div class="menus-desplegables-seccion" id="menus-seccion-{{ section.id }}">
-    
-    <!-- Título opcional de la sección -->
-    {% if mostrar_titulo and titulo_seccion != blank %}
-      <h2 class="menus-titulo-principal">{{ titulo_seccion }}</h2>
-    {% endif %}
-  
-    <!-- Contenedor de los 4 menús -->
-    <div class="menus-contenedor">
-      
-      {% comment %} Iteramos máximo 4 bloques de menú {% endcomment %}
-      {% for bloque in section.blocks limit: 4 %}
-        
-        {% comment %} Obtenemos datos de cada menú {% endcomment %}
-        {%- liquid
-          assign menu_handle = bloque.settings.menu_seleccionado
-          assign titulo_menu = bloque.settings.titulo_personalizado
-          assign menu_obj = linklists[menu_handle]
-          
-          # Si no hay título personalizado, usamos el del menú
-          if titulo_menu == blank and menu_obj
-            assign titulo_menu = menu_obj.title
-          endif
-        -%}
-  
-        <!-- Cada elemento de menú individual -->
-        <div class="menu-item" data-menu-index="{{ forloop.index }}">
-          
-          <!-- Título clickeable (especialmente para móvil) -->
-          <h3 class="menu-titulo" 
-              onclick="toggleMenu({{ forloop.index }})" 
-              role="button" 
-              tabindex="0"
-              aria-expanded="false"
-              aria-controls="menu-contenido-{{ forloop.index }}">
-            
-            {{ titulo_menu | default: 'Menú ' | append: forloop.index }}
-            
-            <!-- Icono de flecha para móvil -->
-            <span class="menu-flecha" aria-hidden="true">▼</span>
-          </h3>
-  
-          <!-- Contenido del menú (enlaces) -->
-          <div class="menu-contenido" 
-               id="menu-contenido-{{ forloop.index }}"
-               aria-hidden="true">
-            
-            {% if menu_obj and menu_obj.links.size > 0 %}
-              <ul class="menu-lista">
-                {% for link in menu_obj.links %}
-                  <li class="menu-link-item">
-                    <a href="{{ link.url }}" class="menu-enlace">
-                      {{ link.title }}
-                    </a>
-                  </li>
-                {% endfor %}
-              </ul>
-            {% else %}
-              <!-- Mensaje cuando no hay menú seleccionado -->
-              <p class="menu-vacio">
-                No hay menú seleccionado para este bloque
-              </p>
-            {% endif %}
-            
-          </div>
-        </div>
-        
-      {% endfor %}
-      
-      {% comment %} Si hay menos de 4 bloques, mostramos placeholders {% endcomment %}
-      {% assign bloques_faltantes = 4 | minus: section.blocks.size %}
-      {% if bloques_faltantes > 0 %}
-        {% for i in (1..bloques_faltantes) %}
-          <div class="menu-item menu-placeholder">
-            <h3 class="menu-titulo">Agregar Menú {{ section.blocks.size | plus: forloop.index }}</h3>
-            <div class="menu-contenido">
-              <p class="menu-vacio">Configura este menú desde el editor de temas</p>
+{% liquid
+  # Configuración de la sección desde el editor
+  assign titulo_seccion = section.settings.heading
+  assign mostrar_titulo = section.settings.mostrar_titulo
+  assign color_scheme_string = section.settings.color_scheme | append: ''
+  assign block_section_class = 'block-section'
+  unless color_scheme_string == 'background-1'
+    assign block_section_class = block_section_class | append: ' block-section-padded'
+  endunless
+%}
+
+<style>
+  #shopify-section-{{ section.id }} .block-section {
+    margin-top: {{ section.settings.spacing_top | times: 0.8 | round: 0 }}px;
+    margin-bottom: {{ section.settings.spacing_bottom | times: 0.8 | round: 0 }}px;
+  }
+
+  #shopify-section-{{ section.id }} .block-section-padded {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: {{ section.settings.spacing_top | times: 0.8 | round: 0 }}px;
+    padding-bottom: {{ section.settings.spacing_bottom | times: 0.8 | round: 0 }}px;
+  }
+
+  @media (min-width: 990px) {
+    #shopify-section-{{ section.id }} .block-section {
+      margin-top: {{ section.settings.spacing_top }}px;
+      margin-bottom: {{ section.settings.spacing_bottom }}px;
+    }
+
+    #shopify-section-{{ section.id }} .block-section-padded {
+      margin-top: 0;
+      margin-bottom: 0;
+      padding-top: {{ section.settings.spacing_top }}px;
+      padding-bottom: {{ section.settings.spacing_bottom }}px;
+    }
+  }
+</style>
+
+{%- capture visibility_classes -%}{%- render 'section-visibility-classes' -%}{%- endcapture -%}
+{%- assign visibility_classes = visibility_classes | strip -%}
+
+<!-- Contenedor principal con el mismo estilo que Link Index -->
+<div class="{{ visibility_classes }}">
+  <div class="color-{{ section.settings.color_scheme }}">
+    <div class="container">
+      <div class="{{ block_section_class }}">
+        <!-- Título opcional de la sección -->
+        {% if mostrar_titulo and titulo_seccion != blank %}
+          <div class="block-block-section-title-wrapper">
+            <div class="block-section-title-wrap">
+              <{{ section.settings.heading_tag }} class="block-section-title heading-size-{{ section.settings.heading_size }}">
+                {{- titulo_seccion -}}
+              </{{ section.settings.heading_tag }}>
             </div>
           </div>
-        {% endfor %}
-      {% endif %}
-  
+        {% endif %}
+
+        <!-- Contenedor de menús con estilo Link Index -->
+        <div class="menus-desplegables-grid">
+          {% comment %} Iteramos máximo 4 bloques de menú {% endcomment %}
+          {% for bloque in section.blocks limit: 4 %}
+            {% comment %} Obtenemos datos de cada menú {% endcomment %}
+            {%- liquid
+              assign menu_handle = bloque.settings.menu_seleccionado
+              assign titulo_menu = bloque.settings.titulo_personalizado
+              assign menu_obj = linklists[menu_handle]
+
+              # Si no hay título personalizado, usamos el del menú
+              if titulo_menu == blank and menu_obj
+                assign titulo_menu = menu_obj.title
+              endif
+            -%}
+
+            <!-- Cada columna de menú -->
+            <div class="menu-columna" data-menu-index="{{ forloop.index }}">
+              <!-- Título del menú -->
+              <h3
+                class="menu-columna__titulo"
+                onclick="toggleMenuMovil({{ forloop.index }})"
+                role="button"
+                tabindex="0"
+                aria-expanded="false"
+                aria-controls="menu-contenido-{{ forloop.index }}"
+              >
+                {{ titulo_menu | default: 'Menú ' | append: forloop.index }}
+                <span class="menu-icono-movil" aria-hidden="true">▼</span>
+              </h3>
+
+              <!-- Contenido del menú -->
+              <div
+                class="menu-columna__contenido"
+                id="menu-contenido-{{ forloop.index }}"
+                aria-hidden="false"
+              >
+                {% if menu_obj and menu_obj.links.size > 0 %}
+                  <ul class="menu-lista">
+                    {% for link in menu_obj.links %}
+                      <li>
+                        <a href="{{ link.url }}" class="menu-enlace">
+                          {{ link.title }}
+                        </a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% else %}
+                  <p class="menu-vacio">No hay menú seleccionado</p>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
     </div>
   </div>
-  
-  <!-- Estilos CSS integrados -->
-  <style>
-    /* =====================================================
-       ESTILOS BASE PARA MENÚS DESPLEGABLES
+</div>
+
+<!-- Estilos CSS basados en Link Index -->
+<style>
+  /* =====================================================
+       ESTILOS BASADOS EN LINK INDEX - COLUMNS
        ===================================================== */
-    
-    .menus-desplegables-seccion {
-      /* Espaciado de la sección */
-      padding: 2rem 1rem;
-      max-width: 1200px;
-      margin: 0 auto;
+
+  .menus-desplegables-grid {
+    /* Grid idéntico a flexi-link-index--groups-columns */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+
+  .menu-columna__titulo {
+    /* Mismo estilo que flexi-link-group__heading */
+    font-size: calc(var(--font-heading-scale) * 1.6rem);
+    margin: 0 0 1rem 0;
+    font-weight: 600;
+    cursor: default;
+    user-select: none;
+  }
+
+  .menu-icono-movil {
+    /* Icono oculto en desktop */
+    display: none;
+  }
+
+  .menu-columna__contenido {
+    /* Contenido siempre visible en desktop */
+    display: block;
+  }
+
+  .menu-lista {
+    /* Lista sin estilos */
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .menu-lista li {
+    /* Espaciado entre enlaces */
+    margin-bottom: 0.5rem;
+  }
+
+  .menu-lista li:last-child {
+    margin-bottom: 0;
+  }
+
+  .menu-enlace {
+    /* Estilo idéntico a flexi-link-index-link */
+    display: block;
+    color: rgba(var(--color-accent-1));
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  [class*='color-'] .menu-enlace:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 0.2rem;
+  }
+
+  .menu-vacio {
+    color: rgba(var(--color-foreground), 0.55);
+    font-style: italic;
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  /* =====================================================
+       RESPONSIVE: MÓVIL (990px y menor)
+       ===================================================== */
+
+  @media (max-width: 989px) {
+    .menus-desplegables-grid {
+      /* Cambia a columna en móvil */
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
     }
-  
-    .menus-titulo-principal {
-      /* Título principal de la sección */
-      text-align: center;
-      margin-bottom: 2rem;
-      font-size: 2rem;
-      color: #333;
-    }
-  
-    .menus-contenedor {
-      /* Contenedor principal flexbox */
-      display: flex;
-      gap: 1rem;
-    }
-  
-    .menu-item {
-      /* Cada elemento de menú */
-      flex: 1; /* Distribuye espacio equitativamente */
-      border: 1px solid #ddd;
-      border-radius: 8px;
+
+    .menu-columna {
+      /* Borde y padding para cada menú en móvil */
+      border: 1px solid rgba(var(--color-foreground), 0.1);
+      border-radius: 0.5rem;
       overflow: hidden;
-      background: #fff;
+      background: rgba(var(--color-background), 1);
     }
-  
-    .menu-titulo {
-      /* Título de cada menú */
-      margin: 0;
-      padding: 1rem;
-      background: #f8f9fa;
+
+    .menu-columna__titulo {
+      /* Título clickeable en móvil */
       cursor: pointer;
-      user-select: none;
+      padding: 1rem;
+      margin: 0;
+      background: rgba(var(--color-background), 1);
       transition: background-color 0.3s ease;
       position: relative;
-      font-size: 1.1rem;
-      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-  
-    .menu-titulo:hover {
-      background: #e9ecef;
+
+    .menu-columna__titulo:hover {
+      background: rgba(var(--color-foreground), 0.05);
     }
-  
-    .menu-flecha {
-      /* Flecha indicadora */
-      position: absolute;
-      right: 1rem;
-      top: 50%;
-      transform: translateY(-50%);
+
+    .menu-icono-movil {
+      /* Muestra icono en móvil */
+      display: inline-block;
       transition: transform 0.3s ease;
-      display: none; /* Oculta en desktop por defecto */
+      font-size: 0.8em;
     }
-  
-    .menu-contenido {
-      /* Contenido desplegable */
-      padding: 1rem;
-      background: #fff;
+
+    .menu-columna__contenido {
+      /* Oculta contenido por defecto en móvil */
+      display: none;
+      padding: 0 1rem 1rem 1rem;
     }
-  
-    .menu-lista {
-      /* Lista de enlaces */
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-  
-    .menu-link-item {
-      /* Cada elemento de la lista */
-      margin-bottom: 0.5rem;
-    }
-  
-    .menu-link-item:last-child {
-      margin-bottom: 0;
-    }
-  
-    .menu-enlace {
-      /* Estilos de enlaces */
-      text-decoration: none;
-      color: #555;
+
+    .menu-columna.activo .menu-columna__contenido {
+      /* Muestra contenido cuando está activo */
       display: block;
-      padding: 0.5rem 0;
-      transition: color 0.3s ease;
-      border-bottom: 1px solid transparent;
     }
-  
-    .menu-enlace:hover {
-      color: #007bff;
-      border-bottom-color: #007bff;
+
+    .menu-columna.activo .menu-icono-movil {
+      /* Rota icono cuando está activo */
+      transform: rotate(180deg);
     }
-  
-    .menu-vacio {
-      /* Mensaje cuando no hay contenido */
-      color: #888;
-      font-style: italic;
-      margin: 0;
-    }
-  
-    .menu-placeholder {
-      /* Placeholder para menús no configurados */
-      opacity: 0.6;
-    }
-  
-    /* =====================================================
-       RESPONSIVE: MÓVIL (768px y menor)
+  }
+</style>
+
+<!-- JavaScript para funcionalidad móvil -->
+<script>
+  /* =====================================================
+       JAVASCRIPT PARA ACORDEÓN MÓVIL
        ===================================================== */
-    
-    @media (max-width: 768px) {
-      .menus-contenedor {
-        /* Cambia a columna en móvil */
-        flex-direction: column;
-      }
-  
-      .menu-flecha {
-        /* Muestra flecha en móvil */
-        display: block;
-      }
-  
-      .menu-contenido {
-        /* Oculta contenido por defecto en móvil */
-        display: none;
-        padding: 0 1rem 1rem 1rem;
-      }
-  
-      .menu-item.activo .menu-contenido {
-        /* Muestra contenido cuando está activo */
-        display: block;
-      }
-  
-      .menu-item.activo .menu-flecha {
-        /* Rota flecha cuando está activo */
-        transform: translateY(-50%) rotate(180deg);
-      }
-  
-      .menu-titulo {
-        /* Ajusta padding en móvil */
-        padding: 1rem 3rem 1rem 1rem; /* Espacio para la flecha */
-      }
+
+  function toggleMenuMovil(indiceMenu) {
+    // Solo funciona en móvil (989px o menor)
+    if (window.innerWidth <= 989) {
+      // Encuentra el elemento del menú
+      const menuColumna = document.querySelector(`[data-menu-index="${indiceMenu}"]`);
+      const contenido = menuColumna.querySelector('.menu-columna__contenido');
+      const titulo = menuColumna.querySelector('.menu-columna__titulo');
+
+      // Toggle de la clase activo
+      menuColumna.classList.toggle('activo');
+
+      // Actualiza aria attributes para accesibilidad
+      const estaAbierto = menuColumna.classList.contains('activo');
+      titulo.setAttribute('aria-expanded', estaAbierto);
+      contenido.setAttribute('aria-hidden', !estaAbierto);
     }
-  
-    /* =====================================================
-       RESPONSIVE: TABLET (769px - 1024px)
-       ===================================================== */
-    
-    @media (min-width: 769px) and (max-width: 1024px) {
-      .menus-contenedor {
-        /* En tablet podemos hacer 2x2 grid */
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr 1fr;
-        gap: 1rem;
-      }
-    }
-  </style>
-  
-  <!-- JavaScript para funcionalidad móvil -->
-  <script>
-    /* =====================================================
-       JAVASCRIPT PARA MENÚS DESPLEGABLES
-       ===================================================== */
-    
-    function toggleMenu(indiceMenu) {
-      // Solo funciona en móvil (768px o menor)
-      if (window.innerWidth <= 768) {
-        
-        // Encuentra el elemento del menú
-        const menuItem = document.querySelector(`[data-menu-index="${indiceMenu}"]`);
-        const contenido = menuItem.querySelector('.menu-contenido');
-        const titulo = menuItem.querySelector('.menu-titulo');
-        
-        // Toggle de la clase activo
-        menuItem.classList.toggle('activo');
-        
-        // Actualiza aria-expanded para accesibilidad
-        const estaAbierto = menuItem.classList.contains('activo');
-        titulo.setAttribute('aria-expanded', estaAbierto);
-        contenido.setAttribute('aria-hidden', !estaAbierto);
-        
-        // Opcional: Cierra otros menús (comportamiento acordeón)
-        const otrosMenus = document.querySelectorAll('.menu-item:not([data-menu-index="' + indiceMenu + '"])');
-        otrosMenus.forEach(menu => {
-          menu.classList.remove('activo');
-          const otroTitulo = menu.querySelector('.menu-titulo');
-          const otroContenido = menu.querySelector('.menu-contenido');
-          otroTitulo.setAttribute('aria-expanded', 'false');
-          otroContenido.setAttribute('aria-hidden', 'true');
-        });
-      }
-    }
-  
-    // Manejador para redimensionado de ventana
-    window.addEventListener('resize', function() {
-      // Si cambiamos a desktop, muestra todos los contenidos
-      if (window.innerWidth > 768) {
-        const todosMenus = document.querySelectorAll('.menu-item');
-        todosMenus.forEach(menu => {
-          menu.classList.remove('activo');
-          const titulo = menu.querySelector('.menu-titulo');
-          const contenido = menu.querySelector('.menu-contenido');
+  }
+
+  // Manejador para redimensionado de ventana
+  window.addEventListener('resize', function () {
+    // Si cambiamos a desktop, muestra todos los contenidos
+    if (window.innerWidth > 989) {
+      const todosMenus = document.querySelectorAll('.menu-columna');
+      todosMenus.forEach((menu) => {
+        menu.classList.remove('activo');
+        const titulo = menu.querySelector('.menu-columna__titulo');
+        const contenido = menu.querySelector('.menu-columna__contenido');
+        if (titulo && contenido) {
           titulo.setAttribute('aria-expanded', 'true');
           contenido.setAttribute('aria-hidden', 'false');
-        });
-      }
-    });
-  
-    // Soporte para navegación por teclado
-    document.addEventListener('keydown', function(e) {
-      if (e.target.classList.contains('menu-titulo')) {
-        // Enter o Espacio activan el menú
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          const indice = e.target.closest('.menu-item').dataset.menuIndex;
-          toggleMenu(parseInt(indice));
         }
-      }
-    });
-  </script>
+      });
+    } else {
+      // En móvil, cierra todos por defecto
+      const todosMenus = document.querySelectorAll('.menu-columna');
+      todosMenus.forEach((menu) => {
+        if (!menu.classList.contains('activo')) {
+          const titulo = menu.querySelector('.menu-columna__titulo');
+          const contenido = menu.querySelector('.menu-columna__contenido');
+          if (titulo && contenido) {
+            titulo.setAttribute('aria-expanded', 'false');
+            contenido.setAttribute('aria-hidden', 'true');
+          }
+        }
+      });
+    }
+  });
 
-  {% schema %}
+  // Soporte para navegación por teclado
+  document.addEventListener('keydown', function (e) {
+    if (e.target.classList.contains('menu-columna__titulo')) {
+      // Enter o Espacio activan el menú en móvil
+      if ((e.key === 'Enter' || e.key === ' ') && window.innerWidth <= 989) {
+        e.preventDefault();
+        const indice = e.target.closest('.menu-columna').dataset.menuIndex;
+        toggleMenuMovil(parseInt(indice));
+      }
+    }
+  });
+</script>
+
+{% schema %}
 {
   "name": "Menús Desplegables",
   "tag": "section",
   "class": "section-menus-desplegables",
   "settings": [
+    {
+      "type": "header",
+      "content": "Contenido de la sección"
+    },
     {
       "type": "checkbox",
       "id": "mostrar_titulo",
@@ -340,28 +338,113 @@
       "default": true
     },
     {
-      "type": "text",
-      "id": "titulo_seccion",
+      "type": "inline_richtext",
+      "id": "heading",
       "label": "Título de la sección",
       "default": "Nuestros Menús"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "Tamaño del título",
+      "default": "md",
+      "options": [
+        {
+          "value": "sm",
+          "label": "Pequeño"
+        },
+        {
+          "value": "md",
+          "label": "Mediano"
+        },
+        {
+          "value": "lg",
+          "label": "Grande"
+        },
+        {
+          "value": "xl",
+          "label": "Extra grande"
+        },
+        {
+          "value": "xxl",
+          "label": "XXL"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Colores"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Esquema de color",
+      "default": "background-1"
+    },
+    {
+      "type": "header",
+      "content": "Espaciado de sección"
+    },
+    {
+      "type": "range",
+      "id": "spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 2,
+      "default": 60,
+      "label": "Espaciado superior"
+    },
+    {
+      "type": "range",
+      "id": "spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 2,
+      "default": 60,
+      "label": "Espaciado inferior"
+    },
+    {
+      "type": "header",
+      "content": "SEO"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Etiqueta del título",
+      "default": "h2",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        }
+      ]
     }
   ],
   "blocks": [
     {
       "type": "menu_block",
       "name": "Menú",
+      "limit": 4,
       "settings": [
         {
           "type": "link_list",
           "id": "menu_seleccionado",
           "label": "Seleccionar menú",
-          "info": "Elige el menú que quieres mostrar en esta columna"
+          "info": "Elige el menú que quieres mostrar"
         },
         {
           "type": "text",
           "id": "titulo_personalizado",
           "label": "Título personalizado (opcional)",
-          "info": "Si está vacío, usará el nombre del menú seleccionado"
+          "info": "Si está vacío, usará el nombre del menú"
         }
       ]
     }
