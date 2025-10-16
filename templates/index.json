@@ -570,7 +570,7 @@
         "hide_collection_description": false,
         "hide_collection_title": false,
         "hide_collection_button": true,
-        "collection_text_color": "#fff",
+        "collection_text_color": "#ffffff",
         "collection_button_text": "",
         "collection_button_color_scheme": "",
         "collection_box_align": "bottom-left",
@@ -729,32 +729,36 @@
         "menu_BmxXrm": {
           "type": "menu",
           "settings": {
-            "menu_seleccionado": "",
+            "menu_seleccionado": "menu-header-dev",
             "titulo_personalizado": "",
+            "mostrar_icono": false,
             "icon": "store"
           }
         },
         "menu_axypT6": {
           "type": "menu",
           "settings": {
-            "menu_seleccionado": "",
+            "menu_seleccionado": "footer",
             "titulo_personalizado": "",
+            "mostrar_icono": false,
             "icon": "box"
           }
         },
         "menu_49hUaN": {
           "type": "menu",
           "settings": {
-            "menu_seleccionado": "",
+            "menu_seleccionado": "main-menu",
             "titulo_personalizado": "",
+            "mostrar_icono": false,
             "icon": "truck"
           }
         },
         "menu_UbiiGL": {
           "type": "menu",
           "settings": {
-            "menu_seleccionado": "",
+            "menu_seleccionado": "categor-as",
             "titulo_personalizado": "",
+            "mostrar_icono": false,
             "icon": "phone"
           }
         }
