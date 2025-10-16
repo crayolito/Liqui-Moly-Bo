@@ -756,6 +756,33 @@
         "show_on_mobile": true,
         "hide_placeholders": false
       }
+    },
+    "dual_images_ftDgYx": {
+      "type": "dual-images",
+      "name": "Imágenes Duales",
+      "settings": {
+        "full_width": false,
+        "usar_bordes_redondeados": true,
+        "padding_superior": 20,
+        "padding_inferior": 20,
+        "espacio_entre_imagenes": 20,
+        "altura_desktop": 150,
+        "altura_mobile": 100,
+        "usar_fondo_suave": false,
+        "color_scheme": "",
+        "imagen_1_desktop": "shopify://shop_images/2s-motorcycle-2-d_43c0970d-8e91-4d07-b756-26756053b7b8.jpg",
+        "imagen_1_mobile": "shopify://shop_images/2s-motorcycle-2-m.jpg",
+        "alt_imagen_1": "",
+        "overlay_imagen_1": "linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3) 100%)",
+        "enlace_1": "",
+        "texto_enlace_1": "Ver más",
+        "imagen_2_desktop": "shopify://shop_images/2s-performance-update-d.webp",
+        "imagen_2_mobile": "shopify://shop_images/2s-performance-update-m.webp",
+        "alt_imagen_2": "",
+        "overlay_imagen_2": "linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3) 100%)",
+        "enlace_2": "",
+        "texto_enlace_2": "Ver más"
+      }
     }
   },
   "order": [
@@ -770,6 +797,7 @@
     "featured_collection_v2_xPFzRn",
     "countdown_banner_B8iADV",
     "brands",
-    "collection_grid_DHqATT"
+    "collection_grid_DHqATT",
+    "dual_images_ftDgYx"
   ]
 }
