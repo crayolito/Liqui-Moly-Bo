@@ -67,6 +67,7 @@
             assign menu_handle = bloque.settings.menu_seleccionado
             assign titulo_menu = bloque.settings.titulo_personalizado
             assign icono_menu = bloque.settings.icon
+            assign mostrar_icono = bloque.settings.mostrar_icono
             assign menu_obj = linklists[menu_handle]
 
             if titulo_menu == blank and menu_obj
@@ -84,7 +85,7 @@
                 data-menu-index="{{ forloop.index }}"
               >
                 <span>
-                  {% if icono_menu != blank %}
+                  {% if mostrar_icono and icono_menu != blank %}
                     {% render 'icons', icon: icono_menu %}
                   {% endif %}
                   {{ titulo_menu | default: 'Menú' }}
@@ -130,6 +131,14 @@
     display: block;
   }
 
+  /* Ocultar bordes en desktop */
+  @media (min-width: 990px) {
+    .menu-expandable-item .facet {
+      border-top: none !important;
+      border-bottom: none !important;
+    }
+  }
+
   /* Títulos en desktop siempre visibles */
   @media (min-width: 990px) {
     .menu-expandable-item .facet-toggle {
@@ -137,7 +146,7 @@
       pointer-events: none;
     }
 
-    .menu-expandable-item .facet-toggle {% render 'angle', direction: 'down' %} {
+    .menu-expandable-item .facet-toggle .angle {
       display: none;
     }
 
@@ -165,7 +174,7 @@
     transition: all 0.3s ease;
   }
 
-  [class*="color-"] .menu-link-item:hover {
+  [class*='color-'] .menu-link-item:hover {
     text-decoration: underline;
     text-decoration-thickness: 0.2rem;
   }
@@ -310,6 +319,12 @@
           "id": "titulo_personalizado",
           "label": "Título personalizado (opcional)",
           "info": "Si está vacío, usará el nombre del menú"
+        },
+        {
+          "type": "checkbox",
+          "id": "mostrar_icono",
+          "label": "Mostrar icono",
+          "default": true
         },
         {
           "type": "select",
