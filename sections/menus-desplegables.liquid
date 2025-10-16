@@ -1,15 +1,14 @@
 {% comment %}
   =====================================================
-  SECCIÓN: Menús Desplegables Responsivos
-  PROPÓSITO: 3-4 menús en columnas (desktop) / acordeón (móvil)
-  ESTILO: Basado en Link Index - Columns
-  AUTOR: Tu nombre
-  ÚLTIMA ACTUALIZACIÓN: 2024-10-16
+  SECCIÓN: Menús Desplegables con Diseño Expandable
+  MÓVIL: Estilo expandable con iconos y animación
+  DESKTOP: Grid centrado de 3-4 columnas
   =====================================================
 {% endcomment %}
 
+{{ 'component-facets.css' | asset_url | stylesheet_tag }}
+
 {% liquid
-  # Configuración de la sección desde el editor
   assign titulo_seccion = section.settings.heading
   assign mostrar_titulo = section.settings.mostrar_titulo
   assign color_scheme_string = section.settings.color_scheme | append: ''
@@ -47,141 +46,126 @@
   }
 </style>
 
-{%- assign visibility_classes = '' -%}
-{%- assign visibility_classes = visibility_classes | strip -%}
-
-<!-- Contenedor principal con el mismo estilo que Link Index -->
-<div class="{{ visibility_classes }}">
-  <div class="color-{{ section.settings.color_scheme }}">
-    <div class="container">
-      <div class="{{ block_section_class }}">
-        <!-- Título opcional de la sección -->
-        {% if mostrar_titulo and titulo_seccion != blank %}
-          <div class="block-block-section-title-wrapper">
-            <div class="block-section-title-wrap">
-              <{{ section.settings.heading_tag }} class="block-section-title heading-size-{{ section.settings.heading_size }}">
-                {{- titulo_seccion -}}
-              </{{ section.settings.heading_tag }}>
-            </div>
+<div class="color-{{ section.settings.color_scheme }}">
+  <div class="container {% if section.settings.narrow %} container-narrow{% endif %}">
+    <div class="{{ block_section_class }}">
+      <!-- Título de la sección -->
+      {% if mostrar_titulo and titulo_seccion != blank %}
+        <div class="block-block-section-title-wrapper">
+          <div class="block-section-title-wrap text-{{ section.settings.heading_alignment }}">
+            <{{ section.settings.heading_tag }} class="block-section-title heading-size-{{ section.settings.heading_size }}">
+              {{- titulo_seccion -}}
+            </{{ section.settings.heading_tag }}>
           </div>
-        {% endif %}
+        </div>
+      {% endif %}
 
-        <!-- Contenedor de menús con estilo Link Index -->
-        <div class="menus-desplegables-grid">
-          {% comment %} Iteramos máximo 4 bloques de menú {% endcomment %}
-          {% for bloque in section.blocks limit: 4 %}
-            {% comment %} Obtenemos datos de cada menú {% endcomment %}
-            {%- liquid
-              assign menu_handle = bloque.settings.menu_seleccionado
-              assign titulo_menu = bloque.settings.titulo_personalizado
-              assign menu_obj = linklists[menu_handle]
+      <!-- Contenedor de menús -->
+      <div class="menus-desplegables-container">
+        {% for bloque in section.blocks limit: 4 %}
+          {%- liquid
+            assign menu_handle = bloque.settings.menu_seleccionado
+            assign titulo_menu = bloque.settings.titulo_personalizado
+            assign icono_menu = bloque.settings.icon
+            assign menu_obj = linklists[menu_handle]
 
-              # Si no hay título personalizado, usamos el del menú
-              if titulo_menu == blank and menu_obj
-                assign titulo_menu = menu_obj.title
-              endif
-            -%}
+            if titulo_menu == blank and menu_obj
+              assign titulo_menu = menu_obj.title
+            endif
+          -%}
 
-            <!-- Cada columna de menú -->
-            <div class="menu-columna" data-menu-index="{{ forloop.index }}">
-              <!-- Título del menú -->
-              <h3
-                class="menu-columna__titulo"
-                onclick="toggleMenuMovil({{ forloop.index }})"
-                role="button"
-                tabindex="0"
+          <!-- Cada menú con estilo expandable -->
+          <collapsible-expandable expanded="false" class="menu-expandable-item">
+            <div class="facet">
+              <button
+                class="facet-toggle"
+                type="button"
                 aria-expanded="false"
-                aria-controls="menu-contenido-{{ forloop.index }}"
+                data-menu-index="{{ forloop.index }}"
               >
-                {{ titulo_menu | default: 'Menú ' | append: forloop.index }}
-                <span class="menu-icono-movil" aria-hidden="true">▼</span>
-              </h3>
+                <span>
+                  {% if icono_menu != blank %}
+                    {% render 'icons', icon: icono_menu %}
+                  {% endif %}
+                  {{ titulo_menu | default: 'Menú' }}
+                </span>
+                {% render 'angle', direction: 'down' %}
+              </button>
 
-              <!-- Contenido del menú -->
-              <div
-                class="menu-columna__contenido"
-                id="menu-contenido-{{ forloop.index }}"
-                aria-hidden="false"
-              >
+              <div class="facet-content menu-links-content">
                 {% if menu_obj and menu_obj.links.size > 0 %}
-                  <ul class="menu-lista">
+                  <ul class="menu-links-list">
                     {% for link in menu_obj.links %}
                       <li>
-                        <a href="{{ link.url }}" class="menu-enlace">
+                        <a href="{{ link.url }}" class="menu-link-item">
                           {{ link.title }}
                         </a>
                       </li>
                     {% endfor %}
                   </ul>
                 {% else %}
-                  <p class="menu-vacio">No hay menú seleccionado</p>
+                  <p class="menu-vacio">Selecciona un menú en la configuración</p>
                 {% endif %}
               </div>
             </div>
-          {% endfor %}
-        </div>
+          </collapsible-expandable>
+        {% endfor %}
       </div>
     </div>
   </div>
 </div>
 
-<!-- Estilos CSS basados en Link Index -->
 <style>
-  /* =====================================================
-       ESTILOS BASADOS EN LINK INDEX - COLUMNS
-       ===================================================== */
-
-  .menus-desplegables-grid {
-    /* Grid idéntico a flexi-link-index--groups-columns */
+  /* ===== ESTILOS DESKTOP: Grid centrado ===== */
+  .menus-desplegables-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
   }
 
-  .menu-columna__titulo {
-    /* Mismo estilo que flexi-link-group__heading */
-    font-size: calc(var(--font-heading-scale) * 1.6rem);
-    margin: 0 0 1rem 0;
-    font-weight: 600;
-    cursor: default;
-    user-select: none;
-  }
-
-  .menu-icono-movil {
-    /* Icono oculto en desktop */
-    display: none;
-  }
-
-  .menu-columna__contenido {
-    /* Contenido siempre visible en desktop */
+  /* Cada item de menú */
+  .menu-expandable-item {
     display: block;
   }
 
-  .menu-lista {
-    /* Lista sin estilos */
+  /* Títulos en desktop siempre visibles */
+  @media (min-width: 990px) {
+    .menu-expandable-item .facet-toggle {
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .menu-expandable-item .facet-toggle {% render 'angle', direction: 'down' %} {
+      display: none;
+    }
+
+    .menu-expandable-item .facet-content {
+      max-height: none !important;
+      overflow: visible !important;
+    }
+  }
+
+  /* Links del menú */
+  .menu-links-list {
     list-style: none;
     margin: 0;
     padding: 0;
   }
 
-  .menu-lista li {
-    /* Espaciado entre enlaces */
-    margin-bottom: 0.5rem;
+  .menu-links-list li {
+    margin-bottom: 0.8rem;
   }
 
-  .menu-lista li:last-child {
-    margin-bottom: 0;
-  }
-
-  .menu-enlace {
-    /* Estilo idéntico a flexi-link-index-link */
+  .menu-link-item {
     display: block;
     color: rgba(var(--color-accent-1));
     text-decoration: none;
     transition: all 0.3s ease;
   }
 
-  [class*='color-'] .menu-enlace:hover {
+  [class*="color-"] .menu-link-item:hover {
     text-decoration: underline;
     text-decoration-thickness: 0.2rem;
   }
@@ -193,133 +177,18 @@
     font-size: 0.9rem;
   }
 
-  /* =====================================================
-       RESPONSIVE: MÓVIL (990px y menor)
-       ===================================================== */
-
+  /* ===== MÓVIL: Columna completa ===== */
   @media (max-width: 989px) {
-    .menus-desplegables-grid {
-      /* Cambia a columna en móvil */
+    .menus-desplegables-container {
       grid-template-columns: 1fr;
-      gap: 0.5rem;
-    }
-
-    .menu-columna {
-      /* Borde y padding para cada menú en móvil */
-      border: 1px solid rgba(var(--color-foreground), 0.1);
-      border-radius: 0.5rem;
-      overflow: hidden;
-      background: rgba(var(--color-background), 1);
-    }
-
-    .menu-columna__titulo {
-      /* Título clickeable en móvil */
-      cursor: pointer;
-      padding: 1rem;
-      margin: 0;
-      background: rgba(var(--color-background), 1);
-      transition: background-color 0.3s ease;
-      position: relative;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .menu-columna__titulo:hover {
-      background: rgba(var(--color-foreground), 0.05);
-    }
-
-    .menu-icono-movil {
-      /* Muestra icono en móvil */
-      display: inline-block;
-      transition: transform 0.3s ease;
-      font-size: 0.8em;
-    }
-
-    .menu-columna__contenido {
-      /* Oculta contenido por defecto en móvil */
-      display: none;
-      padding: 0 1rem 1rem 1rem;
-    }
-
-    .menu-columna.activo .menu-columna__contenido {
-      /* Muestra contenido cuando está activo */
-      display: block;
-    }
-
-    .menu-columna.activo .menu-icono-movil {
-      /* Rota icono cuando está activo */
-      transform: rotate(180deg);
+      gap: 0;
     }
   }
 </style>
 
-<!-- JavaScript para funcionalidad móvil -->
-<script>
-  /* =====================================================
-       JAVASCRIPT PARA ACORDEÓN MÓVIL
-       ===================================================== */
-
-  function toggleMenuMovil(indiceMenu) {
-    // Solo funciona en móvil (989px o menor)
-    if (window.innerWidth <= 989) {
-      // Encuentra el elemento del menú
-      const menuColumna = document.querySelector(`[data-menu-index="${indiceMenu}"]`);
-      const contenido = menuColumna.querySelector('.menu-columna__contenido');
-      const titulo = menuColumna.querySelector('.menu-columna__titulo');
-
-      // Toggle de la clase activo
-      menuColumna.classList.toggle('activo');
-
-      // Actualiza aria attributes para accesibilidad
-      const estaAbierto = menuColumna.classList.contains('activo');
-      titulo.setAttribute('aria-expanded', estaAbierto);
-      contenido.setAttribute('aria-hidden', !estaAbierto);
-    }
-  }
-
-  // Manejador para redimensionado de ventana
-  window.addEventListener('resize', function () {
-    // Si cambiamos a desktop, muestra todos los contenidos
-    if (window.innerWidth > 989) {
-      const todosMenus = document.querySelectorAll('.menu-columna');
-      todosMenus.forEach((menu) => {
-        menu.classList.remove('activo');
-        const titulo = menu.querySelector('.menu-columna__titulo');
-        const contenido = menu.querySelector('.menu-columna__contenido');
-        if (titulo && contenido) {
-          titulo.setAttribute('aria-expanded', 'true');
-          contenido.setAttribute('aria-hidden', 'false');
-        }
-      });
-    } else {
-      // En móvil, cierra todos por defecto
-      const todosMenus = document.querySelectorAll('.menu-columna');
-      todosMenus.forEach((menu) => {
-        if (!menu.classList.contains('activo')) {
-          const titulo = menu.querySelector('.menu-columna__titulo');
-          const contenido = menu.querySelector('.menu-columna__contenido');
-          if (titulo && contenido) {
-            titulo.setAttribute('aria-expanded', 'false');
-            contenido.setAttribute('aria-hidden', 'true');
-          }
-        }
-      });
-    }
-  });
-
-  // Soporte para navegación por teclado
-  document.addEventListener('keydown', function (e) {
-    if (e.target.classList.contains('menu-columna__titulo')) {
-      // Enter o Espacio activan el menú en móvil
-      if ((e.key === 'Enter' || e.key === ' ') && window.innerWidth <= 989) {
-        e.preventDefault();
-        const indice = e.target.closest('.menu-columna').dataset.menuIndex;
-        toggleMenuMovil(parseInt(indice));
-      }
-    }
-  });
-</script>
+{%- if request.design_mode -%}
+  <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
 
 {% schema %}
 {
@@ -349,27 +218,33 @@
       "label": "Tamaño del título",
       "default": "md",
       "options": [
-        {
-          "value": "sm",
-          "label": "Pequeño"
-        },
-        {
-          "value": "md",
-          "label": "Mediano"
-        },
-        {
-          "value": "lg",
-          "label": "Grande"
-        },
-        {
-          "value": "xl",
-          "label": "Extra grande"
-        },
-        {
-          "value": "xxl",
-          "label": "XXL"
-        }
+        { "value": "sm", "label": "Pequeño" },
+        { "value": "md", "label": "Mediano" },
+        { "value": "lg", "label": "Grande" },
+        { "value": "xl", "label": "Extra grande" },
+        { "value": "xxl", "label": "XXL" }
       ]
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Alineación del título",
+      "default": "center",
+      "options": [
+        { "value": "left", "label": "Izquierda" },
+        { "value": "center", "label": "Centro" }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Diseño"
+    },
+    {
+      "type": "checkbox",
+      "id": "narrow",
+      "label": "Contenedor angosto",
+      "default": false,
+      "info": "Hace el contenedor más estrecho y centrado"
     },
     {
       "type": "header",
@@ -383,7 +258,7 @@
     },
     {
       "type": "header",
-      "content": "Espaciado de sección"
+      "content": "Espaciado"
     },
     {
       "type": "range",
@@ -413,38 +288,49 @@
       "label": "Etiqueta del título",
       "default": "h2",
       "options": [
-        {
-          "value": "h1",
-          "label": "H1"
-        },
-        {
-          "value": "h2",
-          "label": "H2"
-        },
-        {
-          "value": "h3",
-          "label": "H3"
-        }
+        { "value": "h1", "label": "H1" },
+        { "value": "h2", "label": "H2" },
+        { "value": "h3", "label": "H3" }
       ]
     }
   ],
   "blocks": [
     {
-      "type": "menu_block",
+      "type": "menu",
       "name": "Menú",
-      "limit": 4,
       "settings": [
         {
           "type": "link_list",
           "id": "menu_seleccionado",
           "label": "Seleccionar menú",
-          "info": "Elige el menú que quieres mostrar"
+          "info": "Elige el menú de navegación"
         },
         {
           "type": "text",
           "id": "titulo_personalizado",
           "label": "Título personalizado (opcional)",
           "info": "Si está vacío, usará el nombre del menú"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icono",
+          "options": [
+            { "label": "Sin icono", "value": "" },
+            { "label": "Tienda", "value": "store" },
+            { "label": "Bolsa", "value": "bag" },
+            { "label": "Etiquetas", "value": "tags" },
+            { "label": "Caja", "value": "box" },
+            { "label": "Menú", "value": "menu" },
+            { "label": "Info", "value": "info" },
+            { "label": "Teléfono", "value": "phone" },
+            { "label": "Email", "value": "email" },
+            { "label": "Ubicación", "value": "pin" },
+            { "label": "Camión", "value": "truck" },
+            { "label": "Estrella", "value": "star-full" },
+            { "label": "Corazón", "value": "heart" },
+            { "label": "Check", "value": "check" }
+          ]
         }
       ]
     }
@@ -454,18 +340,10 @@
     {
       "name": "Menús Desplegables",
       "blocks": [
-        {
-          "type": "menu_block"
-        },
-        {
-          "type": "menu_block"
-        },
-        {
-          "type": "menu_block"
-        },
-        {
-          "type": "menu_block"
-        }
+        { "type": "menu", "settings": { "icon": "store" } },
+        { "type": "menu", "settings": { "icon": "box" } },
+        { "type": "menu", "settings": { "icon": "truck" } },
+        { "type": "menu", "settings": { "icon": "phone" } }
       ]
     }
   ]
