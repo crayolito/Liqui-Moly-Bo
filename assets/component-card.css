@@ -868,22 +868,25 @@ body.product-compare-toggled-on .card-product-compare-actions {
   min-height: auto;
   padding: 1rem 0 0 0; /* Padding top para que la imagen no esté pegada */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
+  overflow: visible;
   background-color: rgba(var(--color-background));
   border: 1px solid rgba(var(--color-border)); /* Borde simple y limpio */
 }
 
-/* Hover más pronunciado - mantiene fondo sólido */
 .card-media-sm:hover {
-  transform: translateY(-8px); /* Elevación suave */
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Sombra dramática */
+  transform: scale(1.03); /* Escala ligeramente en lugar de elevar */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1),
+    /* Sombra suave cercana */ 0 8px 24px rgba(0, 0, 0, 0.15); /* Sombra difusa más alejada */
   z-index: 10; /* Por encima de otros elementos */
-  background-color: rgba(var(--color-background)); /* Mantiene fondo sólido */
-  border-color: rgba(var(--color-border), 0.5); /* Borde más visible en hover */
+  background-color: rgba(var(--color-background));
+  border-color: rgba(
+    var(--color-foreground),
+    0.2
+  ); /* Borde más visible pero sutil */
 }
 
 .card-media-sm-with-image {
-  padding: 0; /* Sin padding */
+  padding: 1.5rem 0 0 0; /* Mantiene padding superior para separar imagen del borde */
 }
 
 .card-media-sm .card-media {
@@ -893,6 +896,12 @@ body.product-compare-toggled-on .card-product-compare-actions {
   overflow: hidden;
   flex-shrink: 0; /* No permite que se achique */
   border-radius: 0; /* Sin bordes redondeados */
+}
+
+.card-media-sm:hover .card-media img,
+.card-media-sm:hover .card-media svg {
+  transform: scale(1.08); /* Zoom sutil en la imagen */
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card-media-sm .card-media img,
@@ -976,60 +985,60 @@ body.product-compare-toggled-on .card-product-compare-actions {
   border-radius: 0; /* Imagen sin bordes */
 }
 
-/* Desktop: 6 columnas */
+/* Desktop: 6 columnas - última fila */
 @media (min-width: 990px) {
-  /* Primera columna - esquina superior izquierda AL CARD */
+  /* Detectar elementos de la última fila - primera columna (esquina inferior izquierda) */
   .section-collection-grid
     .grid-6-col-desktop
-    > .grid-item:nth-child(6n + 1)
+    > .grid-item:nth-last-child(-n + 6):nth-child(6n + 1)
     .card-media-sm {
-    border-top-left-radius: var(--border-radius-base);
+    border-bottom-left-radius: var(--border-radius-base);
   }
 
-  /* Última columna - esquina superior derecha AL CARD */
+  /* Detectar elementos de la última fila - última columna (esquina inferior derecha) */
   .section-collection-grid
     .grid-6-col-desktop
-    > .grid-item:nth-child(6n)
+    > .grid-item:nth-last-child(-n + 6):nth-child(6n)
     .card-media-sm {
-    border-top-right-radius: var(--border-radius-base);
+    border-bottom-right-radius: var(--border-radius-base);
   }
 }
 
-/* Tablet: 2 columnas */
+/* Tablet: 2 columnas - última fila */
 @media (min-width: 750px) and (max-width: 989px) {
-  /* Primera columna (impares) AL CARD */
+  /* Última fila - primera columna (impares) */
   .section-collection-grid
     .grid-2-col-tablet
-    > .grid-item:nth-child(2n + 1)
+    > .grid-item:nth-last-child(-n + 2):nth-child(2n + 1)
     .card-media-sm {
-    border-top-left-radius: var(--border-radius-base);
+    border-bottom-left-radius: var(--border-radius-base);
   }
 
-  /* Segunda columna (pares) AL CARD */
+  /* Última fila - segunda columna (pares) */
   .section-collection-grid
     .grid-2-col-tablet
-    > .grid-item:nth-child(2n)
+    > .grid-item:nth-last-child(-n + 2):nth-child(2n)
     .card-media-sm {
-    border-top-right-radius: var(--border-radius-base);
+    border-bottom-right-radius: var(--border-radius-base);
   }
 }
 
-/* Mobile: 2 columnas */
+/* Mobile: 2 columnas - última fila */
 @media (max-width: 749px) {
-  /* Primera columna (impares) AL CARD */
+  /* Última fila - primera columna (impares) */
   .section-collection-grid
     .grid-2-col
-    > .grid-item:nth-child(2n + 1)
+    > .grid-item:nth-last-child(-n + 2):nth-child(2n + 1)
     .card-media-sm {
-    border-top-left-radius: var(--border-radius-base);
+    border-bottom-left-radius: var(--border-radius-base);
   }
 
-  /* Segunda columna (pares) AL CARD */
+  /* Última fila - segunda columna (pares) */
   .section-collection-grid
     .grid-2-col
-    > .grid-item:nth-child(2n)
+    > .grid-item:nth-last-child(-n + 2):nth-child(2n)
     .card-media-sm {
-    border-top-right-radius: var(--border-radius-base);
+    border-bottom-right-radius: var(--border-radius-base);
   }
 }
 
