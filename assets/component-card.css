@@ -851,6 +851,12 @@ body.product-compare-toggled-on .card-product-compare-actions {
 /* Variation - Card media small
    (Collection grid section)
 =============================================================== */
+.section-collection-grid .card {
+  border-radius: 0 !important; /* Sin bordes por defecto */
+  box-shadow: none !important; /* Sin sombras/bordes */
+  background-color: transparent;
+}
+
 .card-media-sm {
   display: flex;
   flex-direction: column;
