@@ -783,6 +783,44 @@
         "enlace_2": "",
         "texto_enlace_2": "Ver más"
       }
+    },
+    "featured_collection_v1_cqFibQ": {
+      "type": "featured-collection-v1",
+      "name": "Featured Collection V1",
+      "settings": {
+        "heading": "LOS MAS VENDIDOS",
+        "heading_size": "md",
+        "subheading": "",
+        "collection": "ofertas",
+        "products_to_show": 12,
+        "products": [],
+        "show_vendor": true,
+        "show_stock": true,
+        "show_rating": false,
+        "product_image_fit": "contain",
+        "show_collection": false,
+        "collection_overlay_background": "linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8) 100%)",
+        "collection_title": "",
+        "collection_description": "",
+        "hide_collection_description": false,
+        "hide_collection_title": false,
+        "hide_collection_button": false,
+        "collection_text_color": "#ffffff",
+        "collection_button_text": "",
+        "collection_button_color_scheme": "",
+        "collection_box_align": "bottom-left",
+        "layout": "slider",
+        "columns": "4",
+        "stack_on_mobile": false,
+        "mobile_columns": "1",
+        "color_scheme": "",
+        "spacing_top": 20,
+        "spacing_bottom": 20,
+        "heading_tag": "h2",
+        "show_on_desktop": true,
+        "show_on_mobile": true,
+        "hide_placeholders": false
+      }
     }
   },
   "order": [
@@ -798,6 +836,7 @@
     "countdown_banner_B8iADV",
     "brands",
     "collection_grid_DHqATT",
-    "dual_images_ftDgYx"
+    "dual_images_ftDgYx",
+    "featured_collection_v1_cqFibQ"
   ]
 }
