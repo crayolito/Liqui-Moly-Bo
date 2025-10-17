@@ -213,7 +213,15 @@
     #shopify-section-{{ section.id }} .card-product .card-info {
       background-color: #ffffff !important;
     }
+
     /* Mostrar/ocultar imágenes según dispositivo */
+    #shopify-section-{{ section.id }} .visible-mobile-only,
+    #shopify-section-{{ section.id }} .hidden-mobile {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
     #shopify-section-{{ section.id }} .visible-mobile-only {
       display: block;
     }
