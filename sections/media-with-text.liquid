@@ -1,7 +1,7 @@
 {% liquid
   assign is_empty = true
 
-  if section.settings.image == blank and section.settings.video_url == blank
+  if section.settings.image == blank
     assign is_empty = true
   endif
 
@@ -16,8 +16,6 @@
 %}
 {%- unless hide_because_empty -%}
   {{ 'section-media-with-text.css' | asset_url | stylesheet_tag }}
-  {{ 'section-video.css' | asset_url | stylesheet_tag }}
-  {{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
   {{ 'component-card.css' | asset_url | stylesheet_tag }}
   {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
@@ -56,14 +54,48 @@
     	}
     }
 
-    /* Ajustar proporciones para productos */
+    /* Imagen - altura mínima en móvil y sin restricción de aspect-ratio */
+    #shopify-section-{{ section.id }} .media-with-text-media-item {
+      min-height: 400px;
+    }
+
+    #shopify-section-{{ section.id }} .media-with-text-media-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: {% if section.settings.image_full_space %}cover{% else %}contain{% endif %};
+      border-radius: var(--border-radius-base);
+    }
+
+    /* Proporciones: 40% imagen, 60% productos en desktop */
     @media (min-width: 750px) {
       #shopify-section-{{ section.id }} .media-with-text-media-item {
-        width: 35%;
+        width: 40%;
+        min-height: 500px;
       }
 
       #shopify-section-{{ section.id }} .media-with-text-text-item {
-        width: 65%;
+        width: 60%;
+        padding-left: 2rem;
+      }
+
+      #shopify-section-{{ section.id }} .media-with-text-grid-reverse .media-with-text-text-item {
+        padding-left: 0;
+        padding-right: 2rem;
+      }
+    }
+
+    @media (min-width: 990px) {
+      #shopify-section-{{ section.id }} .media-with-text-media-item {
+        min-height: 600px;
+      }
+
+      #shopify-section-{{ section.id }} .media-with-text-text-item {
+        padding-left: 3rem;
+      }
+
+      #shopify-section-{{ section.id }} .media-with-text-grid-reverse .media-with-text-text-item {
+        padding-left: 0;
+        padding-right: 3rem;
       }
     }
 
@@ -71,10 +103,18 @@
     {% if section.settings.image_full_space %}
     #shopify-section-{{ section.id }} .media-with-text-media {
       padding: 0;
+      height: 100%;
+    }
+    #shopify-section-{{ section.id }} .media-with-text-media img {
+      object-fit: cover !important;
     }
     {% else %}
     #shopify-section-{{ section.id }} .media-with-text-media {
       padding: 2rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     {% endif %}
 
@@ -83,9 +123,10 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 1.5rem;
+      width: 100%;
     }
 
-    /* 3 columnas en tablet/desktop para 6 productos */
+    /* 2 columnas en tablet, 3 columnas en desktop para 6 productos */
     @media (min-width: 750px) {
       #shopify-section-{{ section.id }} .products-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -96,27 +137,57 @@
     @media (min-width: 990px) {
       #shopify-section-{{ section.id }} .products-grid {
         grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
       }
     }
 
-    /* Ocultar vendor y botón en productos */
-    #shopify-section-{{ section.id }} .card-product .card-vendor,
-    #shopify-section-{{ section.id }} .card-product .card-footer {
+    /* Ocultar vendor (está en card-eyebrow dentro de card-info) */
+    #shopify-section-{{ section.id }} .card-product .card-eyebrow,
+    #shopify-section-{{ section.id }} .card-product .card-vendor {
       display: none !important;
     }
 
-    /* Ocultar descripción */
-    #shopify-section-{{ section.id }} .card-product-description {
+    /* Ocultar botón de agregar al carrito */
+    #shopify-section-{{ section.id }} .card-product .card-product-add-to-cart,
+    #shopify-section-{{ section.id }} .card-product .button {
       display: none !important;
+    }
+
+    /* Ocultar descripción y rating */
+    #shopify-section-{{ section.id }} .card-product-description,
+    #shopify-section-{{ section.id }} .card-product .card-rating {
+      display: none !important;
+    }
+
+    /* Ocultar badge de stock */
+    #shopify-section-{{ section.id }} .card-product .badge-stock {
+      display: none !important;
+    }
+
+    /* Mantener visible los precios */
+    #shopify-section-{{ section.id }} .card-product .card-footer {
+      display: block !important;
+    }
+
+    #shopify-section-{{ section.id }} .card-product .card-footer-intro {
+      display: none !important;
+    }
+
+    #shopify-section-{{ section.id }} .card-product .price {
+      display: block !important;
     }
 
     /* Título del producto más suave */
     #shopify-section-{{ section.id }} .card-product .card-heading {
       font-weight: 400 !important;
-      font-size: 1.4rem;
+      font-size: 1.3rem !important;
     }
 
     /* Ajustar imagen del producto */
+    #shopify-section-{{ section.id }} .card-product .card-media {
+      background-color: rgba(var(--color-background));
+    }
+
     #shopify-section-{{ section.id }} .card-product .card-media img {
       object-fit: contain;
       object-position: center;
@@ -125,8 +196,8 @@
 
   {%- capture visibility_classes -%}{%- render 'section-visibility-classes' -%}{%- endcapture -%}
   {%- assign visibility_classes = visibility_classes | strip -%}
-  {%- assign image_sizes = '(min-width: 990px) 35vw, (min-width: 750px) 35vw, 100vw' -%}
-  {%- assign image_widths = '200, 420, 680, 850, 1000' -%}
+  {%- assign image_sizes = '(min-width: 990px) 40vw, (min-width: 750px) 40vw, 100vw' -%}
+  {%- assign image_widths = '400, 600, 800, 1000, 1200' -%}
 
   <div class="{{ visibility_classes }}">
     <div class="color-{{ section.settings.color_scheme }}">
@@ -137,41 +208,15 @@
               <!-- Imagen -->
               <div class="media-with-text-media-item">
                 <div class="media-with-text-media">
-                  {% if section.settings.video_url != blank %}
-                    {% render 'video',
-                      media_id: section.settings.video_url.id,
-                      video_url: section.settings.video_url,
-                      cover_image: section.settings.image,
-                      description: section.settings.image.alt,
-                      image_sizes: image_sizes,
-                      image_widths: image_widths
-                    %}
-                  {% else %}
-                    {%- if section.settings.image != blank -%}
-                      {% liquid
-                        assign ratio = 0
-                        if section.settings.image and section.settings.image.aspect_ratio != 0 and section.settings.image.aspect_ratio != null
-                          assign ratio = section.settings.image.aspect_ratio
-                        endif
-                      %}
-                      {% if ratio != 0 %}
-                        <div
-                          class="aspect-ratio"
-                          style="--ratio-percent: {{ 1 | divided_by: ratio | times: 100 }}%;"
-                        >
-                      {% endif %}
-                      {{
-                        section.settings.image
-                        | image_url: width: 1000
-                        | image_tag: widths: image_widths, sizes: image_sizes
-                      }}
-                      {% if ratio != 0 %}
-                        </div>
-                      {% endif %}
-                    {%- else -%}
-                      {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
-                    {%- endif -%}
-                  {% endif %}
+                  {%- if section.settings.image != blank -%}
+                    {{
+                      section.settings.image
+                      | image_url: width: 1200
+                      | image_tag: widths: image_widths, sizes: image_sizes, loading: 'lazy'
+                    }}
+                  {%- else -%}
+                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                  {%- endif -%}
                 </div>
               </div>
 
@@ -231,7 +276,7 @@
   "settings": [
     {
       "type": "header",
-      "content": "Imagen / Video"
+      "content": "Imagen"
     },
     {
       "type": "image_picker",
@@ -243,16 +288,8 @@
       "type": "checkbox",
       "id": "image_full_space",
       "label": "Imagen ocupa todo el espacio",
-      "info": "Si está activado, la imagen no tendrá padding interno",
+      "info": "Si está activado, la imagen cubrirá todo el espacio sin padding (cover). Si está desactivado, la imagen se mostrará completa con padding (contain)",
       "default": false
-    },
-    {
-      "type": "video_url",
-      "id": "video_url",
-      "label": "Video URL",
-      "accept": ["youtube", "vimeo"],
-      "placeholder": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
-      "info": "Opcional: Video en lugar de imagen"
     },
     {
       "type": "header",
@@ -273,7 +310,7 @@
       "id": "layout",
       "label": "Diseño",
       "default": "media_first",
-      "info": "Posición de la imagen",
+      "info": "Posición de la imagen (40% imagen, 60% productos)",
       "options": [
         {
           "value": "media_first",
