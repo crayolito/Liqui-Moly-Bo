@@ -70,11 +70,9 @@
       #shopify-section-{{ section.id }} .section-countdown-banner-wrap {
         position: relative;
         overflow: hidden;
-        /* REMOVIDO: display: grid y place-items que causaban el problema */
       }
 
       #shopify-section-{{ section.id }} .section-countdown-banner-backdrop {
-        /* La imagen de fondo que dicta la altura del contenedor */
         width: 100%;
         height: auto;
         display: block;
@@ -83,7 +81,6 @@
       }
 
       #shopify-section-{{ section.id }} .section-countdown-banner-wrap-inner {
-        /* Contenido superpuesto sobre la imagen */
         position: absolute;
         top: 0;
         left: 0;
@@ -126,10 +123,69 @@
       <div class="{% if section.settings.full_width %} block-section-fullwidth{% else %} container{% endif %}">
         <div class="block-section">
           <div class="section-countdown-banner-wrap color-{{ section.settings.color_scheme }}">
-            {%- comment -%}
-              Si es solo imagen, convertir todo en un enlace clickeable
-            {%- endcomment -%}
+            {%- comment -%} PRIMERO LA IMAGEN {%- endcomment -%}
+            {% if section.settings.background_image %}
+              {% capture image_sizes %}
+							{% if section.settings.full_width == true %}
+								100vw
+							{% else %}
+								(min-width: 1420px) 1420px, calc(100vw - 3rem)
+							{% endif %}
+						{% endcapture %}
 
+              <picture>
+                {% if section.settings.mobile_background_image %}
+                  <source
+                    srcset="
+                      {% if section.settings.mobile_background_image.width >= 375 %}{{ section.settings.mobile_background_image | image_url: width: 375 }} 375w,{% endif %}
+                      {% if section.settings.mobile_background_image.width >= 550 %}{{ section.settings.mobile_background_image | image_url: width: 550 }} 550w,{% endif %}
+                      {% if section.settings.mobile_background_image.width >= 750 %}{{ section.settings.mobile_background_image | image_url: width: 750 }} 750w,{% endif %}
+                      {% if section.settings.mobile_background_image.width >= 1100 %}{{ section.settings.mobile_background_image | image_url: width: 1100 }} 1100w,{% endif %}
+                      {% if section.settings.mobile_background_image.width >= 1420 %}{{ section.settings.mobile_background_image | image_url: width: 1420 }} 1420w,{% endif %}
+                      {% if section.settings.mobile_background_image.width >= 2000 %}{{ section.settings.mobile_background_image | image_url: width: 2000 }} 2000w,{% endif %}
+                      {% if section.settings.mobile_background_image.width >= 2480 %}{{ section.settings.mobile_background_image | image_url: width: 2480 }} 2480w,{% endif %}
+                      {% if section.settings.mobile_background_image.width >= 3000 %}{{ section.settings.mobile_background_image | image_url: width: 3000 }} 3000w,{% endif %}
+                      {% if section.settings.mobile_background_image.width >= 3840 %}{{ section.settings.mobile_background_image | image_url: width: 3840 }} 3840w,{% endif %}
+                      {{ section.settings.mobile_background_image | image_url }} {{ section.settings.mobile_background_image.width }}w
+                    "
+                    sizes="{{ image_sizes }}"
+                    media="(max-width: 749px)"
+                  >
+                {% endif %}
+
+                <source
+                  srcset="
+                    {% if section.settings.background_image.width >= 375 %}{{ section.settings.background_image | image_url: width: 375 }} 375w,{% endif %}
+                    {% if section.settings.background_image.width >= 550 %}{{ section.settings.background_image | image_url: width: 550 }} 550w,{% endif %}
+                    {% if section.settings.background_image.width >= 750 %}{{ section.settings.background_image | image_url: width: 750 }} 750w,{% endif %}
+                    {% if section.settings.background_image.width >= 1100 %}{{ section.settings.background_image | image_url: width: 1100 }} 1100w,{% endif %}
+                    {% if section.settings.background_image.width >= 1420 %}{{ section.settings.background_image | image_url: width: 1420 }} 1420w,{% endif %}
+                    {% if section.settings.background_image.width >= 2000 %}{{ section.settings.background_image | image_url: width: 2000 }} 2000w,{% endif %}
+                    {% if section.settings.background_image.width >= 2480 %}{{ section.settings.background_image | image_url: width: 2480 }} 2480w,{% endif %}
+                    {% if section.settings.background_image.width >= 3000 %}{{ section.settings.background_image | image_url: width: 3000 }} 3000w,{% endif %}
+                    {% if section.settings.background_image.width >= 3840 %}{{ section.settings.background_image | image_url: width: 3840 }} 3840w,{% endif %}
+                    {{ section.settings.background_image | image_url }} {{ section.settings.background_image.width }}w
+                  "
+                  sizes="{{ image_sizes }}"
+                  {% if section.settings.mobile_background_image != blank %}
+                    media="(min-width: 750px)"
+                  {% endif %}
+                >
+
+                {{
+                  section.settings.background_image
+                  | image_url: width: 3840
+                  | image_tag:
+                    class: 'section-countdown-banner-backdrop',
+                    widths: '375, 550, 750, 1100, 1420, 2000, 2480, 3000, 3840',
+                    sizes: image_sizes,
+                    fetchpriority: fetch_priority,
+                    loading: lazy
+                }}
+              </picture>
+            {% endif %}
+
+            {%- comment -%} DESPUÉS EL CONTENIDO SUPERPUESTO {%- endcomment -%}
             {% if is_image_only %}
               <a
                 href="{{ section.settings.link }}"
@@ -198,70 +254,6 @@
             {% if section.settings.full_width %}
               </div>
             {% endif %}
-
-            {% if section.settings.background_image %}
-              {% capture image_sizes %}
-							{% if section.settings.full_width == true %}
-								100vw
-							{% else %}
-								(min-width: 1420px) 1420px, calc(100vw - 3rem)
-							{% endif %}
-						{% endcapture %}
-
-              <picture>
-                {% if section.settings.mobile_background_image %}
-                  <source
-                    srcset="
-                      {% if section.settings.mobile_background_image.width >= 375 %}{{ section.settings.mobile_background_image | image_url: width: 375 }} 375w,{% endif %}
-                      {% if section.settings.mobile_background_image.width >= 550 %}{{ section.settings.mobile_background_image | image_url: width: 550 }} 550w,{% endif %}
-                      {% if section.settings.mobile_background_image.width >= 750 %}{{ section.settings.mobile_background_image | image_url: width: 750 }} 750w,{% endif %}
-                      {% if section.settings.mobile_background_image.width >= 1100 %}{{ section.settings.mobile_background_image | image_url: width: 1100 }} 1100w,{% endif %}
-                      {% if section.settings.mobile_background_image.width >= 1420 %}{{ section.settings.mobile_background_image | image_url: width: 1420 }} 1420w,{% endif %}
-                      {% if section.settings.mobile_background_image.width >= 2000 %}{{ section.settings.mobile_background_image | image_url: width: 2000 }} 2000w,{% endif %}
-                      {% if section.settings.mobile_background_image.width >= 2480 %}{{ section.settings.mobile_background_image | image_url: width: 2480 }} 2480w,{% endif %}
-                      {% if section.settings.mobile_background_image.width >= 3000 %}{{ section.settings.mobile_background_image | image_url: width: 3000 }} 3000w,{% endif %}
-                      {% if section.settings.mobile_background_image.width >= 3840 %}{{ section.settings.mobile_background_image | image_url: width: 3840 }} 3840w,{% endif %}
-                      {{ section.settings.mobile_background_image | image_url }} {{ section.settings.mobile_background_image.width }}w
-                    "
-                    sizes="{{ image_sizes }}"
-                    media="(max-width: 749px)"
-                  >
-                {% endif %}
-
-                <source
-                  srcset="
-                    {% if section.settings.background_image.width >= 375 %}{{ section.settings.background_image | image_url: width: 375 }} 375w,{% endif %}
-                    {% if section.settings.background_image.width >= 550 %}{{ section.settings.background_image | image_url: width: 550 }} 550w,{% endif %}
-                    {% if section.settings.background_image.width >= 750 %}{{ section.settings.background_image | image_url: width: 750 }} 750w,{% endif %}
-                    {% if section.settings.background_image.width >= 1100 %}{{ section.settings.background_image | image_url: width: 1100 }} 1100w,{% endif %}
-                    {% if section.settings.background_image.width >= 1420 %}{{ section.settings.background_image | image_url: width: 1420 }} 1420w,{% endif %}
-                    {% if section.settings.background_image.width >= 2000 %}{{ section.settings.background_image | image_url: width: 2000 }} 2000w,{% endif %}
-                    {% if section.settings.background_image.width >= 2480 %}{{ section.settings.background_image | image_url: width: 2480 }} 2480w,{% endif %}
-                    {% if section.settings.background_image.width >= 3000 %}{{ section.settings.background_image | image_url: width: 3000 }} 3000w,{% endif %}
-                    {% if section.settings.background_image.width >= 3840 %}{{ section.settings.background_image | image_url: width: 3840 }} 3840w,{% endif %}
-                    {{ section.settings.background_image | image_url }} {{ section.settings.background_image.width }}w
-                  "
-                  sizes="{{ image_sizes }}"
-                  {% if section.settings.mobile_background_image != blank %}
-                    media="(min-width: 750px)"
-                  {% endif %}
-                >
-
-                {{
-                  section.settings.background_image
-                  | image_url: width: 3840
-                  | image_tag:
-                    class: 'section-countdown-banner-backdrop',
-                    widths: '375, 550, 750, 1100, 1420, 2000, 2480, 3000, 3840',
-                    sizes: image_sizes,
-                    fetchpriority: fetch_priority,
-                    loading: lazy
-                }}
-              </picture>
-            {% endif %}
-            {%- comment -%}
-              Cerrar el enlace o div según el caso
-            {%- endcomment -%}
             {% if is_image_only %}
               </a>
             {% else %}
