@@ -56,23 +56,23 @@
 
   <style>
     #shopify-section-{{ section.id }} .card-overlay::after {
-    	background: {{ section.settings.collection_overlay_background }};
+      background: {{ section.settings.collection_overlay_background }};
     }
 
     #shopify-section-{{ section.id }} .card-overlay .card-overlay-info {
-    	color: {{ section.settings.collection_text_color }};
+      color: {{ section.settings.collection_text_color }};
     }
 
     #shopify-section-{{ section.id }} .block-section {
-    	margin-top: {{ section.settings.spacing_top | times: 0.8 | round: 0 }}px;
-    	margin-bottom: {{ section.settings.spacing_bottom | times: 0.8 | round: 0 }}px;
+      margin-top: {{ section.settings.spacing_top | times: 0.8 | round: 0 }}px;
+      margin-bottom: {{ section.settings.spacing_bottom | times: 0.8 | round: 0 }}px;
     }
 
     #shopify-section-{{ section.id }} .block-section-padded {
-    	margin-top: 0;
-    	margin-bottom: 0;
-    	padding-top: {{ section.settings.spacing_top | times: 0.8 | round: 0 }}px;
-    	padding-bottom: {{ section.settings.spacing_bottom | times: 0.8 | round: 0 }}px;
+      margin-top: 0;
+      margin-bottom: 0;
+      padding-top: {{ section.settings.spacing_top | times: 0.8 | round: 0 }}px;
+      padding-bottom: {{ section.settings.spacing_bottom | times: 0.8 | round: 0 }}px;
     }
 
     /* Control de object-fit para imágenes de productos */
@@ -108,21 +108,30 @@
       transition: inherit;
     }
 
-    @media (min-width: 990px) {
-    	#shopify-section-{{ section.id }} .block-section {
-    		margin-top: {{ section.settings.spacing_top }}px;
-    		margin-bottom: {{ section.settings.spacing_bottom }}px;
-    	}
+    /* Ocultar descripción de productos */
+    #shopify-section-{{ section.id }} .card-product-description {
+      display: none !important;
+    }
 
-    	#shopify-section-{{ section.id }} .block-section-padded {
-    		margin-top: 0;
-    		margin-bottom: 0;
-    		padding-top: {{ section.settings.spacing_top }}px;
-    		padding-bottom: {{ section.settings.spacing_bottom }}px;
-    	}
+    /* Quitar negrita del título de producto - hacerlo suave */
+    #shopify-section-{{ section.id }} .card-product .card-heading {
+      font-weight: 400 !important;
+    }
+
+    @media (min-width: 990px) {
+      #shopify-section-{{ section.id }} .block-section {
+        margin-top: {{ section.settings.spacing_top }}px;
+        margin-bottom: {{ section.settings.spacing_bottom }}px;
+      }
+
+      #shopify-section-{{ section.id }} .block-section-padded {
+        margin-top: 0;
+        margin-bottom: 0;
+        padding-top: {{ section.settings.spacing_top }}px;
+        padding-bottom: {{ section.settings.spacing_bottom }}px;
+      }
     }
   </style>
-
   {%- capture visibility_classes -%}{%- render 'section-visibility-classes' -%}{%- endcapture -%}
   {%- assign visibility_classes = visibility_classes | strip -%}
 
