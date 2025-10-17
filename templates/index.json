@@ -494,6 +494,7 @@
       "name": "t:sections.media_with_text.presets.name",
       "settings": {
         "image": "shopify://shop_images/Werkstatt.jpg_1.jpg",
+        "image_mobile": "shopify://shop_images/csm_Privatkunden.jpg_3fd33bf65d.jpg",
         "image_full_space": true,
         "collection": "productos-mas-vendidos",
         "layout": "media_first",
