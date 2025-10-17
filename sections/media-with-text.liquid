@@ -57,17 +57,22 @@
     /* Imagen - ocupa todo el ancho en móvil */
     #shopify-section-{{ section.id }} .media-with-text-media-item {
       width: 100%;
-      min-height: 400px;
+      min-height: 350px;
+      display: flex;
     }
 
     #shopify-section-{{ section.id }} .media-with-text-media {
       width: 100%;
       height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     #shopify-section-{{ section.id }} .media-with-text-media-item img {
       width: 100%;
-      height: 100%;
+      height: auto;
+      min-height: 100%;
       object-fit: {% if section.settings.image_full_space %}cover{% else %}contain{% endif %};
       border-radius: var(--border-radius-base);
     }
@@ -76,7 +81,7 @@
     @media (min-width: 750px) {
       #shopify-section-{{ section.id }} .media-with-text-media-item {
         width: 45%;
-        min-height: 500px;
+        min-height: 450px;
       }
 
       #shopify-section-{{ section.id }} .media-with-text-text-item {
@@ -92,10 +97,9 @@
 
     @media (min-width: 990px) {
       #shopify-section-{{ section.id }} .media-with-text-media-item {
-        min-height: 600px;
+        min-height: 450px;
       }
 
-      /* Aquí puedes ajustar a 6rem si 4rem te parece poco */
       #shopify-section-{{ section.id }} .media-with-text-text-item {
         padding-left: 4rem;
       }
@@ -108,20 +112,21 @@
 
     /* Control de padding en imagen */
     {% if section.settings.image_full_space %}
-    #shopify-section-{{ section.id }} .media-with-text-media {
-      padding: 0;
-    }
-    #shopify-section-{{ section.id }} .media-with-text-media img {
-      object-fit: cover !important;
-    }
-    {% else %}
-    #shopify-section-{{ section.id }} .media-with-text-media {
-      padding: 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    {% endif %}
+      #shopify-section-{{ section.id }} .media-with-text-media {
+        padding: 0;
+      }
+      #shopify-section-{{ section.id }} .media-with-text-media img {
+        object-fit: cover !important;
+        height: 100%;
+      }
+      {% else %}
+      #shopify-section-{{ section.id }} .media-with-text-media {
+        padding: 1.5rem;
+      }
+      #shopify-section-{{ section.id }} .media-with-text-media-item img {
+        max-height: 100%;
+      }
+      {% endif %}
 
     /* Grid de productos - 2 columnas en móvil */
     #shopify-section-{{ section.id }} .products-grid {
