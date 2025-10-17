@@ -1,7 +1,7 @@
 {% liquid
   assign is_empty = true
 
-  if section.settings.image == blank
+  if section.settings.image == blank and section.settings.image_mobile == blank
     assign is_empty = true
   endif
 
@@ -213,6 +213,24 @@
     #shopify-section-{{ section.id }} .card-product .card-info {
       background-color: #ffffff !important;
     }
+    /* Mostrar/ocultar imágenes según dispositivo */
+    #shopify-section-{{ section.id }} .visible-mobile-only {
+      display: block;
+    }
+
+    #shopify-section-{{ section.id }} .hidden-mobile {
+      display: none;
+    }
+
+    @media (min-width: 750px) {
+      #shopify-section-{{ section.id }} .visible-mobile-only {
+        display: none;
+      }
+
+      #shopify-section-{{ section.id }} .hidden-mobile {
+        display: block;
+      }
+    }
   </style>
 
   {%- capture visibility_classes -%}{%- render 'section-visibility-classes' -%}{%- endcapture -%}
@@ -229,12 +247,37 @@
               <!-- Imagen -->
               <div class="media-with-text-media-item">
                 <div class="media-with-text-media">
-                  {%- if section.settings.image != blank -%}
-                    {{
-                      section.settings.image
-                      | image_url: width: 1200
-                      | image_tag: widths: image_widths, sizes: image_sizes, loading: 'lazy'
-                    }}
+                  {%- liquid
+                    assign desktop_image = section.settings.image
+                    assign mobile_image = section.settings.image_mobile
+
+                    if mobile_image == blank
+                      assign mobile_image = desktop_image
+                    endif
+
+                    if desktop_image == blank
+                      assign desktop_image = mobile_image
+                    endif
+                  -%}
+
+                  {%- if desktop_image != blank -%}
+                    {%- comment -%} Imagen para móvil {%- endcomment -%}
+                    <div class="visible-mobile-only">
+                      {{
+                        mobile_image
+                        | image_url: width: 1200
+                        | image_tag: widths: image_widths, sizes: image_sizes, loading: 'lazy'
+                      }}
+                    </div>
+
+                    {%- comment -%} Imagen para desktop {%- endcomment -%}
+                    <div class="hidden-mobile">
+                      {{
+                        desktop_image
+                        | image_url: width: 1200
+                        | image_tag: widths: image_widths, sizes: image_sizes, loading: 'lazy'
+                      }}
+                    </div>
                   {%- else -%}
                     {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
                   {%- endif -%}
@@ -304,6 +347,12 @@
       "id": "image",
       "label": "Imagen",
       "info": "Imagen que se mostrará al lado de los productos"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Imagen para móvil",
+      "info": "Opcional: Imagen específica para dispositivos móviles. Si no se selecciona, se usará la imagen de escritorio"
     },
     {
       "type": "checkbox",
