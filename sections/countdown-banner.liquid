@@ -70,21 +70,26 @@
       #shopify-section-{{ section.id }} .section-countdown-banner-wrap {
         position: relative;
         overflow: hidden;
+        display: grid;
       }
 
       #shopify-section-{{ section.id }} .section-countdown-banner-backdrop {
-        position: absolute;
-        top: 0;
-        left: 0;
+        position: relative;
         width: 100%;
-        height: 100%;
+        height: auto;
+        display: block;
         z-index: 1;
       }
 
       #shopify-section-{{ section.id }} .section-countdown-banner-wrap-inner {
-        position: relative;
+        position: absolute;
+        top: 0;
+        left: 0;
         z-index: 2;
         width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
         padding: 2rem 0;
       }
 
