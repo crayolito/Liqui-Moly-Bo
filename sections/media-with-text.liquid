@@ -63,7 +63,7 @@
 
     #shopify-section-{{ section.id }} .media-with-text-media {
       width: 100%;
-      height: 100%;
+      /* NO pongas height: 100% aquí - esto permite que la imagen se vea hermosa */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -119,14 +119,14 @@
         object-fit: cover !important;
         height: 100%;
       }
-      {% else %}
+    {% else %}
       #shopify-section-{{ section.id }} .media-with-text-media {
         padding: 1.5rem;
       }
       #shopify-section-{{ section.id }} .media-with-text-media-item img {
         max-height: 100%;
       }
-      {% endif %}
+    {% endif %}
 
     /* Grid de productos - 2 columnas en móvil */
     #shopify-section-{{ section.id }} .products-grid {
