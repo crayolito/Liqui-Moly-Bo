@@ -570,7 +570,7 @@
         "hide_collection_description": false,
         "hide_collection_title": false,
         "hide_collection_button": true,
-        "collection_text_color": "#fff",
+        "collection_text_color": "#ffffff",
         "collection_button_text": "",
         "collection_button_color_scheme": "",
         "collection_box_align": "bottom-left",
@@ -615,8 +615,8 @@
         "mobile_heading_size": "md",
         "button_type_link_mobile": false,
         "color_scheme": "background-1",
-        "spacing_top": 0,
-        "spacing_bottom": 0,
+        "spacing_top": 20,
+        "spacing_bottom": 20,
         "heading_tag": "h2",
         "show_on_desktop": true,
         "show_on_mobile": true,
@@ -668,7 +668,7 @@
         "padding_inferior": 10,
         "espacio_entre_imagenes": 20,
         "altura_desktop": 150,
-        "altura_mobile": 100,
+        "altura_mobile": 125,
         "usar_fondo_suave": false,
         "color_scheme": "",
         "imagen_1_desktop": "shopify://shop_images/2s-motorcycle-2-d_43c0970d-8e91-4d07-b756-26756053b7b8.jpg",
@@ -729,32 +729,36 @@
         "menu_BmxXrm": {
           "type": "menu",
           "settings": {
-            "menu_seleccionado": "",
+            "menu_seleccionado": "menu-header-dev",
             "titulo_personalizado": "",
+            "mostrar_icono": false,
             "icon": "store"
           }
         },
         "menu_axypT6": {
           "type": "menu",
           "settings": {
-            "menu_seleccionado": "",
+            "menu_seleccionado": "footer",
             "titulo_personalizado": "",
+            "mostrar_icono": false,
             "icon": "box"
           }
         },
         "menu_49hUaN": {
           "type": "menu",
           "settings": {
-            "menu_seleccionado": "",
+            "menu_seleccionado": "main-menu",
             "titulo_personalizado": "",
+            "mostrar_icono": false,
             "icon": "truck"
           }
         },
         "menu_UbiiGL": {
           "type": "menu",
           "settings": {
-            "menu_seleccionado": "",
+            "menu_seleccionado": "categor-as",
             "titulo_personalizado": "",
+            "mostrar_icono": false,
             "icon": "phone"
           }
         }
