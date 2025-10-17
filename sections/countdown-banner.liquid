@@ -70,21 +70,25 @@
       #shopify-section-{{ section.id }} .section-countdown-banner-wrap {
         position: relative;
         overflow: hidden;
-        display: grid;
-        grid-template-areas: "stack";
-        place-items: stretch;
+        /* REMOVIDO: display: grid y place-items que causaban el problema */
       }
 
       #shopify-section-{{ section.id }} .section-countdown-banner-backdrop {
-        grid-area: stack;
+        /* La imagen de fondo que dicta la altura del contenedor */
         width: 100%;
         height: auto;
         display: block;
+        position: relative;
         z-index: 1;
       }
 
       #shopify-section-{{ section.id }} .section-countdown-banner-wrap-inner {
-        grid-area: stack;
+        /* Contenido superpuesto sobre la imagen */
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
         z-index: 2;
         display: flex;
         align-items: center;
