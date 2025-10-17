@@ -65,8 +65,8 @@
       width: 100%;
       /* NO pongas height: 100% aquí - esto permite que la imagen se vea hermosa */
       display: flex;
-      align-items: center;
-      justify-content: center;
+      {% comment %} align-items: center; {% endcomment %}
+      {% comment %} justify-content: center; {% endcomment %}
     }
 
     #shopify-section-{{ section.id }} .media-with-text-media-item img {
@@ -136,7 +136,7 @@
       width: 100%;
     }
 
-    /* 2 columnas en tablet, 3 columnas en desktop para 6 productos */
+    /* 2 columnas en tablet, 3 columnas en desktop para 6 producs */
     @media (min-width: 750px) {
       #shopify-section-{{ section.id }} .products-grid {
         grid-template-columns: repeat(2, 1fr);
