@@ -1,11 +1,11 @@
 {% liquid
   assign is_empty = true
   assign is_image_only = false
-  
+
   if section.settings.heading != blank or section.settings.text != blank or section.settings.button_label != blank
     assign is_empty = false
   endif
-  
+
   # Detectar si es solo imagen (sin texto ni botón pero con link)
   if section.settings.heading == blank and section.settings.text == blank and section.settings.button_label == blank and section.settings.link != blank
     assign is_image_only = true
@@ -42,94 +42,84 @@
     endif
   %}
 
-  {% unless request.design_mode == false
-    and section.settings.hide_on_expiration
-    and now > expiration_date
-  %}
+  {% unless request.design_mode == false and section.settings.hide_on_expiration and now > expiration_date %}
     {{ 'section-countdown-banner.css' | asset_url | stylesheet_tag }}
 
-  <style>
-    {%- comment -%}
-    Estilos para imagen clickeable
-    {%- endcomment -%}
-    #shopify-section-{{ section.id }} .section-countdown-banner-image-link {
-      display: block;
-      width: 100%;
-      height: 100%;
-      text-decoration: none;
-      cursor: pointer;
-      transition: opacity 0.3s ease;
-    }
-    
-    #shopify-section-{{ section.id }} .section-countdown-banner-image-link:hover {
-      opacity: 0.9;
-    }
-    
-    #shopify-section-{{ section.id }} .section-countdown-banner-image-link:focus {
-      outline: 2px solid #005fcc;
-      outline-offset: 2px;
-    }
+    <style>
+      {%- comment -%}
+      Estilos para imagen clickeable
+      {%- endcomment -%}
+      #shopify-section-{{ section.id }} .section-countdown-banner-image-link {
+        display: block;
+        width: 100%;
+        height: 100%;
+        text-decoration: none;
+        cursor: pointer;
+        transition: opacity 0.3s ease;
+      }
 
-    #shopify-section-{{ section.id }} .section-countdown-banner-wrap {
-      min-height: {{ section.settings.mobile_min_height | default: 300 }}px;
-      max-height: {{ section.settings.mobile_max_height | default: 600 }}px;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-    }
-    
-    #shopify-section-{{ section.id }} .section-countdown-banner-backdrop {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: {{ section.settings.mobile_image_behavior | default: 'cover' }};
-      object-position: {{ section.settings.mobile_image_position | default: 'center center' }};
-      z-index: 1;
-    }
-    
-    #shopify-section-{{ section.id }} .section-countdown-banner-wrap-inner {
-      position: relative;
-      z-index: 2;
-      width: 100%;
-      padding: 2rem 0;
-    }
-    
-    @media (min-width: 750px) {
+      #shopify-section-{{ section.id }} .section-countdown-banner-image-link:hover {
+        opacity: 0.9;
+      }
+
+      #shopify-section-{{ section.id }} .section-countdown-banner-image-link:focus {
+        outline: 2px solid #005fcc;
+        outline-offset: 2px;
+      }
+
       #shopify-section-{{ section.id }} .section-countdown-banner-wrap {
-        min-height: {{ section.settings.desktop_min_height | default: 400 }}px;
-        max-height: {{ section.settings.desktop_max_height | default: 800 }}px;
+        min-height: {{ section.settings.mobile_min_height | default: 300 }}px;
+        max-height: {{ section.settings.mobile_max_height | default: 600 }}px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
       }
-      
+
       #shopify-section-{{ section.id }} .section-countdown-banner-backdrop {
-        object-fit: {{ section.settings.desktop_image_behavior | default: 'cover' }};
-        object-position: {{ section.settings.desktop_image_position | default: 'center center' }};
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
       }
-      
+
       #shopify-section-{{ section.id }} .section-countdown-banner-wrap-inner {
-        padding: 3rem 0;
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        padding: 2rem 0;
       }
-    }
-    
-    #shopify-section-{{ section.id }} .block-section {
-      margin-top: {{ section.settings.spacing_top | times: 0.8 | round: 0 }}px;
-      margin-bottom: {{ section.settings.spacing_bottom | times: 0.8 | round: 0 }}px;
-    }
-    @media (min-width: 990px) {
+
+      @media (min-width: 750px) {
+        #shopify-section-{{ section.id }} .section-countdown-banner-wrap {
+          min-height: {{ section.settings.desktop_min_height | default: 400 }}px;
+          max-height: {{ section.settings.desktop_max_height | default: 800 }}px;
+        }
+
+        #shopify-section-{{ section.id }} .section-countdown-banner-wrap-inner {
+          padding: 3rem 0;
+        }
+      }
+
       #shopify-section-{{ section.id }} .block-section {
-        margin-top: {{ section.settings.spacing_top }}px;
-        margin-bottom: {{ section.settings.spacing_bottom }}px;
+        margin-top: {{ section.settings.spacing_top | times: 0.8 | round: 0 }}px;
+        margin-bottom: {{ section.settings.spacing_bottom | times: 0.8 | round: 0 }}px;
       }
-    }
-    
-    {% if section.settings.overlay_background != blank %}
-      #shopify-section-{{ section.id }} .section-countdown-banner-wrap-inner::after {
-        background: {{ section.settings.overlay_background }};
+      @media (min-width: 990px) {
+        #shopify-section-{{ section.id }} .block-section {
+          margin-top: {{ section.settings.spacing_top }}px;
+          margin-bottom: {{ section.settings.spacing_bottom }}px;
+        }
       }
-    {% endif %}
-  </style>
+
+      {% if section.settings.overlay_background != blank %}
+        #shopify-section-{{ section.id }} .section-countdown-banner-wrap-inner::after {
+          background: {{ section.settings.overlay_background }};
+        }
+      {% endif %}
+    </style>
 
     {%- capture visibility_classes -%}{%- render 'section-visibility-classes' -%}{%- endcapture -%}
     {%- assign visibility_classes = visibility_classes | strip -%}
@@ -139,75 +129,80 @@
         <div class="block-section">
           <div class="section-countdown-banner-wrap color-{{ section.settings.color_scheme }}">
             {%- comment -%}
-            Si es solo imagen, convertir todo en un enlace clickeable
+              Si es solo imagen, convertir todo en un enlace clickeable
             {%- endcomment -%}
 
             {% if is_image_only %}
-              <a href="{{ section.settings.link }}" class="section-countdown-banner-wrap-inner section-countdown-banner-image-link {% if section.settings.mobile_background_image != blank %} section-countdown-banner-with-mobile-media{% endif %}">
+              <a
+                href="{{ section.settings.link }}"
+                class="section-countdown-banner-wrap-inner section-countdown-banner-image-link {% if section.settings.mobile_background_image != blank %} section-countdown-banner-with-mobile-media{% endif %}"
+              >
             {% else %}
-              <div class="section-countdown-banner-wrap-inner {% if section.settings.mobile_background_image != blank %} section-countdown-banner-with-mobile-media{% endif %}">
+              <div
+                class="section-countdown-banner-wrap-inner {% if section.settings.mobile_background_image != blank %} section-countdown-banner-with-mobile-media{% endif %}"
+              >
             {% endif %}
-              {% if section.settings.full_width %}
-                <div
-                  class="container content-align-{{ section.settings.mobile_box_align }} content-align-desktop-{{ section.settings.box_align }}"
-                >
-              {% endif %}
-              <div class="section-countdown-banner-content-wrap">
-                <div class="section-countdown-banner-content">
-                  <div class="section-countdown-banner-content-inner">
-                    {% if section.settings.heading != blank %}
-                      <div class="section-countdown-banner-title-wrap">
-                        <{{ section.settings.heading_tag }} class="section-countdown-banner-title heading-size-{{ section.settings.heading_size }}">
-                          {{- section.settings.heading -}}
-                        </{{ section.settings.heading_tag }}>
-                        {% if section.settings.button_label != blank %}
-                          <a
-                            {% if section.settings.link %}
-                              href="{{ section.settings.link }}"
-                            {% else %}
-                              role="link" aria-disabled="true"
-                            {% endif %}
-                            class="{% if section.settings.button_type_link %}button-text-link{% else %}button {% endif %} visible-tablet-up"
-                          >
-                            {{ section.settings.button_label | escape }}
-                          </a>
-                        {% endif %}
-                      </div>
-                    {% endif %}
-                    {% if section.settings.text != blank %}
-                      <div class="section-countdown-banner-caption rte">
-                        {{ section.settings.text }}
-                      </div>
-                    {% endif %}
-                  </div>
+            {% if section.settings.full_width %}
+              <div
+                class="container content-align-{{ section.settings.mobile_box_align }} content-align-desktop-{{ section.settings.box_align }}"
+              >
+            {% endif %}
+            <div class="section-countdown-banner-content-wrap">
+              <div class="section-countdown-banner-content">
+                <div class="section-countdown-banner-content-inner">
+                  {% if section.settings.heading != blank %}
+                    <div class="section-countdown-banner-title-wrap">
+                      <{{ section.settings.heading_tag }} class="section-countdown-banner-title heading-size-{{ section.settings.heading_size }}">
+                        {{- section.settings.heading -}}
+                      </{{ section.settings.heading_tag }}>
+                      {% if section.settings.button_label != blank %}
+                        <a
+                          {% if section.settings.link %}
+                            href="{{ section.settings.link }}"
+                          {% else %}
+                            role="link" aria-disabled="true"
+                          {% endif %}
+                          class="{% if section.settings.button_type_link %}button-text-link{% else %}button {% endif %} visible-tablet-up"
+                        >
+                          {{ section.settings.button_label | escape }}
+                        </a>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                  {% if section.settings.text != blank %}
+                    <div class="section-countdown-banner-caption rte">
+                      {{ section.settings.text }}
+                    </div>
+                  {% endif %}
                 </div>
-                {% if section.settings.end_date != blank %}
-                  <div class="section-countdown-banner-countdown">
-                    {% render 'countdown',
-                      expiration_date: expiration_date,
-                      expiration_message: section.settings.expiration_message
-                    %}
-                  </div>
-                {% endif %}
-                {% if section.settings.button_label != blank %}
-                  <a
-                    {% if section.settings.link %}
-                      href="{{ section.settings.link }}"
-                    {% else %}
-                      role="link" aria-disabled="true"
-                    {% endif %}
-                    class="{% if section.settings.button_type_link_mobile %}button-text-link{% else %}button {% endif %} hidden-tablet-up"
-                  >
-                    {{ section.settings.button_label | escape }}
-                  </a>
-                {% endif %}
               </div>
-              {% if section.settings.full_width %}
+              {% if section.settings.end_date != blank %}
+                <div class="section-countdown-banner-countdown">
+                  {% render 'countdown',
+                    expiration_date: expiration_date,
+                    expiration_message: section.settings.expiration_message
+                  %}
                 </div>
               {% endif %}
+              {% if section.settings.button_label != blank %}
+                <a
+                  {% if section.settings.link %}
+                    href="{{ section.settings.link }}"
+                  {% else %}
+                    role="link" aria-disabled="true"
+                  {% endif %}
+                  class="{% if section.settings.button_type_link_mobile %}button-text-link{% else %}button {% endif %} hidden-tablet-up"
+                >
+                  {{ section.settings.button_label | escape }}
+                </a>
+              {% endif %}
+            </div>
+            {% if section.settings.full_width %}
+              </div>
+            {% endif %}
 
-              {% if section.settings.background_image %}
-                {% capture image_sizes %}
+            {% if section.settings.background_image %}
+              {% capture image_sizes %}
 							{% if section.settings.full_width == true %}
 								100vw
 							{% else %}
@@ -215,59 +210,59 @@
 							{% endif %}
 						{% endcapture %}
 
-                <picture>
-                  {% if section.settings.mobile_background_image %}
-                    <source
-                      srcset="
-                        {% if section.settings.mobile_background_image.width >= 375 %}{{ section.settings.mobile_background_image | image_url: width: 375 }} 375w,{% endif %}
-                        {% if section.settings.mobile_background_image.width >= 550 %}{{ section.settings.mobile_background_image | image_url: width: 550 }} 550w,{% endif %}
-                        {% if section.settings.mobile_background_image.width >= 750 %}{{ section.settings.mobile_background_image | image_url: width: 750 }} 750w,{% endif %}
-                        {% if section.settings.mobile_background_image.width >= 1100 %}{{ section.settings.mobile_background_image | image_url: width: 1100 }} 1100w,{% endif %}
-                        {% if section.settings.mobile_background_image.width >= 1420 %}{{ section.settings.mobile_background_image | image_url: width: 1420 }} 1420w,{% endif %}
-                        {% if section.settings.mobile_background_image.width >= 2000 %}{{ section.settings.mobile_background_image | image_url: width: 2000 }} 2000w,{% endif %}
-                        {% if section.settings.mobile_background_image.width >= 2480 %}{{ section.settings.mobile_background_image | image_url: width: 2480 }} 2480w,{% endif %}
-                        {% if section.settings.mobile_background_image.width >= 3000 %}{{ section.settings.mobile_background_image | image_url: width: 3000 }} 3000w,{% endif %}
-                        {% if section.settings.mobile_background_image.width >= 3840 %}{{ section.settings.mobile_background_image | image_url: width: 3840 }} 3840w,{% endif %}
-                        {{ section.settings.mobile_background_image | image_url }} {{ section.settings.mobile_background_image.width }}w
-                      "
-                      sizes="{{ image_sizes }}"
-                      media="(max-width: 749px)"
-                    >
-                  {% endif %}
-
+              <picture>
+                {% if section.settings.mobile_background_image %}
                   <source
                     srcset="
-                      {% if section.settings.background_image.width >= 375 %}{{ section.settings.background_image | image_url: width: 375 }} 375w,{% endif %}
-                      {% if section.settings.background_image.width >= 550 %}{{ section.settings.background_image | image_url: width: 550 }} 550w,{% endif %}
-                      {% if section.settings.background_image.width >= 750 %}{{ section.settings.background_image | image_url: width: 750 }} 750w,{% endif %}
-                      {% if section.settings.background_image.width >= 1100 %}{{ section.settings.background_image | image_url: width: 1100 }} 1100w,{% endif %}
-                      {% if section.settings.background_image.width >= 1420 %}{{ section.settings.background_image | image_url: width: 1420 }} 1420w,{% endif %}
-                      {% if section.settings.background_image.width >= 2000 %}{{ section.settings.background_image | image_url: width: 2000 }} 2000w,{% endif %}
-                      {% if section.settings.background_image.width >= 2480 %}{{ section.settings.background_image | image_url: width: 2480 }} 2480w,{% endif %}
-                      {% if section.settings.background_image.width >= 3000 %}{{ section.settings.background_image | image_url: width: 3000 }} 3000w,{% endif %}
-                      {% if section.settings.background_image.width >= 3840 %}{{ section.settings.background_image | image_url: width: 3840 }} 3840w,{% endif %}
-                      {{ section.settings.background_image | image_url }} {{ section.settings.background_image.width }}w
+                      {% if section.settings.mobile_background_image.width >= 375 %}{{ section.settings.mobile_background_image | image_url: width: 375 }} 375w,{% endif %}
+                      {% if section.settings.mobile_background_image.width >= 550 %}{{ section.settings.mobile_background_image | image_url: width: 550 }} 550w,{% endif %}
+                      {% if section.settings.mobile_background_image.width >= 750 %}{{ section.settings.mobile_background_image | image_url: width: 750 }} 750w,{% endif %}
+                      {% if section.settings.mobile_background_image.width >= 1100 %}{{ section.settings.mobile_background_image | image_url: width: 1100 }} 1100w,{% endif %}
+                      {% if section.settings.mobile_background_image.width >= 1420 %}{{ section.settings.mobile_background_image | image_url: width: 1420 }} 1420w,{% endif %}
+                      {% if section.settings.mobile_background_image.width >= 2000 %}{{ section.settings.mobile_background_image | image_url: width: 2000 }} 2000w,{% endif %}
+                      {% if section.settings.mobile_background_image.width >= 2480 %}{{ section.settings.mobile_background_image | image_url: width: 2480 }} 2480w,{% endif %}
+                      {% if section.settings.mobile_background_image.width >= 3000 %}{{ section.settings.mobile_background_image | image_url: width: 3000 }} 3000w,{% endif %}
+                      {% if section.settings.mobile_background_image.width >= 3840 %}{{ section.settings.mobile_background_image | image_url: width: 3840 }} 3840w,{% endif %}
+                      {{ section.settings.mobile_background_image | image_url }} {{ section.settings.mobile_background_image.width }}w
                     "
                     sizes="{{ image_sizes }}"
-                    {% if section.settings.mobile_background_image != blank %}
-                      media="(min-width: 750px)"
-                    {% endif %}
+                    media="(max-width: 749px)"
                   >
+                {% endif %}
 
-                  {{
-                    section.settings.background_image
-                    | image_url: width: 3840
-                    | image_tag:
-                      class: 'section-countdown-banner-backdrop',
-                      widths: '375, 550, 750, 1100, 1420, 2000, 2480, 3000, 3840',
-                      sizes: image_sizes,
-                      fetchpriority: fetch_priority,
-                      loading: lazy
-                  }}
-                </picture>
-              {% endif %}
+                <source
+                  srcset="
+                    {% if section.settings.background_image.width >= 375 %}{{ section.settings.background_image | image_url: width: 375 }} 375w,{% endif %}
+                    {% if section.settings.background_image.width >= 550 %}{{ section.settings.background_image | image_url: width: 550 }} 550w,{% endif %}
+                    {% if section.settings.background_image.width >= 750 %}{{ section.settings.background_image | image_url: width: 750 }} 750w,{% endif %}
+                    {% if section.settings.background_image.width >= 1100 %}{{ section.settings.background_image | image_url: width: 1100 }} 1100w,{% endif %}
+                    {% if section.settings.background_image.width >= 1420 %}{{ section.settings.background_image | image_url: width: 1420 }} 1420w,{% endif %}
+                    {% if section.settings.background_image.width >= 2000 %}{{ section.settings.background_image | image_url: width: 2000 }} 2000w,{% endif %}
+                    {% if section.settings.background_image.width >= 2480 %}{{ section.settings.background_image | image_url: width: 2480 }} 2480w,{% endif %}
+                    {% if section.settings.background_image.width >= 3000 %}{{ section.settings.background_image | image_url: width: 3000 }} 3000w,{% endif %}
+                    {% if section.settings.background_image.width >= 3840 %}{{ section.settings.background_image | image_url: width: 3840 }} 3840w,{% endif %}
+                    {{ section.settings.background_image | image_url }} {{ section.settings.background_image.width }}w
+                  "
+                  sizes="{{ image_sizes }}"
+                  {% if section.settings.mobile_background_image != blank %}
+                    media="(min-width: 750px)"
+                  {% endif %}
+                >
+
+                {{
+                  section.settings.background_image
+                  | image_url: width: 3840
+                  | image_tag:
+                    class: 'section-countdown-banner-backdrop',
+                    widths: '375, 550, 750, 1100, 1420, 2000, 2480, 3000, 3840',
+                    sizes: image_sizes,
+                    fetchpriority: fetch_priority,
+                    loading: lazy
+                }}
+              </picture>
+            {% endif %}
             {%- comment -%}
-            Cerrar el enlace o div según el caso
+              Cerrar el enlace o div según el caso
             {%- endcomment -%}
             {% if is_image_only %}
               </a>
@@ -275,10 +270,7 @@
               </div>
             {% endif %}
 
-            {% if request.design_mode
-              and section.settings.hide_on_expiration
-              and now > expiration_date
-            %}
+            {% if request.design_mode and section.settings.hide_on_expiration and now > expiration_date %}
               <div class="section-countdown-banner-editor-hidden-note">
                 {{ 'sections.countdown_banner.hidden_note' | t }}
               </div>
@@ -289,14 +281,14 @@
   {% endunless %}
 {%- endunless -%}
 {% schema %}
-  {
-    "name": "t:sections.countdown_banner.name",
-    "tag": "section",
-    "class": "section section-countdown-banner",
-    "disabled_on": {
-      "groups": ["header", "footer", "custom.overlays"]
-    },
-    "settings": [
+{
+  "name": "t:sections.countdown_banner.name",
+  "tag": "section",
+  "class": "section section-countdown-banner",
+  "disabled_on": {
+    "groups": ["header", "footer", "custom.overlays"]
+  },
+  "settings": [
     {
       "type": "header",
       "content": "Control de Altura Dinámica"
@@ -341,301 +333,249 @@
       "unit": "px",
       "label": "Altura máxima desktop"
     },
-      {
-        "type": "header",
-        "content": "Adaptación de Imágenes"
-      },
-      {
-        "type": "select",
-        "id": "mobile_image_behavior",
-        "label": "Comportamiento imagen móvil",
-        "default": "cover",
-        "options": [
-          {"value": "cover", "label": "Cubrir completamente"},
-          {"value": "contain", "label": "Mostrar imagen completa"},
-          {"value": "fill", "label": "Estirar para llenar"}
-        ]
-      },
-      {
-        "type": "select",
-        "id": "mobile_image_position",
-        "label": "Posición imagen móvil",
-        "default": "center center",
-        "options": [
-          {"value": "center center", "label": "Centro"},
-          {"value": "top center", "label": "Arriba"},
-          {"value": "bottom center", "label": "Abajo"},
-          {"value": "left center", "label": "Izquierda"},
-          {"value": "right center", "label": "Derecha"}
-        ]
-      },
-      {
-        "type": "select",
-        "id": "desktop_image_behavior",
-        "label": "Comportamiento imagen desktop",
-        "default": "cover",
-        "options": [
-          {"value": "cover", "label": "Cubrir completamente"},
-          {"value": "contain", "label": "Mostrar imagen completa"},
-          {"value": "fill", "label": "Estirar para llenar"}
-        ]
-      },
-      {
-        "type": "select",
-        "id": "desktop_image_position",
-        "label": "Posición imagen desktop",
-        "default": "center center",
-        "options": [
-          {"value": "center center", "label": "Centro"},
-          {"value": "top center", "label": "Arriba"},
-          {"value": "bottom center", "label": "Abajo"},
-          {"value": "left center", "label": "Izquierda"},
-          {"value": "right center", "label": "Derecha"}
-        ]
-      },
-      {
-        "type": "header",
-        "content": "t:sections.all.section_background_media.heading"
-      },
-      {
-        "type": "image_picker",
-        "id": "background_image",
-        "label": "t:sections.countdown_banner.settings.background_image.label"
-      },
-      {
-        "type": "color_background",
-        "id": "overlay_background",
-        "label": "t:sections.all.gradient.overlay_background.label",
-        "default": "linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.8) 100%)"
-      },
-      {
-        "type": "header",
-        "content": "t:sections.all.section_content.heading"
-      },
-      {
-        "type": "inline_richtext",
-        "id": "heading",
-        "default": "Countdown banner",
-        "label": "t:sections.countdown_banner.settings.heading.label"
-      },
-      {
-        "type": "select",
-        "id": "heading_size",
-        "label": "t:sections.countdown_banner.settings.heading_size.label",
-        "default": "md",
-        "options": [
-          {
-            "value": "sm",
-            "label": "t:sections.countdown_banner.settings.heading_size.options.label_sm"
-          },
-          {
-            "value": "md",
-            "label": "t:sections.countdown_banner.settings.heading_size.options.label_md"
-          },
-          {
-            "value": "lg",
-            "label": "t:sections.countdown_banner.settings.heading_size.options.label_lg"
-          },
-          {
-            "value": "xl",
-            "label": "t:sections.countdown_banner.settings.heading_size.options.label_xl"
-          },
-          {
-            "value": "xxl",
-            "label": "t:sections.countdown_banner.settings.heading_size.options.label_xxl"
-          }
-        ]
-      },
-      {
-        "type": "richtext",
-        "id": "text",
-        "label": "t:sections.countdown_banner.settings.text.label",
-        "default": "<p>Use this text to create urgency and promote limited time offers of your products and services.</p>"
-      },
-      {
-        "type": "text",
-        "id": "button_label",
-        "label": "t:sections.countdown_banner.settings.button_label.label",
-        "default": "Learn more"
-      },
-      {
-        "type": "url",
-        "id": "link",
-        "label": "t:sections.countdown_banner.settings.link.label"
-      },
-      {
-        "type": "checkbox",
-        "id": "button_type_link",
-        "default": false,
-        "label": "t:sections.countdown_banner.settings.button_type_link.label"
-      },
-      {
-        "type": "header",
-        "content": "t:sections.countdown_banner.settings.header_1.content"
-      },
-      {
-        "type": "text",
-        "id": "end_date",
-        "label": "t:sections.countdown_banner.settings.end_date.label",
-        "info": "t:sections.countdown_banner.settings.end_date.info"
-      },
-      {
-        "type": "text",
-        "id": "end_time",
-        "label": "t:sections.countdown_banner.settings.end_time.label",
-        "info": "t:sections.countdown_banner.settings.end_time.info"
-      },
-      {
-        "type": "checkbox",
-        "id": "hide_on_expiration",
-        "default": false,
-        "label": "t:sections.countdown_banner.settings.hide_on_expiration.label"
-      },
-      {
-        "type": "richtext",
-        "id": "expiration_message",
-        "label": "t:sections.countdown_banner.settings.expiration_message.label",
-        "info": "t:sections.countdown_banner.settings.expiration_message.info",
-        "visible_if": "{{ section.settings.hide_on_expiration == false }}"
-      },
-      {
-        "type": "header",
-        "content": "t:sections.all.layout.heading"
-      },
-      {
-        "type": "checkbox",
-        "id": "full_width",
-        "label": "t:sections.countdown_banner.settings.full_width.label",
-        "default": false
-      },
-      {
-        "type": "header",
-        "content": "t:sections.countdown_banner.settings.header_2.content"
-      },
-      {
-        "type": "image_picker",
-        "id": "mobile_background_image",
-        "label": "t:sections.countdown_banner.settings.background_image.label"
-      },
-      {
-        "type": "select",
-        "id": "mobile_heading_size",
-        "label": "t:sections.countdown_banner.settings.heading_size.label",
-        "default": "md",
-        "options": [
-          {
-            "value": "sm",
-            "label": "t:sections.countdown_banner.settings.heading_size.options.label_sm"
-          },
-          {
-            "value": "md",
-            "label": "t:sections.countdown_banner.settings.heading_size.options.label_md"
-          },
-          {
-            "value": "lg",
-            "label": "t:sections.countdown_banner.settings.heading_size.options.label_lg"
-          },
-          {
-            "value": "xl",
-            "label": "t:sections.countdown_banner.settings.heading_size.options.label_xl"
-          },
-          {
-            "value": "xxl",
-            "label": "t:sections.countdown_banner.settings.heading_size.options.label_xxl"
-          }
-        ]
-      },
-      {
-        "type": "checkbox",
-        "id": "button_type_link_mobile",
-        "default": false,
-        "label": "t:sections.countdown_banner.settings.button_type_link.label"
-      },
-      {
-        "type": "header",
-        "content": "t:sections.all.colors.heading"
-      },
-      {
-        "type": "color_scheme",
-        "id": "color_scheme",
-        "label": "t:sections.all.colors.color_scheme.label",
-        "default": "accent-3"
-      },
-      {
-        "type": "header",
-        "content": "t:sections.all.section_spacing.heading"
-      },
-      {
-        "type": "range",
-        "id": "spacing_top",
-        "min": 0,
-        "max": 150,
-        "step": 2,
-        "default": 60,
-        "label": "t:sections.all.section_spacing.spacing_top.label"
-      },
-      {
-        "type": "range",
-        "id": "spacing_bottom",
-        "min": 0,
-        "max": 150,
-        "step": 2,
-        "default": 60,
-        "label": "t:sections.all.section_spacing.spacing_bottom.label"
-      },
-      {
-        "type": "header",
-        "content": "t:sections.all.advanced.seo_heading.label"
-      },
-      {
-        "type": "select",
-        "id": "heading_tag",
-        "label": "t:sections.all.advanced.heading_tag.label",
-        "default": "h2",
-        "options": [
-          {
-            "value": "h1",
-            "label": "H1"
-          },
-          {
-            "value": "h2",
-            "label": "H2"
-          },
-          {
-            "value": "h3",
-            "label": "H3"
-          }
-        ]
-      },
-      {
-        "type": "header",
-        "content": "t:sections.all.advanced.visibility_heading.label"
-      },
-      {
-        "type": "checkbox",
-        "id": "show_on_desktop",
-        "default": true,
-        "label": "t:sections.all.advanced.show_on_desktop.label"
-      },
-      {
-        "type": "checkbox",
-        "id": "show_on_mobile",
-        "default": true,
-        "label": "t:sections.all.advanced.show_on_mobile.label"
-      },
-      {
-        "type": "checkbox",
-        "id": "hide_if_empty",
-        "default": false,
-        "label": "t:sections.countdown_banner.settings.hide_if_empty.label",
-        "info": "t:sections.all.advanced.hide_if_empty.info"
-      }
-    ],
-    "presets": [
-      {
-        "name": "t:sections.countdown_banner.presets.name",
-        "category": "t:sections.all.preset_category.banners"
-      }
-    ]
-  }
+    {
+      "type": "header",
+      "content": "t:sections.all.section_background_media.heading"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "t:sections.countdown_banner.settings.background_image.label"
+    },
+    {
+      "type": "color_background",
+      "id": "overlay_background",
+      "label": "t:sections.all.gradient.overlay_background.label",
+      "default": "linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.8) 100%)"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.section_content.heading"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "default": "Countdown banner",
+      "label": "t:sections.countdown_banner.settings.heading.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "label": "t:sections.countdown_banner.settings.heading_size.label",
+      "default": "md",
+      "options": [
+        {
+          "value": "sm",
+          "label": "t:sections.countdown_banner.settings.heading_size.options.label_sm"
+        },
+        {
+          "value": "md",
+          "label": "t:sections.countdown_banner.settings.heading_size.options.label_md"
+        },
+        {
+          "value": "lg",
+          "label": "t:sections.countdown_banner.settings.heading_size.options.label_lg"
+        },
+        {
+          "value": "xl",
+          "label": "t:sections.countdown_banner.settings.heading_size.options.label_xl"
+        },
+        {
+          "value": "xxl",
+          "label": "t:sections.countdown_banner.settings.heading_size.options.label_xxl"
+        }
+      ]
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:sections.countdown_banner.settings.text.label",
+      "default": "<p>Use this text to create urgency and promote limited time offers of your products and services.</p>"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:sections.countdown_banner.settings.button_label.label",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:sections.countdown_banner.settings.link.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_type_link",
+      "default": false,
+      "label": "t:sections.countdown_banner.settings.button_type_link.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.countdown_banner.settings.header_1.content"
+    },
+    {
+      "type": "text",
+      "id": "end_date",
+      "label": "t:sections.countdown_banner.settings.end_date.label",
+      "info": "t:sections.countdown_banner.settings.end_date.info"
+    },
+    {
+      "type": "text",
+      "id": "end_time",
+      "label": "t:sections.countdown_banner.settings.end_time.label",
+      "info": "t:sections.countdown_banner.settings.end_time.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_expiration",
+      "default": false,
+      "label": "t:sections.countdown_banner.settings.hide_on_expiration.label"
+    },
+    {
+      "type": "richtext",
+      "id": "expiration_message",
+      "label": "t:sections.countdown_banner.settings.expiration_message.label",
+      "info": "t:sections.countdown_banner.settings.expiration_message.info",
+      "visible_if": "{{ section.settings.hide_on_expiration == false }}"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.layout.heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "t:sections.countdown_banner.settings.full_width.label",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "t:sections.countdown_banner.settings.header_2.content"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_background_image",
+      "label": "t:sections.countdown_banner.settings.background_image.label"
+    },
+    {
+      "type": "select",
+      "id": "mobile_heading_size",
+      "label": "t:sections.countdown_banner.settings.heading_size.label",
+      "default": "md",
+      "options": [
+        {
+          "value": "sm",
+          "label": "t:sections.countdown_banner.settings.heading_size.options.label_sm"
+        },
+        {
+          "value": "md",
+          "label": "t:sections.countdown_banner.settings.heading_size.options.label_md"
+        },
+        {
+          "value": "lg",
+          "label": "t:sections.countdown_banner.settings.heading_size.options.label_lg"
+        },
+        {
+          "value": "xl",
+          "label": "t:sections.countdown_banner.settings.heading_size.options.label_xl"
+        },
+        {
+          "value": "xxl",
+          "label": "t:sections.countdown_banner.settings.heading_size.options.label_xxl"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "button_type_link_mobile",
+      "default": false,
+      "label": "t:sections.countdown_banner.settings.button_type_link.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.colors.heading"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.color_scheme.label",
+      "default": "accent-3"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.section_spacing.heading"
+    },
+    {
+      "type": "range",
+      "id": "spacing_top",
+      "min": 0,
+      "max": 150,
+      "step": 2,
+      "default": 60,
+      "label": "t:sections.all.section_spacing.spacing_top.label"
+    },
+    {
+      "type": "range",
+      "id": "spacing_bottom",
+      "min": 0,
+      "max": 150,
+      "step": 2,
+      "default": 60,
+      "label": "t:sections.all.section_spacing.spacing_bottom.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.advanced.seo_heading.label"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "t:sections.all.advanced.heading_tag.label",
+      "default": "h2",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.advanced.visibility_heading.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_desktop",
+      "default": true,
+      "label": "t:sections.all.advanced.show_on_desktop.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_mobile",
+      "default": true,
+      "label": "t:sections.all.advanced.show_on_mobile.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_if_empty",
+      "default": false,
+      "label": "t:sections.countdown_banner.settings.hide_if_empty.label",
+      "info": "t:sections.all.advanced.hide_if_empty.info"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.countdown_banner.presets.name",
+      "category": "t:sections.all.preset_category.banners"
+    }
+  ]
+}
 {% endschema %}
