@@ -92,6 +92,22 @@
     }
     {% endif %}
 
+    /* Efecto hover de elevación completa */
+    #shopify-section-{{ section.id }} .card-product {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transform-style: preserve-3d;
+    }
+
+    #shopify-section-{{ section.id }} .card-product:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Asegurar que la transición sea suave en todos los elementos */
+    #shopify-section-{{ section.id }} .card-product * {
+      transition: inherit;
+    }
+
     @media (min-width: 990px) {
     	#shopify-section-{{ section.id }} .block-section {
     		margin-top: {{ section.settings.spacing_top }}px;
@@ -181,7 +197,7 @@
                     show_vendor: section.settings.show_vendor,
                     show_stock: section.settings.show_stock,
                     show_rating: section.settings.show_rating,
-                    show_add_to_cart: settings.products_show_add_to_cart,
+                    show_add_to_cart: false,
                     mobile_two_columns: mobile_two_columns,
                     event_context: 'FeaturedCollectionSection',
                     lazyload: lazyload
@@ -201,7 +217,7 @@
                       show_vendor: section.settings.show_vendor,
                       show_stock: section.settings.show_stock,
                       show_rating: section.settings.show_rating,
-                      show_add_to_cart: settings.products_show_add_to_cart,
+                      show_add_to_cart: false,
                       mobile_two_columns: mobile_two_columns,
                       event_context: 'FeaturedCollectionSection',
                       lazyload: lazyload
@@ -215,7 +231,7 @@
                         show_vendor: section.settings.show_vendor,
                         show_stock: section.settings.show_stock,
                         show_rating: section.settings.show_rating,
-                        show_add_to_cart: settings.products_show_add_to_cart,
+                        show_add_to_cart: false,
                         mobile_two_columns: mobile_two_columns,
                         event_context: 'FeaturedCollectionSection'
                       %}
