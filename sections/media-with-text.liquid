@@ -54,9 +54,15 @@
     	}
     }
 
-    /* Imagen - altura mínima en móvil y sin restricción de aspect-ratio */
+    /* Imagen - ocupa todo el ancho en móvil */
     #shopify-section-{{ section.id }} .media-with-text-media-item {
+      width: 100%;
       min-height: 400px;
+    }
+
+    #shopify-section-{{ section.id }} .media-with-text-media {
+      width: 100%;
+      height: 100%;
     }
 
     #shopify-section-{{ section.id }} .media-with-text-media-item img {
@@ -66,21 +72,21 @@
       border-radius: var(--border-radius-base);
     }
 
-    /* Proporciones: 40% imagen, 60% productos en desktop */
+    /* Proporciones: 45% imagen, 55% productos en desktop */
     @media (min-width: 750px) {
       #shopify-section-{{ section.id }} .media-with-text-media-item {
-        width: 40%;
+        width: 45%;
         min-height: 500px;
       }
 
       #shopify-section-{{ section.id }} .media-with-text-text-item {
-        width: 60%;
-        padding-left: 2rem;
+        width: 55%;
+        padding-left: 4rem;
       }
 
       #shopify-section-{{ section.id }} .media-with-text-grid-reverse .media-with-text-text-item {
         padding-left: 0;
-        padding-right: 2rem;
+        padding-right: 4rem;
       }
     }
 
@@ -89,13 +95,14 @@
         min-height: 600px;
       }
 
+      /* Aquí puedes ajustar a 6rem si 4rem te parece poco */
       #shopify-section-{{ section.id }} .media-with-text-text-item {
-        padding-left: 3rem;
+        padding-left: 4rem;
       }
 
       #shopify-section-{{ section.id }} .media-with-text-grid-reverse .media-with-text-text-item {
         padding-left: 0;
-        padding-right: 3rem;
+        padding-right: 4rem;
       }
     }
 
@@ -103,7 +110,6 @@
     {% if section.settings.image_full_space %}
     #shopify-section-{{ section.id }} .media-with-text-media {
       padding: 0;
-      height: 100%;
     }
     #shopify-section-{{ section.id }} .media-with-text-media img {
       object-fit: cover !important;
@@ -111,7 +117,6 @@
     {% else %}
     #shopify-section-{{ section.id }} .media-with-text-media {
       padding: 2rem;
-      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -141,6 +146,11 @@
       }
     }
 
+    /* FONDO BLANCO para las tarjetas de productos */
+    #shopify-section-{{ section.id }} .card-product {
+      background-color: #ffffff !important;
+    }
+
     /* Ocultar vendor (está en card-eyebrow dentro de card-info) */
     #shopify-section-{{ section.id }} .card-product .card-eyebrow,
     #shopify-section-{{ section.id }} .card-product .card-vendor {
@@ -167,6 +177,7 @@
     /* Mantener visible los precios */
     #shopify-section-{{ section.id }} .card-product .card-footer {
       display: block !important;
+      background-color: #ffffff !important;
     }
 
     #shopify-section-{{ section.id }} .card-product .card-footer-intro {
@@ -183,14 +194,19 @@
       font-size: 1.3rem !important;
     }
 
-    /* Ajustar imagen del producto */
+    /* Ajustar imagen del producto con fondo blanco */
     #shopify-section-{{ section.id }} .card-product .card-media {
-      background-color: rgba(var(--color-background));
+      background-color: #ffffff !important;
     }
 
     #shopify-section-{{ section.id }} .card-product .card-media img {
       object-fit: contain;
       object-position: center;
+    }
+
+    /* Card info también con fondo blanco */
+    #shopify-section-{{ section.id }} .card-product .card-info {
+      background-color: #ffffff !important;
     }
   </style>
 
