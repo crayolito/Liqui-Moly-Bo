@@ -57,14 +57,16 @@
             "side_image_2": "shopify://shop_images/1_78e616ac-17d9-489d-9b58-731c5f3b5f41.avif",
             "side_title_2": "ASDADS",
             "side_text_2": "<p>ASDASDAD</p>",
-            "side_url_2": "",
+            "side_url_2": "shopify://collections",
+            "side_image_3": "shopify://shop_images/LIQUI_MOLY_Logo_MIG_landscape_EN_png_2c33626c-6701-4d00-81ad-4594b715563f.avif",
             "side_title_3": "c",
-            "side_text_3": "",
-            "side_url_3": "",
+            "side_text_3": "<p>C</p>",
+            "side_url_3": "shopify://collections",
+            "side_image_4": "shopify://shop_images/LIQUI_MOLY_Logo_MIG_landscape_EN_png_2c33626c-6701-4d00-81ad-4594b715563f.avif",
             "side_title_4": "d",
-            "side_text_4": "",
-            "side_url_4": "",
-            "show_compact_banners": true
+            "side_text_4": "<p>D</p>",
+            "side_url_4": "shopify://collections",
+            "show_compact_banners": false
           }
         },
         "megamenu_Me4Qxd": {
