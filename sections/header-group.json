@@ -38,7 +38,7 @@
         "megamenu": {
           "type": "megamenu",
           "settings": {
-            "menu_item": "Productos",
+            "menu_item": "productos",
             "side_position": "left",
             "side_items_heading": "a",
             "product_list": [
