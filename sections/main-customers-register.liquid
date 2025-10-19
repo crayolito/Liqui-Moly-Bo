@@ -116,9 +116,9 @@
 
         <!-- Teléfono (Obligatorio) -->
         <div class="field">
-          <label for="RegisterForm-phone"> Teléfono <span style="color: red;">*</span> </label>
+          <label for="RegisterForm-phone-number"> Teléfono <span style="color: red;">*</span> </label>
           <div class="phone-input-wrapper">
-            <select id="RegisterForm-country-code" class="country-select" required>
+            <select id="RegisterForm-country-code" class="country-select">
               <option value="+591" selected>🇧🇴 +591</option>
               <option value="+54">🇦🇷 +54</option>
               <option value="+55">🇧🇷 +55</option>
@@ -139,15 +139,20 @@
             </select>
             <input
               type="tel"
-              name="customer[note][phone]"
-              id="RegisterForm-phone"
+              id="RegisterForm-phone-number"
               class="phone-number-input"
               placeholder="Ej: 71234567"
               required
               aria-required="true"
             >
           </div>
-          <input type="hidden" id="RegisterForm-full-phone" name="customer[phone]" value="">
+          <!-- Este campo oculto es el que se envía a Shopify como customer[phone] -->
+          <input
+            type="hidden"
+            name="customer[phone]"
+            id="RegisterForm-full-phone"
+            value=""
+          >
         </div>
 
         <!-- Contraseña (Obligatorio) -->
@@ -239,10 +244,11 @@
     const optionalFields = document.getElementById('optional-name-fields');
     const firstNameInput = document.getElementById('RegisterForm-FirstName');
     const lastNameInput = document.getElementById('RegisterForm-LastName');
+    const emailInput = document.getElementById('RegisterForm-email');
     const form = document.querySelector('form[action*="account"]');
-    const phoneInput = document.getElementById('RegisterForm-phone');
+    const phoneNumberInput = document.getElementById('RegisterForm-phone-number');
     const countryCode = document.getElementById('RegisterForm-country-code');
-    const fullPhoneInput = document.getElementById('RegisterForm-full-phone');
+    const fullPhoneInput = document.getElementById('RegisterForm-phone');
 
     // Mostrar/ocultar campos de nombre según checkbox
     checkbox.addEventListener('change', function () {
@@ -250,7 +256,6 @@
         optionalFields.classList.add('show');
       } else {
         optionalFields.classList.remove('show');
-        // Limpiar valores si desmarca
         firstNameInput.value = '';
         lastNameInput.value = '';
       }
@@ -259,23 +264,24 @@
     // Combinar código de país con número de teléfono
     function updateFullPhone() {
       const code = countryCode.value;
-      const number = phoneInput.value;
+      const number = phoneNumberInput.value;
       fullPhoneInput.value = code + number;
     }
 
-    phoneInput.addEventListener('input', updateFullPhone);
+    phoneNumberInput.addEventListener('input', updateFullPhone);
     countryCode.addEventListener('change', updateFullPhone);
 
     // Manejar envío del formulario
     form.addEventListener('submit', function (e) {
-      // Si el checkbox NO está marcado, usar valores temporales
+      // Si el checkbox NO está marcado, usar el email como identificador
       if (!checkbox.checked) {
-        // Si Shopify requiere nombre/apellido, usar valores temporales
-        if (!firstNameInput.value) {
-          firstNameInput.value = 'Cliente';
-        }
-        if (!lastNameInput.value) {
-          lastNameInput.value = 'Temporal';
+        const email = emailInput.value;
+
+        if (email) {
+          // Extraer la parte antes del @ del email
+          const emailPrefix = email.split('@')[0];
+          firstNameInput.value = emailPrefix;
+          lastNameInput.value = 'NN'; // NN = Nombre No proporcionado
         }
       }
 
@@ -283,7 +289,7 @@
       updateFullPhone();
 
       // Validar que el teléfono tenga contenido
-      if (!phoneInput.value.trim()) {
+      if (!phoneNumberInput.value.trim()) {
         e.preventDefault();
         alert('Por favor ingrese su número de teléfono');
         return false;
