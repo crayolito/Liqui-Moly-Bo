@@ -37,7 +37,7 @@
         "megamenu": {
           "type": "megamenu",
           "settings": {
-            "menu_item": "Lubricantes",
+            "menu_item": "lubricantes",
             "side_position": "left",
             "side_items_heading": "a",
             "product_list": [
