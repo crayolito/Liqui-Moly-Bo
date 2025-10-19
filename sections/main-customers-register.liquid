@@ -1,5 +1,53 @@
 {{ 'template-customer.css' | asset_url | stylesheet_tag }}
 
+<style>
+  .phone-input-wrapper {
+    display: flex;
+    gap: 10px;
+  }
+
+  .country-select {
+    width: 120px;
+    font-size: 16px;
+  }
+
+  .phone-number-input {
+    flex: 1;
+  }
+
+  .optional-fields {
+    display: none;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .optional-fields.show {
+    display: block;
+    opacity: 1;
+    max-height: 500px;
+    margin-top: 15px;
+  }
+
+  .checkbox-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+  }
+
+  .checkbox-field input[type='checkbox'] {
+    width: auto;
+    margin: 0;
+  }
+
+  .checkbox-field label {
+    margin: 0;
+    cursor: pointer;
+  }
+</style>
+
 <div class="container container-min">
   <div class="block-section">
     <div class="customer register">
@@ -30,39 +78,11 @@
           </div>
         {%- endif -%}
 
-        <div class="field">
-          <label for="RegisterForm-FirstName">
-            {{ 'customer.register.first_name' | t }}
-          </label>
-          <input
-            type="text"
-            name="customer[first_name]"
-            id="RegisterForm-FirstName"
-            {% if form.first_name %}
-              value="{{ form.first_name }}"
-            {% endif %}
-            autocomplete="given-name"
-          >
-        </div>
-
-        <div class="field">
-          <label for="RegisterForm-LastName">
-            {{ 'customer.register.last_name' | t }}
-          </label>
-          <input
-            type="text"
-            name="customer[last_name]"
-            id="RegisterForm-LastName"
-            {% if form.last_name %}
-              value="{{ form.last_name }}"
-            {% endif %}
-            autocomplete="family-name"
-          >
-        </div>
-
+        <!-- Email (Obligatorio) -->
         <div class="field">
           <label for="RegisterForm-email">
             {{ 'customer.register.email' | t }}
+            <span style="color: red;">*</span>
           </label>
           <input
             type="email"
@@ -76,6 +96,7 @@
             autocapitalize="off"
             autocomplete="email"
             aria-required="true"
+            required
             {% if form.errors contains 'email' %}
               aria-invalid="true"
               aria-describedby="RegisterForm-email-error"
@@ -93,15 +114,54 @@
           {%- endif -%}
         </div>
 
+        <!-- Teléfono (Obligatorio) -->
+        <div class="field">
+          <label for="RegisterForm-phone"> Teléfono <span style="color: red;">*</span> </label>
+          <div class="phone-input-wrapper">
+            <select id="RegisterForm-country-code" class="country-select" required>
+              <option value="+591" selected>🇧🇴 +591</option>
+              <option value="+54">🇦🇷 +54</option>
+              <option value="+55">🇧🇷 +55</option>
+              <option value="+56">🇨🇱 +56</option>
+              <option value="+57">🇨🇴 +57</option>
+              <option value="+506">🇨🇷 +506</option>
+              <option value="+593">🇪🇨 +593</option>
+              <option value="+503">🇸🇻 +503</option>
+              <option value="+502">🇬🇹 +502</option>
+              <option value="+504">🇭🇳 +504</option>
+              <option value="+52">🇲🇽 +52</option>
+              <option value="+505">🇳🇮 +505</option>
+              <option value="+507">🇵🇦 +507</option>
+              <option value="+595">🇵🇾 +595</option>
+              <option value="+51">🇵🇪 +51</option>
+              <option value="+598">🇺🇾 +598</option>
+              <option value="+58">🇻🇪 +58</option>
+            </select>
+            <input
+              type="tel"
+              name="customer[note][phone]"
+              id="RegisterForm-phone"
+              class="phone-number-input"
+              placeholder="Ej: 71234567"
+              required
+              aria-required="true"
+            >
+          </div>
+          <input type="hidden" id="RegisterForm-full-phone" name="customer[phone]" value="">
+        </div>
+
+        <!-- Contraseña (Obligatorio) -->
         <div class="field">
           <label for="RegisterForm-password">
             {{ 'customer.register.password' | t }}
+            <span style="color: red;">*</span>
           </label>
           <input
             type="password"
             name="customer[password]"
             id="RegisterForm-password"
             aria-required="true"
+            required
             {% if form.errors contains 'password' %}
               aria-invalid="true"
               aria-describedby="RegisterForm-password-error"
@@ -119,7 +179,52 @@
           {%- endif -%}
         </div>
 
-        <button type="submit" class="button">
+        <!-- Checkbox para mostrar campos opcionales -->
+        <div class="checkbox-field">
+          <input
+            type="checkbox"
+            id="accept-name-checkbox"
+            name="accept_name"
+          >
+          <label for="accept-name-checkbox"> Acepta proporcionarnos Nombre y Apellido </label>
+        </div>
+
+        <!-- Campos opcionales (Nombre y Apellido) -->
+        <div class="optional-fields" id="optional-name-fields">
+          <div class="field">
+            <label for="RegisterForm-FirstName"> {{ 'customer.register.first_name' | t }} (Opcional) </label>
+            <input
+              type="text"
+              name="customer[first_name]"
+              id="RegisterForm-FirstName"
+              {% if form.first_name %}
+                value="{{ form.first_name }}"
+              {% endif %}
+              autocomplete="given-name"
+              class="optional-input"
+            >
+          </div>
+
+          <div class="field">
+            <label for="RegisterForm-LastName"> {{ 'customer.register.last_name' | t }} (Opcional) </label>
+            <input
+              type="text"
+              name="customer[last_name]"
+              id="RegisterForm-LastName"
+              {% if form.last_name %}
+                value="{{ form.last_name }}"
+              {% endif %}
+              autocomplete="family-name"
+              class="optional-input"
+            >
+          </div>
+        </div>
+
+        <!-- Campos ocultos para valores temporales si Shopify los requiere -->
+        <input type="hidden" id="temp-first-name" value="">
+        <input type="hidden" id="temp-last-name" value="">
+
+        <button type="submit" class="button" id="register-submit-btn">
           {{ 'customer.register.submit' | t }}
           {% render 'angle', direction: 'right' %}
         </button>
@@ -127,3 +232,62 @@
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const checkbox = document.getElementById('accept-name-checkbox');
+    const optionalFields = document.getElementById('optional-name-fields');
+    const firstNameInput = document.getElementById('RegisterForm-FirstName');
+    const lastNameInput = document.getElementById('RegisterForm-LastName');
+    const form = document.querySelector('form[action*="account"]');
+    const phoneInput = document.getElementById('RegisterForm-phone');
+    const countryCode = document.getElementById('RegisterForm-country-code');
+    const fullPhoneInput = document.getElementById('RegisterForm-full-phone');
+
+    // Mostrar/ocultar campos de nombre según checkbox
+    checkbox.addEventListener('change', function () {
+      if (this.checked) {
+        optionalFields.classList.add('show');
+      } else {
+        optionalFields.classList.remove('show');
+        // Limpiar valores si desmarca
+        firstNameInput.value = '';
+        lastNameInput.value = '';
+      }
+    });
+
+    // Combinar código de país con número de teléfono
+    function updateFullPhone() {
+      const code = countryCode.value;
+      const number = phoneInput.value;
+      fullPhoneInput.value = code + number;
+    }
+
+    phoneInput.addEventListener('input', updateFullPhone);
+    countryCode.addEventListener('change', updateFullPhone);
+
+    // Manejar envío del formulario
+    form.addEventListener('submit', function (e) {
+      // Si el checkbox NO está marcado, usar valores temporales
+      if (!checkbox.checked) {
+        // Si Shopify requiere nombre/apellido, usar valores temporales
+        if (!firstNameInput.value) {
+          firstNameInput.value = 'Cliente';
+        }
+        if (!lastNameInput.value) {
+          lastNameInput.value = 'Temporal';
+        }
+      }
+
+      // Asegurar que el teléfono completo esté actualizado
+      updateFullPhone();
+
+      // Validar que el teléfono tenga contenido
+      if (!phoneInput.value.trim()) {
+        e.preventDefault();
+        alert('Por favor ingrese su número de teléfono');
+        return false;
+      }
+    });
+  });
+</script>
