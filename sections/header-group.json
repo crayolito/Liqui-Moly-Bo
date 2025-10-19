@@ -36,7 +36,6 @@
       "blocks": {
         "megamenu": {
           "type": "megamenu",
-          "disabled": true,
           "settings": {
             "menu_item": "Shop By Category",
             "side_position": "right",
@@ -60,12 +59,11 @@
         },
         "badge_by8eHe": {
           "type": "badge",
-          "disabled": true,
           "settings": {
-            "badge_menu_item": "asdasd",
+            "badge_menu_item": "Hola Mundo",
             "label": "Badge",
             "text_color": "#ffffff",
-            "background_color": "#39b5fb"
+            "background_color": "#287dff"
           }
         }
       },
