@@ -13,7 +13,6 @@
   "sections": {
     "announcement-bar": {
       "type": "announcement-bar",
-      "disabled": true,
       "settings": {
         "text": "Free shipping for all orders over €100",
         "link": "",
@@ -68,19 +67,33 @@
             "show_compact_banners": true
           }
         },
-        "badge_by8eHe": {
-          "type": "badge",
+        "megamenu_Me4Qxd": {
+          "type": "megamenu",
           "settings": {
-            "badge_menu_item": "Hola Mundo",
-            "label": "Badge{{ metaobjects[\"shopify--vehicle-oil-features\"][\"proteccion-contra-altas-temperaturas\"].label.value }}",
-            "text_color": "#ffffff",
-            "background_color": "#287dff"
+            "menu_item": "",
+            "side_position": "right",
+            "side_items_heading": "",
+            "product_list": [],
+            "collection_list": [],
+            "side_title": "",
+            "side_text": "",
+            "side_url": "",
+            "side_title_2": "",
+            "side_text_2": "",
+            "side_url_2": "",
+            "side_title_3": "",
+            "side_text_3": "",
+            "side_url_3": "",
+            "side_title_4": "",
+            "side_text_4": "",
+            "side_url_4": "",
+            "show_compact_banners": false
           }
         }
       },
       "block_order": [
         "megamenu",
-        "badge_by8eHe"
+        "megamenu_Me4Qxd"
       ],
       "settings": {
         "logo": "shopify://shop_images/LIQUI_MOLY_Logo_MIG_landscape_EN_png_2c33626c-6701-4d00-81ad-4594b715563f.avif",
