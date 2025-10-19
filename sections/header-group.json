@@ -40,15 +40,8 @@
             "menu_item": "Power tools",
             "side_position": "right",
             "side_items_heading": "2",
-            "product_list": [
-              "2t-motoroil-race-tec",
-              "top-tec-atf-1200-1l",
-              "aceite-para-transmision-automatica-top-tec-atf-1800"
-            ],
-            "collection_list": [
-              "aceites-de-motor",
-              "aceites-hidraulicos"
-            ],
+            "product_list": [],
+            "collection_list": [],
             "side_title": "",
             "side_text": "",
             "side_url": "",
