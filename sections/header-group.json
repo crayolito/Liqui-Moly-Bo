@@ -106,8 +106,8 @@
         "navigation_remove_border": false,
         "navigation_submenu_color_scheme": "background-1",
         "mobile_navigation_color_scheme": "background-1",
-        "spacing_top": 2.4,
-        "spacing_bottom": 2,
+        "spacing_top": 1,
+        "spacing_bottom": 1,
         "logo_homepage_tag": "h1"
       }
     },
