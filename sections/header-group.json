@@ -37,7 +37,7 @@
         "megamenu": {
           "type": "megamenu",
           "settings": {
-            "menu_item": "Shop By Category",
+            "menu_item": "Productos",
             "side_position": "left",
             "side_items_heading": "ASasAS",
             "product_list": [
