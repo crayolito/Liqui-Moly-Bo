@@ -149,7 +149,19 @@
           <!-- Este campo oculto es el que se envía a Shopify como customer[phone] -->
           <input
             type="hidden"
-            name="customer[phone]"
+            name="customer[note][País]"
+            id="RegisterForm-country-note"
+            value=""
+          >
+          <input
+            type="hidden"
+            name="customer[note][Número]"
+            id="RegisterForm-number-note"
+            value=""
+          >
+          <input
+            type="hidden"
+            name="customer[note][Teléfono]"
             id="RegisterForm-full-phone"
             value=""
           >
@@ -248,7 +260,11 @@
     const form = document.querySelector('form[action*="account"]');
     const phoneNumberInput = document.getElementById('RegisterForm-phone-number');
     const countryCode = document.getElementById('RegisterForm-country-code');
+
+    // Campos ocultos para las notas
     const fullPhoneInput = document.getElementById('RegisterForm-full-phone');
+    const countryNoteInput = document.getElementById('RegisterForm-country-note');
+    const numberNoteInput = document.getElementById('RegisterForm-number-note');
 
     // Mostrar/ocultar campos de nombre según checkbox
     checkbox.addEventListener('change', function () {
@@ -261,11 +277,24 @@
       }
     });
 
-    // Combinar código de país con número de teléfono
+    // Actualizar los campos de teléfono
     function updateFullPhone() {
       const code = countryCode.value;
       const number = phoneNumberInput.value;
+
+      // Guardar el código del país
+      countryNoteInput.value = code;
+
+      // Guardar solo el número
+      numberNoteInput.value = number;
+
+      // Guardar el teléfono completo
       fullPhoneInput.value = code + number;
+
+      // Para debug - ver en consola
+      console.log('País:', code);
+      console.log('Número:', number);
+      console.log('Teléfono completo:', code + number);
     }
 
     phoneNumberInput.addEventListener('input', updateFullPhone);
@@ -294,6 +323,16 @@
         alert('Por favor ingrese su número de teléfono');
         return false;
       }
+
+      // Debug final - ver todos los datos antes de enviar
+      console.log('=== DATOS A ENVIAR ===');
+      console.log('Email:', emailInput.value);
+      console.log('País:', countryNoteInput.value);
+      console.log('Número:', numberNoteInput.value);
+      console.log('Teléfono:', fullPhoneInput.value);
+      console.log('Nombre:', firstNameInput.value);
+      console.log('Apellido:', lastNameInput.value);
+      console.log('======================');
     });
   });
 </script>
