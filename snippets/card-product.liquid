@@ -174,11 +174,13 @@
         Muestra un extracto corto de la descripción limitado a 3 líneas
         =====================================================
       {%- endcomment -%}
-      {% if card_product.description != blank %}
-        <div class="card-product-description">
-          {{ card_product.description | strip_html | truncatewords: 20 }}
-        </div>
-      {% endif %}
+      {% comment %}
+        {% if card_product.description != blank %}
+          <div class="card-product-description">
+            {{ card_product.description | strip_html | truncatewords: 20 }}
+          </div>
+        {% endif %}
+      {% endcomment %}
 
       {% if settings.swatches_on_product_listings %}
         {% render 'card-product-swatches', product: card_product %}
