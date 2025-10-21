@@ -51,9 +51,7 @@
             </div>
 
             <div class="field hidden">
-              <label class="field-label" for="shipping-province-{{ section.id }}"
-                >Province/state</label
-              >
+              <label class="field-label" for="shipping-province-{{ section.id }}">Province/state</label>
               <select
                 class="field-input province"
                 id="shipping-province-{{ section.id }}"
@@ -121,30 +119,29 @@
 
                 <small class="cart-totals-note tax-note rte">
                   {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
-                    {{
-                      'templates.cart.taxes_included_and_shipping_policy_html'
-                      | t: link: shop.shipping_policy.url
-                    }}
+                    {% comment %} {{ 'templates.cart.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }} {% endcomment %}
                   {%- elsif cart.taxes_included -%}
-                    {{ 'templates.cart.taxes_included_but_shipping_at_checkout' | t }}
+                    {% comment %} {{ 'templates.cart.taxes_included_but_shipping_at_checkout' | t }} {% endcomment %}
                   {%- elsif shop.shipping_policy.body != blank -%}
-                    {{
-                      'templates.cart.taxes_and_shipping_policy_at_checkout_html'
-                      | t: link: shop.shipping_policy.url
-                    }}
+                    {% comment %}
+                      {{
+                        'templates.cart.taxes_and_shipping_policy_at_checkout_html'
+                        | t: link: shop.shipping_policy.url
+                      }}
+                    {% endcomment %}
                   {%- else -%}
-                    {{ 'templates.cart.taxes_and_shipping_at_checkout' | t }}
+                    {% comment %} {{ 'templates.cart.taxes_and_shipping_at_checkout' | t }} {% endcomment %}
                   {%- endif -%}
                 </small>
 
                 {% if settings.free_shipping_enabled %}
-                  {% assign free_shipping_threshold = settings.free_shipping_threshold
-                    | times: 100
-                  %}
+                  {% assign free_shipping_threshold = settings.free_shipping_threshold | times: 100 %}
                   {% if cart.total_price >= free_shipping_threshold %}
-                    <small class="cart-totals-note cart-free-shipping-note">
-                      {{ 'templates.cart.free_shipping.amount_reached' | t }}
-                    </small>
+                    {% comment %}
+                      <small class="cart-totals-note cart-free-shipping-note">
+                        {{ 'templates.cart.free_shipping.amount_reached' | t }}
+                      </small>
+                    {% endcomment %}
                   {% endif %}
                 {% endif %}
 
@@ -219,7 +216,7 @@
         debounce((event) => {
           const body = JSON.stringify({ note: event.target.value });
           fetch(`${routes.cart_update_url}`, { ...fetchConfig(), ...{ body } });
-        }, 300),
+        }, 300)
       );
     }
   }
@@ -227,72 +224,72 @@
 {% endjavascript %}
 
 {% schema %}
-  {
-    "name": "t:sections.main_cart_footer.name",
-    "class": "cart-footer-wrapper",
-    "settings": [
-      {
-        "type": "checkbox",
-        "id": "show_coupon_code",
-        "default": true,
-        "label": "t:sections.main_cart_footer.settings.show_coupon_code.label"
-      },
-      {
-        "type": "checkbox",
-        "id": "append_coupon_codes",
-        "default": false,
-        "label": "t:sections.main_cart_footer.settings.append_coupon_codes.label",
-        "info": "t:sections.main_cart_footer.settings.append_coupon_codes.info",
-        "visible_if": "{{ section.settings.show_coupon_code }}"
-      },
-      {
-        "type": "checkbox",
-        "id": "show_cart_note",
-        "default": false,
-        "label": "t:sections.main_cart_footer.settings.show_cart_note.label"
-      },
-      {
-        "type": "checkbox",
-        "id": "show_shipping_calculator",
-        "default": false,
-        "label": "t:sections.main_cart_footer.settings.show_shipping_calculator.label",
-        "info": "t:sections.main_cart_footer.settings.show_shipping_calculator.info"
-      }
-    ],
-    "blocks": [
-      {
-        "type": "@app"
-      },
-      {
-        "type": "subtotal",
-        "name": "t:sections.main_cart_footer.blocks.subtotal.name",
-        "limit": 1
-      },
-      {
-        "type": "buttons",
-        "name": "t:sections.main_cart_footer.blocks.buttons.name",
-        "limit": 1,
-        "settings": [
-          {
-            "type": "checkbox",
-            "id": "show_buy_now",
-            "label": "t:sections.main_cart_footer.blocks.buttons.settings.show_buy_now.label",
-            "default": true
-          }
-        ]
-      },
-      {
-        "type": "custom_liquid",
-        "name": "t:sections.all.custom_liquid.name",
-        "settings": [
-          {
-            "type": "liquid",
-            "id": "custom_liquid",
-            "label": "t:sections.all.custom_liquid.custom_liquid.label",
-            "info": "t:sections.all.custom_liquid.custom_liquid.info"
-          }
-        ]
-      }
-    ]
-  }
+{
+  "name": "t:sections.main_cart_footer.name",
+  "class": "cart-footer-wrapper",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_coupon_code",
+      "default": true,
+      "label": "t:sections.main_cart_footer.settings.show_coupon_code.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "append_coupon_codes",
+      "default": false,
+      "label": "t:sections.main_cart_footer.settings.append_coupon_codes.label",
+      "info": "t:sections.main_cart_footer.settings.append_coupon_codes.info",
+      "visible_if": "{{ section.settings.show_coupon_code }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart_note",
+      "default": false,
+      "label": "t:sections.main_cart_footer.settings.show_cart_note.label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_shipping_calculator",
+      "default": false,
+      "label": "t:sections.main_cart_footer.settings.show_shipping_calculator.label",
+      "info": "t:sections.main_cart_footer.settings.show_shipping_calculator.info"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "subtotal",
+      "name": "t:sections.main_cart_footer.blocks.subtotal.name",
+      "limit": 1
+    },
+    {
+      "type": "buttons",
+      "name": "t:sections.main_cart_footer.blocks.buttons.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_buy_now",
+          "label": "t:sections.main_cart_footer.blocks.buttons.settings.show_buy_now.label",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "custom_liquid",
+      "name": "t:sections.all.custom_liquid.name",
+      "settings": [
+        {
+          "type": "liquid",
+          "id": "custom_liquid",
+          "label": "t:sections.all.custom_liquid.custom_liquid.label",
+          "info": "t:sections.all.custom_liquid.custom_liquid.info"
+        }
+      ]
+    }
+  ]
+}
 {% endschema %}
