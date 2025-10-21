@@ -75,24 +75,22 @@
     	padding-bottom: {{ section.settings.spacing_bottom | times: 0.8 | round: 0 }}px;
     }
 
-    /* Control de object-fit para imágenes de productos - FORZADO */
+    /* Control de object-fit para imágenes de productos - 100x100px FORZADO */
     #shopify-section-{{ section.id }} .card-product .card-media {
-      max-width: 100px !important;
-      max-height: 100px !important;
       width: 100px !important;
       height: 100px !important;
+      max-width: 100px !important;
+      max-height: 100px !important;
       margin: 0 auto !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      overflow: hidden !important;
+    }
+
+    #shopify-section-{{ section.id }} .card-product .card-media > a {
+      height: 100% !important;
     }
 
     #shopify-section-{{ section.id }} .card-product .card-media .aspect-ratio {
-      width: 100px !important;
-      height: 100px !important;
-      max-width: 100px !important;
-      max-height: 100px !important;
+      height: 100% !important;
+      padding-bottom: 0 !important;
     }
 
     {% if section.settings.product_image_fit == 'contain' %}
@@ -103,19 +101,32 @@
     #shopify-section-{{ section.id }} .card-product .card-media img {
       object-fit: contain !important;
       object-position: center !important;
-      width: 100% !important;
-      height: 100% !important;
-      max-width: 100px !important;
-      max-height: 100px !important;
     }
     {% else %}
     #shopify-section-{{ section.id }} .card-product .card-media img {
       object-fit: cover !important;
       object-position: center !important;
-      width: 100% !important;
-      height: 100% !important;
     }
     {% endif %}
+
+    /* SOBRESCRIBIR TODOS los media queries del CSS base */
+    @media (min-width: 750px) {
+      #shopify-section-{{ section.id }} .card-product .card-media {
+        height: 100px !important;
+      }
+    }
+
+    @media (min-width: 990px) {
+      #shopify-section-{{ section.id }} .card-product .card-media {
+        height: 100px !important;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      #shopify-section-{{ section.id }} .card-product .card-media {
+        height: 100px !important;
+      }
+    }
 
     @media (min-width: 990px) {
     	#shopify-section-{{ section.id }} .block-section {
