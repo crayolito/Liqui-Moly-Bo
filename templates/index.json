@@ -370,7 +370,7 @@
         "collection_box_align": "bottom-left",
         "layout": "grid",
         "columns": "4",
-        "stack_on_mobile": false,
+        "stack_on_mobile": true,
         "mobile_columns": "2",
         "color_scheme": "",
         "spacing_top": 20,
