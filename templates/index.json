@@ -81,6 +81,35 @@
         "hide_if_empty": false
       }
     },
+    "countdown_banner_64DMBC": {
+      "type": "countdown-banner",
+      "name": "t:sections.countdown_banner.presets.name",
+      "settings": {
+        "background_image": "shopify://shop_images/abb1e878-2619-4ec0-a23e-4964b2439a63.jpg",
+        "overlay_background": "",
+        "heading": "",
+        "heading_size": "md",
+        "text": "",
+        "button_label": "",
+        "link": "",
+        "button_type_link": false,
+        "end_date": "",
+        "end_time": "",
+        "hide_on_expiration": false,
+        "expiration_message": "",
+        "full_width": false,
+        "mobile_background_image": "shopify://shop_images/700ef777-8d54-47fe-a98d-d5bd5fee75c0.jpg",
+        "mobile_heading_size": "md",
+        "button_type_link_mobile": false,
+        "color_scheme": "background-1",
+        "spacing_top": 20,
+        "spacing_bottom": 20,
+        "heading_tag": "h2",
+        "show_on_desktop": true,
+        "show_on_mobile": true,
+        "hide_if_empty": false
+      }
+    },
     "countdown_banner_TMarGQ": {
       "type": "countdown-banner",
       "name": "t:sections.countdown_banner.presets.name",
@@ -158,6 +187,7 @@
         "collection_ULHCkh",
         "collection_GBbwnV"
       ],
+      "disabled": true,
       "name": "t:sections.simple_collections_list.preset.name",
       "settings": {
         "heading": "",
@@ -349,6 +379,7 @@
         "collection_kUhUhV",
         "collection_VgTHQh"
       ],
+      "disabled": true,
       "settings": {
         "heading": "",
         "heading_size": "lg",
@@ -457,35 +488,6 @@
         "color_scheme": "background-1",
         "spacing_top": 2,
         "spacing_bottom": 0,
-        "show_on_desktop": true,
-        "show_on_mobile": true,
-        "hide_if_empty": false
-      }
-    },
-    "countdown_banner_64DMBC": {
-      "type": "countdown-banner",
-      "name": "t:sections.countdown_banner.presets.name",
-      "settings": {
-        "background_image": "shopify://shop_images/abb1e878-2619-4ec0-a23e-4964b2439a63.jpg",
-        "overlay_background": "",
-        "heading": "",
-        "heading_size": "md",
-        "text": "",
-        "button_label": "",
-        "link": "",
-        "button_type_link": false,
-        "end_date": "",
-        "end_time": "",
-        "hide_on_expiration": false,
-        "expiration_message": "",
-        "full_width": false,
-        "mobile_background_image": "shopify://shop_images/700ef777-8d54-47fe-a98d-d5bd5fee75c0.jpg",
-        "mobile_heading_size": "md",
-        "button_type_link_mobile": false,
-        "color_scheme": "background-1",
-        "spacing_top": 20,
-        "spacing_bottom": 20,
-        "heading_tag": "h2",
         "show_on_desktop": true,
         "show_on_mobile": true,
         "hide_if_empty": false
