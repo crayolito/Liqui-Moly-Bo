@@ -63,6 +63,7 @@
         "slide_XXmaeB",
         "slide_3Cfxjz"
       ],
+      "disabled": true,
       "name": "t:sections.slideshow.blocks.slide.presets.name",
       "settings": {
         "auto_rotate": true,
@@ -75,6 +76,35 @@
         "spacing_top": 0,
         "spacing_bottom": 20,
         "heading_tag": "h1",
+        "show_on_desktop": true,
+        "show_on_mobile": true,
+        "hide_if_empty": false
+      }
+    },
+    "countdown_banner_TMarGQ": {
+      "type": "countdown-banner",
+      "name": "t:sections.countdown_banner.presets.name",
+      "settings": {
+        "background_image": "shopify://shop_images/77d0ea69-c31a-48fe-9c17-f7eb51044b80.jpg",
+        "overlay_background": "",
+        "heading": "",
+        "heading_size": "md",
+        "text": "",
+        "button_label": "",
+        "link": "",
+        "button_type_link": false,
+        "end_date": "",
+        "end_time": "",
+        "hide_on_expiration": false,
+        "expiration_message": "",
+        "full_width": false,
+        "mobile_background_image": "shopify://shop_images/4de4c886-b18e-4852-bf63-6493b933157c.jpg",
+        "mobile_heading_size": "md",
+        "button_type_link_mobile": false,
+        "color_scheme": "background-1",
+        "spacing_top": 20,
+        "spacing_bottom": 20,
+        "heading_tag": "h2",
         "show_on_desktop": true,
         "show_on_mobile": true,
         "hide_if_empty": false
@@ -432,35 +462,6 @@
         "hide_if_empty": false
       }
     },
-    "countdown_banner_TMarGQ": {
-      "type": "countdown-banner",
-      "name": "t:sections.countdown_banner.presets.name",
-      "settings": {
-        "background_image": "shopify://shop_images/77d0ea69-c31a-48fe-9c17-f7eb51044b80.jpg",
-        "overlay_background": "",
-        "heading": "",
-        "heading_size": "md",
-        "text": "",
-        "button_label": "",
-        "link": "",
-        "button_type_link": false,
-        "end_date": "",
-        "end_time": "",
-        "hide_on_expiration": false,
-        "expiration_message": "",
-        "full_width": false,
-        "mobile_background_image": "shopify://shop_images/4de4c886-b18e-4852-bf63-6493b933157c.jpg",
-        "mobile_heading_size": "md",
-        "button_type_link_mobile": false,
-        "color_scheme": "background-1",
-        "spacing_top": 20,
-        "spacing_bottom": 20,
-        "heading_tag": "h2",
-        "show_on_desktop": true,
-        "show_on_mobile": true,
-        "hide_if_empty": false
-      }
-    },
     "countdown_banner_64DMBC": {
       "type": "countdown-banner",
       "name": "t:sections.countdown_banner.presets.name",
@@ -737,12 +738,12 @@
   },
   "order": [
     "slideshow_WXrdKP",
+    "countdown_banner_64DMBC",
+    "countdown_banner_TMarGQ",
     "simple_collection_list_NgEQ3P",
     "collection-list-1",
     "featured_collection_v1_fxRN7V",
     "features_qh7R3E",
-    "countdown_banner_TMarGQ",
-    "countdown_banner_64DMBC",
     "media_with_text_VVw63K",
     "featured_collection_v2_xPFzRn",
     "countdown_banner_B8iADV",
