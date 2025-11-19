@@ -145,7 +145,7 @@
           "settings": {
             "title": "Description",
             "icon": "info",
-            "expanded": true
+            "expanded": false
           }
         },
         "details": {
