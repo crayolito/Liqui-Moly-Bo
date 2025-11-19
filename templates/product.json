@@ -151,7 +151,7 @@
         "details": {
           "type": "details",
           "settings": {
-            "title": "FICHA TECNICA",
+            "title": "INFORMACION TECNICA",
             "icon": "document",
             "position": "left",
             "expanded": false,
@@ -160,7 +160,7 @@
             "show_sku": false,
             "show_barcode": false,
             "barcode_label": "Barcode",
-            "metafields": "User manual: custom.user_manual\nSafety instructions: custom.safety_instructions",
+            "metafields": "Ficha Tecnica : ficha.tecnica",
             "text": "<p>Additional text can be added before or after this table.</p>",
             "text_position": "after",
             "show_bottom_divider": false
