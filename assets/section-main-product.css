@@ -1846,11 +1846,26 @@ media-zoom {
 
 /* ===================================================================
    CUSTOM: Ajuste responsive de imágenes de producto
-   Desktop: máximo 500x500px | Móvil: se adapta al contenedor
+   Desktop: máximo 500x500px CENTRADO | Móvil: adaptado al contenedor
    =================================================================== */
 
-/* Contenedor principal de la imagen */
+/* Contenedor principal - Centrado */
 .product-media-main-wrapper {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+/* Cada slide de imagen - También centrado */
+.product-media-main {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+
+/* El contenedor aspect-ratio - Centrado */
+.product-media-main .aspect-ratio {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
@@ -1866,12 +1881,17 @@ media-zoom {
     height: auto !important;
     object-fit: contain !important;
     margin: 0 auto !important;
+    display: block !important;
   }
 
   .product-media-main .aspect-ratio {
     max-width: 500px !important;
     max-height: 500px !important;
     margin: 0 auto !important;
+  }
+
+  .product-media-main {
+    justify-content: center !important;
   }
 }
 
@@ -1885,6 +1905,7 @@ media-zoom {
     height: auto !important;
     object-fit: contain !important;
     margin: 0 auto !important;
+    display: block !important;
   }
 
   .product-media-main .aspect-ratio {
@@ -1892,4 +1913,10 @@ media-zoom {
     max-height: 400px !important;
     margin: 0 auto !important;
   }
+}
+
+/* Centrar el contenedor de miniaturas también */
+.product-media-scroll-wrap {
+  display: flex !important;
+  justify-content: center !important;
 }

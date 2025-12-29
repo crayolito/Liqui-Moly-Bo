@@ -146,61 +146,6 @@
 
     {{ content_for_header }}
 
-    {% if template contains 'customers/order' or checkout.order.id %}
-      <script>
-        (function () {
-          // Detectar si es la página de confirmación de pedido
-          var isOrderPage =
-            window.location.pathname.indexOf('/orders/') > -1 || window.location.search.indexOf('checkout') > -1;
-
-          if (isOrderPage && !sessionStorage.getItem('whatsapp_redirect_done')) {
-            try {
-              // Intentar capturar el número de pedido del DOM
-              var orderNumberElement = document.querySelector('.os-order-number, [data-order-number], .order-number');
-              var orderNumber = orderNumberElement ? orderNumberElement.textContent.trim() : '';
-
-              // Si no se encuentra, usar patrón de búsqueda
-              if (!orderNumber) {
-                var bodyText = document.body.innerText;
-                var match = bodyText.match(/#\d+/);
-                orderNumber = match ? match[0] : '#0000';
-              }
-
-              // Número de WhatsApp (Bolivia +591)
-              var whatsappNumber = '59178452415';
-
-              // Crear el mensaje
-              var message = 'BUENOS DIAS POR FAVOR REALIZE EL SIGUIENTE PEDIDO CON ' + orderNumber;
-
-              // Codificar el mensaje para URL
-              var encodedMessage = encodeURIComponent(message);
-
-              // Crear URL de WhatsApp
-              var whatsappURL = 'https://wa.me/' + whatsappNumber + '?text=' + encodedMessage;
-
-              // Marcar como ejecutado para evitar múltiples redirecciones
-              sessionStorage.setItem('whatsapp_redirect_done', 'true');
-
-              // Mostrar notificación
-              var notification = document.createElement('div');
-              notification.style.cssText =
-                'position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #25D366; color: white; padding: 20px 30px; border-radius: 10px; z-index: 9999; font-size: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); text-align: center; max-width: 90%; font-family: Arial, sans-serif;';
-              notification.innerHTML =
-                '✅ Redirigiendo a WhatsApp en 3 segundos...<br><small>Pedido: ' + orderNumber + '</small>';
-              document.body.appendChild(notification);
-
-              // Redirigir después de 3 segundos
-              setTimeout(function () {
-                window.location.href = whatsappURL;
-              }, 3000);
-            } catch (e) {
-              console.error('Error al redirigir a WhatsApp:', e);
-            }
-          }
-        })();
-      </script>
-    {% endif %}
-
     <script>
       if (Shopify.designMode) {
         document.documentElement.classList.add('shopify-design-mode');
