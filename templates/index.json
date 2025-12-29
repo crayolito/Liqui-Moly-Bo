@@ -63,7 +63,6 @@
         "slide_XXmaeB",
         "slide_3Cfxjz"
       ],
-      "disabled": true,
       "name": "t:sections.slideshow.blocks.slide.presets.name",
       "settings": {
         "auto_rotate": true,
@@ -151,19 +150,19 @@
         "collection_GaWMjP": {
           "type": "collection",
           "settings": {
-            "collection": "aceites-hidraulicos"
+            "collection": "productos-populares"
           }
         },
         "collection_EXdwD3": {
           "type": "collection",
           "settings": {
-            "collection": "aceites-para-engranajes"
+            "collection": "aditivos"
           }
         },
         "collection_9DCQFM": {
           "type": "collection",
           "settings": {
-            "collection": "aditivos-de-aceite"
+            "collection": "productos-populares"
           }
         },
         "collection_ULHCkh": {
@@ -175,7 +174,7 @@
         "collection_GBbwnV": {
           "type": "collection",
           "settings": {
-            "collection": "mantenimiento"
+            "collection": "motos-utv-atv-kart"
           }
         }
       },
@@ -187,7 +186,6 @@
         "collection_ULHCkh",
         "collection_GBbwnV"
       ],
-      "disabled": true,
       "name": "t:sections.simple_collections_list.preset.name",
       "settings": {
         "heading": "",
