@@ -1846,7 +1846,7 @@ media-zoom {
 
 /* ===================================================================
    CUSTOM: Ajuste responsive de imágenes de producto
-   Desktop: máximo 500x500px CENTRADO | Móvil: adaptado al contenedor
+   Desktop: máximo 500x500px CENTRADO | Móvil: adaptado y visible
    =================================================================== */
 
 /* Contenedor principal - Centrado */
@@ -1869,6 +1869,7 @@ media-zoom {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
+  width: 100% !important;
 }
 
 /* Imágenes en desktop */
@@ -1895,13 +1896,13 @@ media-zoom {
   }
 }
 
-/* Imágenes en móvil - se ajustan al ancho del contenedor */
+/* Imágenes en móvil - CORREGIDO para que se vean */
 @media (max-width: 749px) {
   .product-media-main img,
   .product-media-main .aspect-ratio img {
     max-width: 100% !important;
-    max-height: 400px !important;
-    width: auto !important;
+    max-height: 500px !important;
+    width: 100% !important;
     height: auto !important;
     object-fit: contain !important;
     margin: 0 auto !important;
@@ -1909,9 +1910,15 @@ media-zoom {
   }
 
   .product-media-main .aspect-ratio {
-    max-width: 100% !important;
-    max-height: 400px !important;
+    width: 100% !important;
+    max-height: 500px !important;
     margin: 0 auto !important;
+    position: relative !important;
+  }
+
+  /* Desactivar el padding del aspect-ratio en móvil */
+  .product-media-main .aspect-ratio::before {
+    display: none !important;
   }
 }
 
