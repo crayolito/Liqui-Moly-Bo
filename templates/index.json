@@ -417,7 +417,7 @@
         "show_stock": true,
         "show_rating": false,
         "product_image_fit": "contain",
-        "show_collection": true,
+        "show_collection": false,
         "collection_image": "shopify://shop_images/05479d88-62f7-46c5-ac56-523510f0c19c___ae3bfcc4ea2e76015c1c542ccdda3093.webp",
         "collection_overlay_background": "linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8) 100%)",
         "collection_title": "",
