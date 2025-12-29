@@ -1845,35 +1845,37 @@ media-zoom {
 }
 
 /* ===================================================================
-   CUSTOM: Ajuste responsive de imágenes de producto
-   Desktop: máximo 500x500px CENTRADO | Móvil: adaptado y visible
+   CUSTOM: Ajuste de imágenes de producto
+   Desktop: 500x500px centrado | Móvil: funciona normal
    =================================================================== */
 
-/* Contenedor principal - Centrado */
-.product-media-main-wrapper {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-}
-
-/* Cada slide de imagen - También centrado */
-.product-media-main {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  width: 100% !important;
-}
-
-/* El contenedor aspect-ratio - Centrado */
-.product-media-main .aspect-ratio {
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  width: 100% !important;
-}
-
-/* Imágenes en desktop */
+/* Solo para DESKTOP - Centrar y limitar tamaño */
 @media (min-width: 750px) {
+  /* Centrar el wrapper completo */
+  .product-media-main-wrapper {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  /* Centrar cada slide */
+  .product-media-main {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  /* Centrar el aspect-ratio */
+  .product-media-main .aspect-ratio {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    max-width: 500px !important;
+    max-height: 500px !important;
+    margin: 0 auto !important;
+  }
+
+  /* Limitar y centrar imágenes */
   .product-media-main img,
   .product-media-main .aspect-ratio img {
     max-width: 500px !important;
@@ -1884,46 +1886,12 @@ media-zoom {
     margin: 0 auto !important;
     display: block !important;
   }
-
-  .product-media-main .aspect-ratio {
-    max-width: 500px !important;
-    max-height: 500px !important;
-    margin: 0 auto !important;
-  }
-
-  .product-media-main {
-    justify-content: center !important;
-  }
 }
 
-/* Imágenes en móvil - CORREGIDO para que se vean */
+/* Para MÓVIL - Dejar el comportamiento original, solo ajustar altura */
 @media (max-width: 749px) {
-  .product-media-main img,
-  .product-media-main .aspect-ratio img {
-    max-width: 100% !important;
-    max-height: 500px !important;
-    width: 100% !important;
-    height: auto !important;
+  .product-media-main img {
+    max-height: 400px !important;
     object-fit: contain !important;
-    margin: 0 auto !important;
-    display: block !important;
   }
-
-  .product-media-main .aspect-ratio {
-    width: 100% !important;
-    max-height: 500px !important;
-    margin: 0 auto !important;
-    position: relative !important;
-  }
-
-  /* Desactivar el padding del aspect-ratio en móvil */
-  .product-media-main .aspect-ratio::before {
-    display: none !important;
-  }
-}
-
-/* Centrar el contenedor de miniaturas también */
-.product-media-scroll-wrap {
-  display: flex !important;
-  justify-content: center !important;
 }
