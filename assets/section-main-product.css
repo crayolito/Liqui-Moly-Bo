@@ -1891,7 +1891,7 @@ media-zoom {
 /* Para MÓVIL - Dejar el comportamiento original, solo ajustar altura */
 @media (max-width: 749px) {
   .product-media-main img {
-    max-height: 400px !important;
+    max-height: 350px !important;
     object-fit: contain !important;
   }
 }
