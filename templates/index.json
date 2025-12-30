@@ -63,6 +63,7 @@
         "slide_XXmaeB",
         "slide_3Cfxjz"
       ],
+      "disabled": true,
       "name": "t:sections.slideshow.blocks.slide.presets.name",
       "settings": {
         "auto_rotate": true,
