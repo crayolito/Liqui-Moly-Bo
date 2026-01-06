@@ -1,0 +1,136 @@
+.checkout-success-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+  padding: 2rem 1rem;
+}
+
+.checkout-success-content {
+  text-align: center;
+  max-width: 500px;
+  padding: 3rem 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.success-icon {
+  margin-bottom: 2rem;
+}
+
+.success-image {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.success-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #28a745;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+}
+
+.success-message {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.order-number {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.order-details {
+  margin-bottom: 2rem;
+}
+
+.order-summary {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.order-summary h3 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.order-summary ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 1rem;
+}
+
+.order-summary li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.order-total {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #28a745;
+  text-align: right;
+  padding-top: 1rem;
+  border-top: 2px solid #28a745;
+}
+
+.success-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.button {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.button-primary {
+  background: #007bff;
+  color: white;
+}
+
+.button-primary:hover {
+  background: #0056b3;
+}
+
+.button-secondary {
+  background: #25d366;
+  color: white;
+}
+
+.button-secondary:hover {
+  background: #1da851;
+}
+
+@media (max-width: 768px) {
+  .success-title {
+    font-size: 2rem;
+  }
+
+  .success-actions {
+    flex-direction: column;
+  }
+
+  .button {
+    width: 100%;
+  }
+}

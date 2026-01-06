@@ -177,16 +177,28 @@
                   </div>
                 {% endif %}
 
+                {% comment %}
+                  <button
+                    form="cart"
+                    type="submit"
+                    id="checkout"
+                    class="cart-checkout-button button"
+                    name="checkout"
+                    {% if cart == empty %}
+                      disabled
+                    {% endif %}
+                    form="cart"
+                  >
+                    {{ 'templates.cart.checkout' | t }}
+                  </button>
+                {% endcomment %}
                 <button
-                  form="cart"
-                  type="submit"
-                  id="checkout"
+                  type="button"
+                  id="custom-checkout"
                   class="cart-checkout-button button"
-                  name="checkout"
                   {% if cart == empty %}
                     disabled
                   {% endif %}
-                  form="cart"
                 >
                   {{ 'templates.cart.checkout' | t }}
                 </button>
@@ -293,3 +305,41 @@
   ]
 }
 {% endschema %}
+
+<script>
+  document.getElementById('custom-checkout').addEventListener('click', function() {
+    if ({{ cart.item_count }} === 0) return;
+
+    // Recopilar datos del carrito
+    const orderData = {
+      orderNumber: 'LM' + Date.now(),
+      items: [
+        {% for item in cart.items %}
+        {
+          title: "{{ item.product.title | escape }}",
+          quantity: {{ item.quantity }},
+          price: "{{ item.final_price | money }}",
+          variant: "{{ item.variant.title | escape }}"
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ],
+      total: "{{ cart.total_price | money }}",
+      subtotal: "{{ cart.total_price | money }}",
+      timestamp: new Date().toISOString()
+    };
+
+    // Guardar datos en localStorage
+    localStorage.setItem('customOrderData', JSON.stringify(orderData));
+
+    // Limpiar carrito
+    fetch('/cart/clear.js', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }).then(() => {
+      // Redirigir a página de agradecimiento
+      window.location.href = '/pages/checkout-success';
+    });
+  });
+</script>
