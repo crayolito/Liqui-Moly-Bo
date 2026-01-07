@@ -19,6 +19,17 @@
   border: var(--border-width) solid rgba(var(--color-border));
 }
 
+/* Imagen de éxito */
+.success-icon {
+  margin-bottom: 2rem;
+}
+
+.success-image {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
 .success-title {
   font-family: var(--font-heading-family);
   font-weight: var(--font-heading-weight);
@@ -160,6 +171,11 @@
 
   .success-title {
     font-size: calc(var(--font-heading-scale) * 1.8rem);
+  }
+
+  .success-image {
+    width: 60px;
+    height: 60px;
   }
 
   .redirect-message {
