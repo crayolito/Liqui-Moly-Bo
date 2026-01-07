@@ -328,7 +328,28 @@
       timestamp: new Date().toISOString()
     };
 
-    // Guardar datos en localStorage
+    // Agregar información del cliente si está logueado
+    {% if customer %}
+    const customerData = {
+      nombre: "{{ customer.first_name | escape }} {{ customer.last_name | escape }}",
+      email: "{{ customer.email | escape }}",
+      telefono: "{{ customer.phone | default: '' | escape }}",
+      direccion: "{% if customer.default_address %}{{ customer.default_address.address1 | escape }}{% if customer.default_address.address2 %}, {{ customer.default_address.address2 | escape }}{% endif %}, {{ customer.default_address.city | escape }}{% endif %}",
+      id: {{ customer.id }},
+      logueado: true
+    };
+
+    // Guardar datos del cliente
+    localStorage.setItem('customerData', JSON.stringify(customerData));
+    {% else %}
+    // Cliente no logueado
+    const customerData = {
+      logueado: false
+    };
+    localStorage.setItem('customerData', JSON.stringify(customerData));
+    {% endif %}
+
+    // Guardar datos del pedido
     localStorage.setItem('customOrderData', JSON.stringify(orderData));
 
     // Limpiar carrito
