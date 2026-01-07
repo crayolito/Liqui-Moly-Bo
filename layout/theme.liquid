@@ -204,207 +204,218 @@
 
   <script>
     /**
-     * SISTEMA DE ACTUALIZACIÓN AUTOMÁTICA DE TELÉFONO
-     * Se ejecuta cuando el usuario está logueado y tiene teléfono pendiente
+     * MÓDULO DE CHECKOUT PERSONALIZADO
+     * Funciones compartidas y optimizadas para todos los flujos de checkout
+     * Cargado globalmente en theme.liquid
      */
-    document.addEventListener('DOMContentLoaded', function() {
-      {% if customer %}
-        // === CONFIGURACIÓN ===
-        const config = {
-          claveStorage: 'telefono_pendiente_actualizacion',
-          urlNetlify: 'https://api-aux-ferroman.netlify.app/.netlify/functions/crear-orden',
-          tiempoEspera: 3000, // 3 segundos
-          emailUsuarioActual: '{{ customer.email }}',
-          tiempoMensaje: 8000 // 8 segundos
+    (function() {
+      'use strict';
+  
+      // Evitar redeclarar si ya existe
+      if (window.CustomCheckout) {
+        return;
+      }
+  
+      // ========== CONFIGURACIÓN ==========
+      const CONFIG = {
+        CHECKOUT_SUCCESS_URL: '/pages/checkout-success',
+        ENABLE_DEBUG: false, // Cambiar a true para debug
+        CART_CLEAR_ENABLED: true,
+        USE_CUSTOM_CHECKOUT: true, // Para Buy Now buttons
+      };
+  
+      // ========== UTILIDADES ==========
+      const debug = {
+        log: (...args) => CONFIG.ENABLE_DEBUG && console.log(...args),
+        error: (...args) => CONFIG.ENABLE_DEBUG && console.error(...args),
+        warn: (...args) => CONFIG.ENABLE_DEBUG && console.warn(...args),
+      };
+  
+      // ========== FUNCIONES DE DATOS DEL CLIENTE ==========
+      function obtenerDatosCliente() {
+        {% if customer %}
+        return {
+          nombre: "{{ customer.first_name | escape }} {{ customer.last_name | escape }}".trim(),
+          email: "{{ customer.email | escape }}",
+          telefono: "{{ customer.phone | default: '' | escape }}",
+          direccion: "{% if customer.default_address %}{{ customer.default_address.address1 | escape }}{% if customer.default_address.address2 %}, {{ customer.default_address.address2 | escape }}{% endif %}, {{ customer.default_address.city | escape }}{% endif %}",
+          id: {{ customer.id }},
+          logueado: true
         };
-    
-        // === VERIFICACIONES INICIALES ===
-        const datosPendientes = localStorage.getItem(config.claveStorage);
+        {% else %}
+        return {
+          logueado: false,
+          nombre: 'Invitado',
+          email: '',
+          telefono: '',
+          direccion: ''
+        };
+        {% endif %}
+      }
+  
+      function guardarDatosCliente() {
+        const customerData = obtenerDatosCliente();
+        localStorage.setItem('customerData', JSON.stringify(customerData));
+        debug.log('👤 Datos del cliente guardados:', customerData.nombre || 'Invitado');
+        return customerData;
+      }
+  
+      // ========== CONSTRUCCIÓN DE DATOS DE PEDIDO ==========
+      function construirItemPedido(item) {
+        const baseItem = {
+          variant_id: item.variant_id || item.id,
+          product_id: item.product_id || item.product?.id,
+          title: item.title || item.product?.title || '',
+          variant_title: item.variant_title || item.title || 'Default Title',
+          quantity: item.quantity || 1,
+          price: item.price || 0,
+          price_cents: item.price_cents || Math.round((item.price || 0) * 100),
+          compare_at_price: item.compare_at_price || 0,
+          sku: item.sku || '',
+          image: item.image || '',
+          url: item.url || item.product?.url || '',
+          vendor: item.vendor || item.product?.vendor || '',
+          product_type: item.product_type || item.product?.type || '',
+          price_formatted: item.price_formatted || ''
+        };
+  
+        // Agregar opciones si existen
+        if (item.option1) baseItem.option1 = item.option1;
+        if (item.option2) baseItem.option2 = item.option2;
+        if (item.option3) baseItem.option3 = item.option3;
+        if (item.options) baseItem.options = item.options;
+  
+        return baseItem;
+      }
+  
+      function construirDatosPedido(items, total = null) {
+        const orderData = {
+          orderNumber: 'LM' + Date.now(),
+          items: Array.isArray(items) ? items.map(construirItemPedido) : [construirItemPedido(items)],
+          timestamp: new Date().toISOString()
+        };
+  
+        // Calcular totales si no se proporcionan
+        if (total === null) {
+          orderData.total = orderData.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+          orderData.total_cents = orderData.items.reduce((sum, item) => sum + (item.price_cents * item.quantity), 0);
+        } else {
+          orderData.total = typeof total === 'number' ? total : (total / 100);
+          orderData.total_cents = typeof total === 'number' ? (total * 100) : total;
+        }
+  
+        orderData.subtotal = orderData.total;
         
-        if (!datosPendientes) {
-          console.log('ℹ️ No hay teléfono pendiente de actualización');
-          return;
+        // Formatear precio
+        try {
+          orderData.total_formatted = new Intl.NumberFormat('es-BO', {
+            style: 'currency',
+            currency: 'BOB'
+          }).format(orderData.total);
+        } catch (e) {
+          orderData.total_formatted = 'Bs. ' + orderData.total.toFixed(2);
         }
-    
-        const datos = JSON.parse(datosPendientes);
-        
-        // Verificar que sea el usuario correcto
-        if (datos.email !== config.emailUsuarioActual) {
-          console.log('⚠️ Email no coincide - no se actualizará el teléfono');
-          return;
-        }
-    
-        console.log('📱 Iniciando actualización de teléfono para:', datos.email);
-    
-        // === FUNCIONES DE GRAPHQL ===
-        
-        /**
-         * Busca un cliente por email usando GraphQL
-         */
-        async function buscarClientePorEmail(email) {
-          const query = `
-            query buscarCliente($consulta: String!) {
-              customers(first: 1, query: $consulta) {
-                edges {
-                  node {
-                    id
-                    email
-                    phone
-                  }
-                }
-              }
-            }
-          `;
-    
-          const respuesta = await fetch(config.urlNetlify, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              query: query,
-              variables: { consulta: `email:${email}` }
-            })
-          });
-    
-          return await respuesta.json();
-        }
-    
-        /**
-         * Actualiza el teléfono de un cliente usando GraphQL
-         */
-        async function actualizarTelefonoCliente(idCliente, telefono) {
-          const mutation = `
-            mutation actualizarCliente($input: CustomerInput!) {
-              customerUpdate(input: $input) {
-                customer {
-                  id
-                  phone
-                  email
-                }
-                userErrors {
-                  field
-                  message
-                }
-              }
-            }
-          `;
-    
-          const respuesta = await fetch(config.urlNetlify, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              query: mutation,
-              variables: {
-                input: {
-                  id: idCliente,
-                  phone: telefono
-                }
-              }
-            })
-          });
-    
-          return await respuesta.json();
-        }
-    
-        /**
-         * Muestra un mensaje de notificación al usuario
-         */
-        function mostrarNotificacion(tipo, titulo, mensaje) {
-          const estilos = {
-            exito: 'background: #d4edda; color: #155724; border: 1px solid #c3e6cb;',
-            error: 'background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;',
-            info: 'background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb;'
-          };
-    
-          const notificacion = document.createElement('div');
-          notificacion.innerHTML = `
-            <div style="
-              ${estilos[tipo]}
-              padding: 15px; 
-              margin: 20px; 
-              border-radius: 8px; 
-              position: fixed;
-              top: 20px;
-              right: 20px;
-              z-index: 9999;
-              max-width: 400px;
-              box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            ">
-              <strong>${titulo}</strong><br>
-              ${mensaje}
-            </div>
-          `;
+  
+        return orderData;
+      }
+  
+      // ========== FUNCIÓN DE CHECKOUT (CORE) ==========
+      async function procesarCheckoutPersonalizado(orderData, options = {}) {
+        const {
+          limpiarCarrito = CONFIG.CART_CLEAR_ENABLED,
+          cerrarDrawer = false,
+          onSuccess = null,
+          onError = null
+        } = options;
+  
+        try {
+          // Guardar datos del cliente
+          guardarDatosCliente();
+  
+          // Guardar datos del pedido
+          localStorage.setItem('customOrderData', JSON.stringify(orderData));
+          debug.log('💾 Datos guardados en localStorage:', orderData);
+  
+          // Limpiar carrito si es necesario
+          if (limpiarCarrito) {
+            await limpiarCarritoShopify();
+          }
+  
+          // Cerrar drawer si es necesario
+          if (cerrarDrawer) {
+            cerrarMiniCartDrawer();
+          }
+  
+          // Callback de éxito
+          if (onSuccess && typeof onSuccess === 'function') {
+            onSuccess(orderData);
+          }
+  
+          // Redirigir
+          window.location.href = CONFIG.CHECKOUT_SUCCESS_URL;
+  
+        } catch (error) {
+          debug.error('💥 Error en checkout personalizado:', error);
           
-          document.body.appendChild(notificacion);
-          setTimeout(() => notificacion.remove(), config.tiempoMensaje);
-        }
-    
-        // === PROCESO PRINCIPAL ===
-        
-        /**
-         * Ejecuta el proceso completo de actualización
-         */
-        async function ejecutarActualizacionTelefono() {
-          try {
-            console.log('🔍 Buscando cliente en Shopify...');
-            
-            // Buscar cliente
-            const resultadoBusqueda = await buscarClientePorEmail(datos.email);
-            
-            if (!resultadoBusqueda.success || resultadoBusqueda.data.customers.edges.length === 0) {
-              throw new Error('Cliente no encontrado');
+          if (onError && typeof onError === 'function') {
+            onError(error);
+          } else {
+            // Fallback: redirigir de todas formas si ya se guardaron los datos
+            if (localStorage.getItem('customOrderData')) {
+              window.location.href = CONFIG.CHECKOUT_SUCCESS_URL;
             }
-    
-            const cliente = resultadoBusqueda.data.customers.edges[0].node;
-            console.log('👤 Cliente encontrado:', cliente.id);
-    
-            // Verificar si ya tiene teléfono
-            if (cliente.phone && cliente.phone.trim() !== '') {
-              console.log('📱 El cliente ya tiene teléfono registrado:', cliente.phone);
-              localStorage.removeItem(config.claveStorage);
-              return;
-            }
-    
-            // Actualizar teléfono
-            console.log('📱 Actualizando teléfono...');
-            const resultadoActualizacion = await actualizarTelefonoCliente(cliente.id, datos.telefono);
-    
-            if (resultadoActualizacion.success && resultadoActualizacion.data.customerUpdate.customer) {
-              // Éxito
-              console.log('✅ Teléfono actualizado correctamente');
-              localStorage.removeItem(config.claveStorage);
-              
-              mostrarNotificacion(
-                'exito',
-                '✅ ¡Registro completado!',
-                `Tu número de teléfono ha sido registrado: <strong>${datos.telefono}</strong>`
-              );
-            } else {
-              // Error en la actualización
-              const errores = resultadoActualizacion.data?.customerUpdate?.userErrors || [];
-              console.error('❌ Error actualizando teléfono:', errores);
-              
-              mostrarNotificacion(
-                'error',
-                '❌ Error al registrar teléfono',
-                'No se pudo registrar tu número. Contacta al soporte.'
-              );
-            }
-    
-          } catch (error) {
-            console.error('💥 Error en el proceso:', error);
-            mostrarNotificacion(
-              'error',
-              '❌ Error del sistema',
-              'Hubo un problema técnico. Inténtalo más tarde.'
-            );
           }
         }
-    
-        // === INICIAR PROCESO ===
-        setTimeout(ejecutarActualizacionTelefono, config.tiempoEspera);
-    
-      {% endif %}
-    });
+      }
+  
+      // ========== FUNCIONES AUXILIARES ==========
+      async function limpiarCarritoShopify() {
+        try {
+          const response = await fetch('/cart/clear.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          });
+          
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          
+          debug.log('✅ Carrito limpiado');
+          return true;
+        } catch (error) {
+          debug.error('❌ Error al limpiar carrito:', error);
+          throw error;
+        }
+      }
+  
+      function cerrarMiniCartDrawer() {
+        const drawerToggle = document.querySelector('drawer-toggle[for="HeaderMiniCart"]');
+        if (drawerToggle) {
+          drawerToggle.click();
+          debug.log('✅ Drawer cerrado');
+        }
+      }
+  
+      // ========== EXPORTAR FUNCIONES PÚBLICAS ==========
+      window.CustomCheckout = {
+        // Función principal
+        procesar: procesarCheckoutPersonalizado,
+        
+        // Funciones auxiliares
+        obtenerDatosCliente,
+        guardarDatosCliente,
+        construirDatosPedido,
+        construirItemPedido,
+        limpiarCarrito: limpiarCarritoShopify,
+        cerrarDrawer: cerrarMiniCartDrawer,
+        
+        // Configuración
+        config: CONFIG,
+        debug
+      };
+  
+      debug.log('✅ Módulo CustomCheckout cargado globalmente');
+    })();
   </script>
 
   <body class="{{ body_class }}">
