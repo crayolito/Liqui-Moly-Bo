@@ -74,8 +74,8 @@
     const datosDelCliente = JSON.parse(localStorage.getItem('customerData') || '{}');
     let numeroWhatsApp = '{{ section.settings.whatsapp_number }}';
 
-    // Mensaje personalizable de WhatsApp
-    const mensajeWhatsAppTemplate = `{{ section.settings.mensaje_whatsapp | default: 'Buenas, mi número de orden es el siguiente: {NUMERO_ORDEN}, por favor me atiende' }}`;
+    // Mensaje personalizable de WhatsApp - LÍNEA CORREGIDA
+    const mensajeWhatsAppTemplate = `{{ section.settings.mensaje_whatsapp | default: "Buenas, mi número de orden es el siguiente: {NUMERO_ORDEN}, por favor me atiende" | escape }}`;
 
     // Actualizar número si hay input de configuración
     const phoneInput = document.getElementById('phone-input');
@@ -85,7 +85,7 @@
       });
     }
 
-    // Crear orden
+    // Resto del código igual...
     crearOrden(datosDelPedido, datosDelCliente);
 
     async function crearOrden(datosPedido, datosCliente) {
@@ -94,7 +94,6 @@
       try {
         actualizarEstado('Procesando orden...');
 
-        // Preparar datos
         const bodyData = {
           productos: datosPedido.items || [],
           total: datosPedido.total,
@@ -102,7 +101,6 @@
           timestamp: new Date().toISOString(),
         };
 
-        // Agregar cliente si está logueado
         if (datosCliente.logueado) {
           bodyData.cliente = {
             nombre: datosCliente.nombre || 'Cliente',
@@ -136,7 +134,6 @@
         actualizarEstado('Orden registrada');
       }
 
-      // Esperar 2 segundos y mostrar WhatsApp
       setTimeout(() => {
         document.getElementById('seccion-whatsapp').style.display = 'block';
         iniciarContadorWhatsApp(numeroOrden);
@@ -145,14 +142,13 @@
 
     function actualizarEstado(mensaje) {
       document.getElementById('estado-pedido').innerHTML = `
-        <div class="loading-text">
-          <p>${mensaje}</p>
-        </div>
-      `;
+          <div class="loading-text">
+            <p>${mensaje}</p>
+          </div>
+        `;
     }
 
     function iniciarContadorWhatsApp(numeroOrden) {
-      // Reemplazar {NUMERO_ORDEN} en el mensaje personalizable
       const mensajeWhatsApp = mensajeWhatsAppTemplate.replace('{NUMERO_ORDEN}', numeroOrden);
       const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensajeWhatsApp)}`;
 
@@ -173,14 +169,12 @@
         }
       }, 1000);
 
-      // Botón simple
       document.getElementById('whatsapp-ahora').addEventListener('click', function () {
         clearInterval(temporizador);
         window.open(urlWhatsApp, '_blank');
       });
     }
 
-    // Limpiar datos
     setTimeout(() => {
       localStorage.removeItem('customOrderData');
       localStorage.removeItem('customerData');
@@ -195,37 +189,37 @@
     {
       "type": "text",
       "id": "titulo_1",
-      "label": "Título Principal",
-      "default": "¡PEDIDO CONFIRMADO!",
-      "info": "El título principal que se muestra en la página"
+      "label": "Titulo Principal",
+      "default": "PEDIDO CONFIRMADO!",
+      "info": "El titulo principal que se muestra en la pagina"
     },
     {
       "type": "textarea",
       "id": "titulo_2",
-      "label": "Mensaje de Confirmación",
-      "default": "Gracias por escogernos. En breve nuestro equipo se contactará contigo vía WhatsApp para coordinar la entrega de tu pedido.",
-      "info": "El mensaje que aparece debajo del título"
+      "label": "Mensaje de Confirmacion",
+      "default": "Gracias por escogernos. En breve nuestro equipo se contactara contigo via WhatsApp para coordinar la entrega de tu pedido.",
+      "info": "El mensaje que aparece debajo del titulo"
     },
     {
       "type": "textarea",
       "id": "mensaje_whatsapp",
       "label": "Mensaje para WhatsApp",
-      "default": "Buenas, mi número de orden es el siguiente: {NUMERO_ORDEN}, por favor me atiende",
-      "info": "Mensaje que se enviará por WhatsApp. Usa {NUMERO_ORDEN} donde quieras que aparezca el número de orden"
+      "default": "Buenas, mi numero de orden es el siguiente: {NUMERO_ORDEN}, por favor me atiende",
+      "info": "Mensaje que se enviara por WhatsApp. Usa {NUMERO_ORDEN} donde quieras que aparezca el numero de orden"
     },
     {
       "type": "text",
       "id": "whatsapp_number",
-      "label": "Número de WhatsApp",
-      "default": "59178123456",
-      "info": "Número de WhatsApp para contacto (incluir código de país sin +)"
+      "label": "Numero de WhatsApp",
+      "default": "+59178452415",
+      "info": "Numero de WhatsApp para contacto (incluir codigo de pais sin +)"
     },
     {
       "type": "checkbox",
       "id": "show_phone_config",
-      "label": "Mostrar configuración de teléfono",
+      "label": "Mostrar configuracion de telefono",
       "default": false,
-      "info": "Permite modificar el número de WhatsApp desde la página"
+      "info": "Permite modificar el numero de WhatsApp desde la pagina"
     }
   ]
 }
