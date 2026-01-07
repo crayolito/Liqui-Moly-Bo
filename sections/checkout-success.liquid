@@ -74,7 +74,7 @@
     const datosDelCliente = JSON.parse(localStorage.getItem('customerData') || '{}');
     let numeroWhatsApp = '{{ section.settings.whatsapp_number }}';
 
-    // Mensaje personalizable de WhatsApp - LÍNEA CORREGIDA
+    // Mensaje personalizable de WhatsApp
     const mensajeWhatsAppTemplate = `{{ section.settings.mensaje_whatsapp | default: "Buenas, mi número de orden es el siguiente: {NUMERO_ORDEN}, por favor me atiende" | escape }}`;
 
     // Actualizar número si hay input de configuración
