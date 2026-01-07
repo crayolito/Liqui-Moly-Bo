@@ -83,8 +83,19 @@
     };
 
     function handleMiniCartCheckout() {
+      // Verificar que el módulo CustomCheckout esté disponible
+      if (!window.CustomCheckout) {
+        console.error('❌ Módulo CustomCheckout no disponible');
+        alert('Error: Sistema de checkout no disponible. Por favor, recarga la página.');
+        return;
+      }
+
       if ({{ cart.item_count }} === 0) {
-        window.CustomCheckout.debug.warn('⚠️ Carrito vacío');
+        if (window.CustomCheckout.debug) {
+          window.CustomCheckout.debug.warn('⚠️ Carrito vacío');
+        } else {
+          console.warn('⚠️ Carrito vacío');
+        }
         return;
       }
 
@@ -123,13 +134,24 @@
     function bindButton(button) {
       if (!button || button.hasAttribute('data-bound')) return false;
 
+      // Verificar que CustomCheckout esté disponible antes de usar debug
+      if (!window.CustomCheckout) {
+        console.error('❌ CustomCheckout no disponible para bindButton');
+        return false;
+      }
+
       button.setAttribute('data-bound', 'true');
       button.addEventListener('click', function(e) {
         e.preventDefault();
         handleMiniCartCheckout();
       });
 
-      window.CustomCheckout.debug.log('✅ Botón mini-cart vinculado');
+      // Usar debug de forma segura
+      if (window.CustomCheckout.debug) {
+        window.CustomCheckout.debug.log('✅ Botón mini-cart vinculado');
+      } else {
+        console.log('✅ Botón mini-cart vinculado');
+      }
       return true;
     }
 

@@ -315,6 +315,13 @@
     checkoutBtn.addEventListener('click', async function(e) {
       e.preventDefault();
 
+      // Verificar que CustomCheckout esté disponible
+      if (!window.CustomCheckout) {
+        console.error('❌ Módulo CustomCheckout no disponible');
+        alert('Error: Sistema de checkout no disponible. Por favor, recarga la página.');
+        return;
+      }
+
       if ({{ cart.item_count }} === 0) {
         console.warn('⚠️ Carrito vacío');
         return;
