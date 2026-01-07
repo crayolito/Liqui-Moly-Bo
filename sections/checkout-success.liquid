@@ -65,17 +65,16 @@
   </div>
 </div>
 
+{% assign mensaje_default = 'Buenas, mi número de orden es el siguiente: {NUMERO_ORDEN}, por favor me atiende' %}
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const NETLIFY_FUNCTION_URL = 'https://api-aux-ferroman.netlify.app/.netlify/functions/crear-orden';
 
     // Obtener datos
-    const datosDelPedido = JSON.parse(localStorage.getItem('customOrderData') || '{}');
-    const datosDelCliente = JSON.parse(localStorage.getItem('customerData') || '{}');
     let numeroWhatsApp = '{{ section.settings.whatsapp_number }}';
-
     // Mensaje personalizable de WhatsApp
-    const mensajeWhatsAppTemplate = `{{ section.settings.mensaje_whatsapp | default: "Buenas, mi número de orden es el siguiente: {NUMERO_ORDEN}, por favor me atiende" | escape }}`;
+    const mensajeWhatsAppTemplate = `{{ section.settings.mensaje_whatsapp | default: mensaje_default | escape }}`;
 
     // Actualizar número si hay input de configuración
     const phoneInput = document.getElementById('phone-input');
@@ -84,6 +83,54 @@
         numeroWhatsApp = this.value;
       });
     }
+
+    // === DEBUGGING COMPLETO ===
+    console.log('🔍 === DEBUGGING CHECKOUT SUCCESS ===');
+    console.log('📦 customOrderData RAW:', localStorage.getItem('customOrderData'));
+    console.log('👤 customerData RAW:', localStorage.getItem('customerData'));
+
+    const datosDelPedido = JSON.parse(localStorage.getItem('customOrderData') || '{}');
+    const datosDelCliente = JSON.parse(localStorage.getItem('customerData') || '{}');
+
+    console.log('📦 Datos del pedido parseados:', datosDelPedido);
+    console.log('👤 Datos del cliente parseados:', datosDelCliente);
+
+    // Verificar si hay datos
+    if (!datosDelPedido || Object.keys(datosDelPedido).length === 0) {
+      console.error('❌ NO HAY DATOS DEL PEDIDO');
+      actualizarEstado('Error: No se encontraron datos del pedido');
+      return;
+    }
+
+    if (!datosDelPedido.items || datosDelPedido.items.length === 0) {
+      console.error('❌ NO HAY PRODUCTOS EN EL PEDIDO');
+      actualizarEstado('Error: No hay productos en el pedido');
+      return;
+    }
+
+    // Verificar cada producto en detalle
+    datosDelPedido.items.forEach((item, index) => {
+      console.log(`🛍️ PRODUCTO ${index + 1}:`);
+      console.log(`  📝 Título: "${item.title}"`);
+      console.log(`  🏷️ Variante: "${item.variant_title}"`);
+      console.log(`  🆔 Variant ID: ${item.variant_id}`);
+      console.log(`  🆔 Product ID: ${item.product_id}`);
+      console.log(`  💰 Precio: ${item.price}`);
+      console.log(`  📊 Cantidad: ${item.quantity}`);
+      console.log(`  🖼️ Imagen: "${item.image}"`);
+      console.log(`  🔧 SKU: "${item.sku}"`);
+    });
+
+    // Verificar datos del cliente
+    console.log('👤 DATOS DEL CLIENTE:');
+    console.log(`  🔐 Logueado: ${datosDelCliente.logueado}`);
+    if (datosDelCliente.logueado) {
+      console.log(`  👤 Nombre: "${datosDelCliente.nombre}"`);
+      console.log(`  📧 Email: "${datosDelCliente.email}"`);
+      console.log(`  📞 Teléfono: "${datosDelCliente.telefono}"`);
+    }
+
+    console.log('🔍 === FIN DEBUGGING ===');
 
     // Resto del código igual...
     crearOrden(datosDelPedido, datosDelCliente);
@@ -94,46 +141,167 @@
       try {
         actualizarEstado('Procesando orden...');
 
-        const bodyData = {
-          productos: datosPedido.items || [],
-          total: datosPedido.total,
-          tienda: '{{ shop.permanent_domain }}',
-          timestamp: new Date().toISOString(),
+        // 1. CREAR DRAFT ORDER con GraphQL
+        const createDraftOrderMutation = `
+        mutation draftOrderCreate($input: DraftOrderInput!) {
+          draftOrderCreate(input: $input) {
+            draftOrder {
+              id
+              name
+              totalPrice
+              lineItems(first: 10) {
+                edges {
+                  node {
+                    title
+                    variant {
+                      title
+                      image {
+                        url
+                      }
+                    }
+                    quantity
+                    originalUnitPrice
+                  }
+                }
+              }
+            }
+            userErrors {
+              field
+              message
+            }
+          }
+        }`;
+
+        const createVariables = {
+          input: {
+            lineItems: datosPedido.items.map((item) => ({
+              variantId: `gid://shopify/ProductVariant/${item.variant_id}`,
+              quantity: item.quantity,
+            })),
+            email: datosCliente.logueado ? datosCliente.email : '',
+            note: `Orden desde web - ${new Date().toISOString()}`,
+          },
         };
 
-        if (datosCliente.logueado) {
-          bodyData.cliente = {
-            nombre: datosCliente.nombre || 'Cliente',
-            email: datosCliente.email || '',
-            telefono: datosCliente.telefono || '',
-            direccion: datosCliente.direccion || '',
-          };
-        }
+        console.log('📤 Creando Draft Order con GraphQL...');
+        console.log('🔍 Variables:', createVariables);
 
-        const respuesta = await fetch(NETLIFY_FUNCTION_URL, {
+        const createResponse = await fetch(NETLIFY_FUNCTION_URL, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(bodyData),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            query: createDraftOrderMutation,
+            variables: createVariables,
+          }),
         });
 
-        const resultado = await respuesta.json();
+        const createResult = await createResponse.json();
+        console.log('📥 Respuesta Draft Order:', createResult);
 
-        if (resultado.success) {
-          numeroOrden = resultado.numeroOrden || resultado.orderNumber || `LM-${Date.now().toString().slice(-8)}`;
-          document.getElementById('numero-orden').textContent = numeroOrden;
+        if (!createResult.success || createResult.errors) {
+          console.error('❌ Error creando draft order:', createResult.errors);
+          throw new Error('Error creando draft order: ' + JSON.stringify(createResult.errors));
+        }
+
+        const draftOrderId = createResult.data.draftOrderCreate.draftOrder.id;
+        const draftOrderName = createResult.data.draftOrderCreate.draftOrder.name;
+
+        console.log('✅ Draft Order creado:', draftOrderName);
+
+        // 2. COMPLETAR DRAFT ORDER (convertir a orden real)
+        actualizarEstado('Finalizando orden...');
+
+        const completeDraftOrderMutation = `
+        mutation draftOrderComplete($id: ID!, $paymentPending: Boolean) {
+          draftOrderComplete(id: $id, paymentPending: $paymentPending) {
+            draftOrder {
+              order {
+                id
+                name
+                totalPrice
+                displayFinancialStatus
+                lineItems(first: 10) {
+                  edges {
+                    node {
+                      title
+                      variant {
+                        title
+                        image {
+                          url
+                        }
+                      }
+                      quantity
+                      originalUnitPrice
+                    }
+                  }
+                }
+              }
+            }
+            userErrors {
+              field
+              message
+            }
+          }
+        }`;
+
+        console.log('📤 Completando Draft Order...');
+
+        const completeResponse = await fetch(NETLIFY_FUNCTION_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            query: completeDraftOrderMutation,
+            variables: {
+              id: draftOrderId,
+              paymentPending: true,
+            },
+          }),
+        });
+
+        const completeResult = await completeResponse.json();
+        console.log('📥 Respuesta Complete Order:', completeResult);
+
+        if (
+          completeResult.success &&
+          !completeResult.errors &&
+          completeResult.data.draftOrderComplete.draftOrder.order
+        ) {
+          // Orden real creada exitosamente
+          const order = completeResult.data.draftOrderComplete.draftOrder.order;
+          numeroOrden = order.name;
+          console.log('✅ Orden REAL creada exitosamente:', numeroOrden);
+          console.log('💰 Total:', order.totalPrice);
+          console.log('💳 Estado financiero:', order.displayFinancialStatus);
+
+          // Mostrar productos de la orden
+          if (order.lineItems && order.lineItems.edges) {
+            console.log('🛍️ Productos en la orden:');
+            order.lineItems.edges.forEach((edge, index) => {
+              const item = edge.node;
+              console.log(`  ${index + 1}. ${item.title} - ${item.variant?.title} (${item.quantity}x)`);
+            });
+          }
+
           actualizarEstado('Orden procesada exitosamente');
         } else {
-          throw new Error(resultado.error || 'Error desconocido');
+          // Si no se puede completar, usar el draft order
+          console.warn('⚠️ No se pudo completar la orden, usando Draft Order');
+          numeroOrden = draftOrderName;
+          actualizarEstado('Orden registrada como borrador');
         }
+
+        document.getElementById('numero-orden').textContent = numeroOrden;
       } catch (error) {
-        console.error('Error:', error);
+        console.error('💥 Error completo:', error);
+        console.error('💥 Stack:', error.stack);
+
+        // Generar número de orden de fallback
         numeroOrden = `LM-${Date.now().toString().slice(-8)}`;
         document.getElementById('numero-orden').textContent = numeroOrden;
-        actualizarEstado('Orden registrada');
+        actualizarEstado('Error procesando orden - Número temporal asignado');
       }
 
+      // Continuar con WhatsApp después de 2 segundos
       setTimeout(() => {
         document.getElementById('seccion-whatsapp').style.display = 'block';
         iniciarContadorWhatsApp(numeroOrden);
@@ -211,7 +379,7 @@
       "type": "text",
       "id": "whatsapp_number",
       "label": "Numero de WhatsApp",
-      "default": "+59178452415",
+      "default": "+59178008717",
       "info": "Numero de WhatsApp para contacto (incluir codigo de pais sin +)"
     },
     {
@@ -224,4 +392,3 @@
   ]
 }
 {% endschema %}
-{% comment %}  {% endcomment %}

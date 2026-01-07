@@ -200,7 +200,8 @@
                     disabled
                   {% endif %}
                 >
-                  {{ 'templates.cart.checkout' | t }}
+                  {% comment %} {{ 'templates.cart.checkout' | t }} {% endcomment %}
+                  Finalizar compra
                 </button>
               </div>
 
@@ -316,14 +317,20 @@
       items: [
         {% for item in cart.items %}
         {
+          variant_id: {{ item.variant.id }},
+          product_id: {{ item.product.id }},
           title: "{{ item.product.title | escape }}",
+          variant_title: "{{ item.variant.title | escape }}",
           quantity: {{ item.quantity }},
-          price: "{{ item.final_price | money }}",
-          variant: "{{ item.variant.title | escape }}"
+          price: {{ item.variant.price }}, // Precio en centavos
+          compare_at_price: {{ item.variant.compare_at_price | default: 0 }},
+          sku: "{{ item.variant.sku | escape }}",
+          image: "{{ item.variant.image | default: item.product.featured_image | image_url: width: 300 }}",
+          url: "{{ item.product.url }}"
         }{% unless forloop.last %},{% endunless %}
         {% endfor %}
       ],
-      total: "{{ cart.total_price | money }}",
+      total: {{ cart.total_price }},
       subtotal: "{{ cart.total_price | money }}",
       timestamp: new Date().toISOString()
     };

@@ -40,9 +40,7 @@
             <span class="rte">
               {{
                 'templates.cart.checkbox_cart_policy_consent_html'
-                | t:
-                  link: settings.cart_policy_consent_page.url,
-                  label: settings.cart_policy_consent_page.title
+                | t: link: settings.cart_policy_consent_page.url, label: settings.cart_policy_consent_page.title
               }}
             </span>
           </label>
@@ -56,8 +54,16 @@
         {% render 'angle', direction: 'right' %}
       </a>
 
-      <button type="submit" class="button" name="checkout">
-        {{ 'templates.cart.checkout' | t }}
+      {% comment %}
+        Botón original que lleva al checkout nativo - COMENTADO
+        <button type="submit" class="button" name="checkout">
+          {{ 'templates.cart.checkout' | t }}
+          {% render 'angle', direction: 'right' %}
+        </button>
+      {% endcomment %}
+
+      <button type="button" class="button" id="mini-cart-custom-checkout">
+        Finalizar compra
         {% render 'angle', direction: 'right' %}
       </button>
     </div>
@@ -65,3 +71,138 @@
     <span class="spinner-sm"></span>
   </div>
 {%- endif -%}
+
+<script>
+  // Función para manejar el checkout del mini-cart
+  function handleMiniCartCheckout() {
+    console.log('Función handleMiniCartCheckout ejecutada');
+
+    if ({{ cart.item_count }} === 0) {
+      console.log('Carrito vacío, saliendo');
+      return;
+    }
+
+    console.log('Procesando checkout del mini-cart...');
+
+    // Recopilar datos del carrito
+    const orderData = {
+      orderNumber: 'LM' + Date.now(),
+      items: [
+        {% for item in cart.items %}
+        {
+          title: "{{ item.product.title | escape }}",
+          quantity: {{ item.quantity }},
+          price: "{{ item.final_price | money }}",
+          variant: "{{ item.variant.title | escape }}"
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ],
+      total: "{{ cart.total_price | money }}",
+      subtotal: "{{ cart.total_price | money }}",
+      timestamp: new Date().toISOString()
+    };
+
+    console.log('Datos del pedido:', orderData);
+
+    // Agregar información del cliente si está logueado
+    {% if customer %}
+    const customerData = {
+      nombre: "{{ customer.first_name | escape }} {{ customer.last_name | escape }}",
+      email: "{{ customer.email | escape }}",
+      telefono: "{{ customer.phone | default: '' | escape }}",
+      direccion: "{% if customer.default_address %}{{ customer.default_address.address1 | escape }}{% if customer.default_address.address2 %}, {{ customer.default_address.address2 | escape }}{% endif %}, {{ customer.default_address.city | escape }}{% endif %}",
+      id: {{ customer.id }},
+      logueado: true
+    };
+    localStorage.setItem('customerData', JSON.stringify(customerData));
+    {% else %}
+    const customerData = { logueado: false };
+    localStorage.setItem('customerData', JSON.stringify(customerData));
+    {% endif %}
+
+    // Guardar datos del pedido
+    localStorage.setItem('customOrderData', JSON.stringify(orderData));
+
+    // Limpiar carrito
+    fetch('/cart/clear.js', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }).then(() => {
+      console.log('Carrito limpiado');
+
+      // Cerrar el mini-cart drawer
+      const drawerToggle = document.querySelector('drawer-toggle[for="HeaderMiniCart"]');
+      if (drawerToggle) {
+        drawerToggle.click();
+        console.log('Drawer cerrado');
+      }
+
+      // Redirigir a página de agradecimiento
+      console.log('Redirigiendo a checkout-success');
+      window.location.href = '/pages/checkout-success';
+    }).catch(error => {
+      console.error('Error al limpiar carrito:', error);
+    });
+  }
+
+  // Múltiples formas de asegurar que el evento se vincule
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM cargado, buscando botón mini-cart...');
+
+    function bindMiniCartButton() {
+      const miniCartCheckoutBtn = document.getElementById('mini-cart-custom-checkout');
+      console.log('Botón encontrado:', miniCartCheckoutBtn);
+
+      if (miniCartCheckoutBtn && !miniCartCheckoutBtn.hasAttribute('data-bound')) {
+        miniCartCheckoutBtn.setAttribute('data-bound', 'true');
+        miniCartCheckoutBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          console.log('Click en botón mini-cart detectado');
+          handleMiniCartCheckout();
+        });
+        console.log('Event listener agregado al botón mini-cart');
+      }
+    }
+
+    // Intentar vincular inmediatamente
+    bindMiniCartButton();
+
+    // También intentar después de un pequeño delay (por si el mini-cart se carga dinámicamente)
+    setTimeout(bindMiniCartButton, 500);
+    setTimeout(bindMiniCartButton, 1000);
+
+    // Observar cambios en el DOM para cuando se abra el mini-cart
+    const observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.type === 'childList') {
+          bindMiniCartButton();
+        }
+      });
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  });
+
+  // También vincular cuando se abra el mini-cart
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('drawer-toggle[for="HeaderMiniCart"]')) {
+      setTimeout(function() {
+        const miniCartCheckoutBtn = document.getElementById('mini-cart-custom-checkout');
+        if (miniCartCheckoutBtn && !miniCartCheckoutBtn.hasAttribute('data-bound')) {
+          miniCartCheckoutBtn.setAttribute('data-bound', 'true');
+          miniCartCheckoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Click en botón mini-cart detectado (desde apertura)');
+            handleMiniCartCheckout();
+          });
+          console.log('Event listener agregado desde apertura del drawer');
+        }
+      }, 100);
+    }
+  });
+</script>
