@@ -20,59 +20,212 @@
     </p>
 
     <div class="order-number">
-      <span
-        >Orden #<span id="order-number">{{ 'now' | date: '%Y%m%d%H%M%S' }}</span></span
-      >
+      <span>Orden #<span id="numero-orden">Procesando...</span></span>
     </div>
 
-    <div class="order-details" id="order-details">
+    <div class="order-details" id="detalles-pedido">
       <!-- Los detalles del pedido se cargarán aquí -->
     </div>
 
-    <div class="success-actions">
-      <a href="{{ routes.root_url }}" class="button button-primary"> Continuar Comprando </a>
-      <button id="whatsapp-contact" class="button button-secondary">Contactar por WhatsApp</button>
+    <!-- Estado del pedido -->
+    <div id="estado-pedido" class="estado-procesando">
+      <p>📝 Creando orden en Shopify...</p>
+    </div>
+
+    <!-- Contador y redirección automática -->
+    <div class="whatsapp-redirect" id="seccion-whatsapp" style="display: none;">
+      <div class="countdown-container">
+        <div class="whatsapp-icon">📱</div>
+        <p class="redirect-message">Te redirigiremos a WhatsApp en <span id="countdown">3</span> segundos...</p>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+
+      <button id="whatsapp-ahora" class="button button-whatsapp">Ir a WhatsApp Ahora</button>
     </div>
   </div>
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    // Obtener datos del pedido desde localStorage
-    const orderData = JSON.parse(localStorage.getItem('customOrderData') || '{}');
+    // Configuración con Admin API (usando tus credenciales actuales)
+    const configuracionAPI = {
+      adminSecret: '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', // Tu secret actual
+      clientId: '6727999b827a6321a8bf0c5814c841c8', // Tu client ID
+      tiendaUrl: '{{ shop.permanent_domain }}',
+      apiVersion: '2024-10', // Versión estable
+    };
 
-    if (orderData.orderNumber) {
-      document.getElementById('order-number').textContent = orderData.orderNumber;
+    // Variables en español
+    const datosDelPedido = JSON.parse(localStorage.getItem('customOrderData') || '{}');
+    const numeroWhatsApp = '{{ section.settings.whatsapp_number }}';
+
+    // Mostrar detalles del pedido inmediatamente
+    if (datosDelPedido.items) {
+      mostrarDetallesPedido(datosDelPedido.items, datosDelPedido.total);
     }
 
-    if (orderData.items) {
-      displayOrderDetails(orderData.items, orderData.total);
+    // Crear orden real en Shopify usando Admin API
+    crearOrdenConAdminAPI(datosDelPedido, configuracionAPI);
+
+    // Función principal para crear Draft Order con Admin API
+    async function crearOrdenConAdminAPI(datosPedido, config) {
+      try {
+        actualizarEstadoPedido('🔄 Conectando con Shopify...');
+
+        // Preparar datos de la orden borrador
+        const ordenBorrador = {
+          draft_order: {
+            line_items: datosPedido.items.map((producto) => ({
+              title: producto.title,
+              quantity: producto.quantity,
+              price: extraerPrecioNumerico(producto.price),
+              custom: true, // Producto personalizado
+              variant_title: producto.variant || 'Default',
+            })),
+            customer: {
+              first_name: 'Cliente',
+              last_name: 'WhatsApp',
+              email: `cliente.${Date.now()}@checkout-personalizado.com`,
+            },
+            note: `Pedido desde checkout personalizado - ${new Date().toLocaleString('es-ES')}`,
+            tags: ['checkout-personalizado', 'whatsapp'],
+            use_customer_default_address: false,
+            financial_status: 'pending',
+          },
+        };
+
+        actualizarEstadoPedido('📝 Creando orden en Shopify...');
+
+        // Crear Draft Order usando Admin API
+        const respuesta = await fetch(`https://${config.tiendaUrl}/admin/api/${config.apiVersion}/draft_orders.json`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Shopify-Access-Token': config.adminSecret,
+          },
+          body: JSON.stringify(ordenBorrador),
+        });
+
+        if (respuesta.ok) {
+          const resultado = await respuesta.json();
+          const numeroOrden = resultado.draft_order.name || `#${resultado.draft_order.id}`;
+
+          // Actualizar número de orden en la página
+          document.getElementById('numero-orden').textContent = numeroOrden;
+
+          // Actualizar estado exitoso
+          actualizarEstadoPedido('✅ ¡Orden creada exitosamente en Shopify!');
+
+          // Mostrar sección de WhatsApp después de 2 segundos
+          setTimeout(() => {
+            document.getElementById('seccion-whatsapp').style.display = 'block';
+            iniciarContadorWhatsApp(numeroOrden);
+          }, 2000);
+        } else {
+          const errorData = await respuesta.json();
+          throw new Error(`Error HTTP ${respuesta.status}: ${JSON.stringify(errorData)}`);
+        }
+      } catch (error) {
+        console.error('Error creando orden:', error);
+
+        // Usar número temporal si falla la API
+        const numeroTemporal = 'LM-' + Date.now().toString().slice(-8);
+        document.getElementById('numero-orden').textContent = numeroTemporal;
+
+        actualizarEstadoPedido('⚠️ Orden registrada localmente - Contacta por WhatsApp');
+
+        // Mostrar WhatsApp inmediatamente si falla
+        setTimeout(() => {
+          document.getElementById('seccion-whatsapp').style.display = 'block';
+          iniciarContadorWhatsApp(numeroTemporal);
+        }, 1000);
+      }
     }
 
-    // Configurar botón de WhatsApp
-    document.getElementById('whatsapp-contact').addEventListener('click', function () {
-      const message = `Hola! Mi pedido #${
-        orderData.orderNumber || 'NUEVO'
-      } ha sido confirmado. Me gustaría coordinar la entrega.`;
-      const whatsappUrl = `https://wa.me/{{ section.settings.whatsapp_number }}?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
-    });
+    // Función para extraer precio numérico
+    function extraerPrecioNumerico(precioTexto) {
+      if (!precioTexto || precioTexto === 'Precio no disponible') {
+        return '0.00';
+      }
 
-    // Limpiar datos después de mostrar
-    localStorage.removeItem('customOrderData');
+      // Limpiar el precio: quitar símbolos y dejar solo números y punto
+      const numeroLimpio = precioTexto.toString().replace(/[^\d.,]/g, '');
+
+      // Convertir comas a puntos si es necesario
+      const numeroConPunto = numeroLimpio.replace(',', '.');
+
+      // Extraer solo la parte numérica
+      const precio = parseFloat(numeroConPunto) || 0;
+
+      return precio.toFixed(2);
+    }
+
+    // Función para actualizar el estado del pedido
+    function actualizarEstadoPedido(mensaje) {
+      const elementoEstado = document.getElementById('estado-pedido');
+      elementoEstado.innerHTML = `<p>${mensaje}</p>`;
+    }
+
+    // Función para iniciar contador de WhatsApp
+    function iniciarContadorWhatsApp(numeroOrden) {
+      const mensajeWhatsApp = `Buenas, quisiera atención por favor. Mi número de orden es el siguiente: #${numeroOrden}`;
+      const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensajeWhatsApp)}`;
+
+      // Contador regresivo
+      let contador = 3;
+      const elementoContador = document.getElementById('countdown');
+      const barraProgreso = document.getElementById('progress-fill');
+
+      const temporizador = setInterval(() => {
+        contador--;
+        elementoContador.textContent = contador;
+
+        // Actualizar barra de progreso
+        const progreso = ((3 - contador) / 3) * 100;
+        barraProgreso.style.width = progreso + '%';
+
+        if (contador <= 0) {
+          clearInterval(temporizador);
+          window.open(urlWhatsApp, '_blank');
+        }
+      }, 1000);
+
+      // Botón manual de WhatsApp
+      document.getElementById('whatsapp-ahora').addEventListener('click', function () {
+        clearInterval(temporizador);
+        window.open(urlWhatsApp, '_blank');
+      });
+    }
+
+    // Función para mostrar detalles del pedido
+    function mostrarDetallesPedido(productos, total) {
+      const contenedorDetalles = document.getElementById('detalles-pedido');
+      let html = '<div class="order-summary"><h3>Resumen del Pedido:</h3><ul>';
+
+      productos.forEach((producto) => {
+        html += `<li>
+            <span class="item-qty">${producto.quantity}x</span> 
+            <span class="item-name">${producto.title}</span>`;
+
+        if (producto.variant && producto.variant !== 'Default Title' && producto.variant !== 'Seleccionado') {
+          html += ` <span class="item-variant">(${producto.variant})</span>`;
+        }
+
+        html += ` <span class="item-price">${producto.price}</span>
+          </li>`;
+      });
+
+      html += `</ul><div class="order-total"><strong>Total: ${total}</strong></div></div>`;
+      contenedorDetalles.innerHTML = html;
+    }
+
+    // Limpiar datos después de procesar
+    setTimeout(() => {
+      localStorage.removeItem('customOrderData');
+    }, 10000); // 10 segundos
   });
-
-  function displayOrderDetails(items, total) {
-    const detailsContainer = document.getElementById('order-details');
-    let html = '<div class="order-summary"><h3>Resumen del Pedido:</h3><ul>';
-
-    items.forEach((item) => {
-      html += `<li>${item.quantity}x ${item.title} - ${item.price}</li>`;
-    });
-
-    html += `</ul><div class="order-total"><strong>Total: ${total}</strong></div></div>`;
-    detailsContainer.innerHTML = html;
-  }
 </script>
 
 {% schema %}
@@ -83,8 +236,14 @@
       "type": "text",
       "id": "whatsapp_number",
       "label": "Número de WhatsApp",
-      "default": "1234567890",
+      "default": "59178123456",
       "info": "Número de WhatsApp para contacto (incluir código de país sin +)"
+    },
+    {
+      "type": "text",
+      "id": "storefront_token",
+      "label": "Storefront Access Token",
+      "info": "Token de acceso de Storefront API para crear órdenes reales"
     }
   ]
 }
