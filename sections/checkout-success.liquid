@@ -68,286 +68,207 @@
 {% assign mensaje_default = 'Buenas, mi número de orden es el siguiente: {NUMERO_ORDEN}, por favor me atiende' %}
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const NETLIFY_FUNCTION_URL = 'https://api-aux-ferroman.netlify.app/.netlify/functions/crear-orden';
+  /**
+   * MÓDULO DE CHECKOUT PERSONALIZADO
+   * Funciones compartidas y optimizadas para todos los flujos de checkout
+   */
+  (function() {
+    'use strict';
 
-    // Obtener datos
-    let numeroWhatsApp = '{{ section.settings.whatsapp_number }}';
-    // Mensaje personalizable de WhatsApp
-    const mensajeWhatsAppTemplate = `{{ section.settings.mensaje_whatsapp | default: mensaje_default | escape }}`;
+    // ========== CONFIGURACIÓN ==========
+    const CONFIG = {
+      CHECKOUT_SUCCESS_URL: '/pages/checkout-success',
+      ENABLE_DEBUG: false, // Cambiar a true para debug
+      CART_CLEAR_ENABLED: true,
+      USE_CUSTOM_CHECKOUT: true, // Para Buy Now buttons
+    };
 
-    // Actualizar número si hay input de configuración
-    const phoneInput = document.getElementById('phone-input');
-    if (phoneInput) {
-      phoneInput.addEventListener('input', function () {
-        numeroWhatsApp = this.value;
-      });
+    // ========== UTILIDADES ==========
+    const debug = {
+      log: (...args) => CONFIG.ENABLE_DEBUG && console.log(...args),
+      error: (...args) => CONFIG.ENABLE_DEBUG && console.error(...args),
+      warn: (...args) => CONFIG.ENABLE_DEBUG && console.warn(...args),
+    };
+
+    // ========== FUNCIONES DE DATOS DEL CLIENTE ==========
+    function obtenerDatosCliente() {
+      {% if customer %}
+      return {
+        nombre: "{{ customer.first_name | escape }} {{ customer.last_name | escape }}".trim(),
+        email: "{{ customer.email | escape }}",
+        telefono: "{{ customer.phone | default: '' | escape }}",
+        direccion: "{% if customer.default_address %}{{ customer.default_address.address1 | escape }}{% if customer.default_address.address2 %}, {{ customer.default_address.address2 | escape }}{% endif %}, {{ customer.default_address.city | escape }}{% endif %}",
+        id: {{ customer.id }},
+        logueado: true
+      };
+      {% else %}
+      return {
+        logueado: false,
+        nombre: 'Invitado',
+        email: '',
+        telefono: '',
+        direccion: ''
+      };
+      {% endif %}
     }
 
-    // === DEBUGGING COMPLETO ===
-    console.log('🔍 === DEBUGGING CHECKOUT SUCCESS ===');
-    console.log('📦 customOrderData RAW:', localStorage.getItem('customOrderData'));
-    console.log('👤 customerData RAW:', localStorage.getItem('customerData'));
-
-    const datosDelPedido = JSON.parse(localStorage.getItem('customOrderData') || '{}');
-    const datosDelCliente = JSON.parse(localStorage.getItem('customerData') || '{}');
-
-    console.log('📦 Datos del pedido parseados:', datosDelPedido);
-    console.log('👤 Datos del cliente parseados:', datosDelCliente);
-
-    // Verificar si hay datos
-    if (!datosDelPedido || Object.keys(datosDelPedido).length === 0) {
-      console.error('❌ NO HAY DATOS DEL PEDIDO');
-      actualizarEstado('Error: No se encontraron datos del pedido');
-      return;
+    function guardarDatosCliente() {
+      const customerData = obtenerDatosCliente();
+      localStorage.setItem('customerData', JSON.stringify(customerData));
+      debug.log('👤 Datos del cliente guardados:', customerData.nombre || 'Invitado');
+      return customerData;
     }
 
-    if (!datosDelPedido.items || datosDelPedido.items.length === 0) {
-      console.error('❌ NO HAY PRODUCTOS EN EL PEDIDO');
-      actualizarEstado('Error: No hay productos en el pedido');
-      return;
+    // ========== CONSTRUCCIÓN DE DATOS DE PEDIDO ==========
+    function construirItemPedido(item) {
+      const baseItem = {
+        variant_id: item.variant_id || item.id,
+        product_id: item.product_id || item.product?.id,
+        title: item.title || item.product?.title || '',
+        variant_title: item.variant_title || item.title || 'Default Title',
+        quantity: item.quantity || 1,
+        price: item.price || 0,
+        price_cents: item.price_cents || Math.round(item.price * 100),
+        compare_at_price: item.compare_at_price || 0,
+        sku: item.sku || '',
+        image: item.image || '',
+        url: item.url || item.product?.url || '',
+        vendor: item.vendor || item.product?.vendor || '',
+        product_type: item.product_type || item.product?.type || '',
+        price_formatted: item.price_formatted || ''
+      };
+
+      // Agregar opciones si existen
+      if (item.option1) baseItem.option1 = item.option1;
+      if (item.option2) baseItem.option2 = item.option2;
+      if (item.option3) baseItem.option3 = item.option3;
+      if (item.options) baseItem.options = item.options;
+
+      return baseItem;
     }
 
-    // Verificar cada producto en detalle
-    datosDelPedido.items.forEach((item, index) => {
-      console.log(`🛍️ PRODUCTO ${index + 1}:`);
-      console.log(`  📝 Título: "${item.title}"`);
-      console.log(`  🏷️ Variante: "${item.variant_title}"`);
-      console.log(`  🆔 Variant ID: ${item.variant_id}`);
-      console.log(`  🆔 Product ID: ${item.product_id}`);
-      console.log(`  💰 Precio: ${item.price}`);
-      console.log(`  📊 Cantidad: ${item.quantity}`);
-      console.log(`  🖼️ Imagen: "${item.image}"`);
-      console.log(`  🔧 SKU: "${item.sku}"`);
-    });
+    function construirDatosPedido(items, total = null) {
+      const orderData = {
+        orderNumber: 'LM' + Date.now(),
+        items: Array.isArray(items) ? items.map(construirItemPedido) : [construirItemPedido(items)],
+        timestamp: new Date().toISOString()
+      };
 
-    // Verificar datos del cliente
-    console.log('👤 DATOS DEL CLIENTE:');
-    console.log(`  🔐 Logueado: ${datosDelCliente.logueado}`);
-    if (datosDelCliente.logueado) {
-      console.log(`  👤 Nombre: "${datosDelCliente.nombre}"`);
-      console.log(`  📧 Email: "${datosDelCliente.email}"`);
-      console.log(`  📞 Teléfono: "${datosDelCliente.telefono}"`);
-    }
-
-    console.log('🔍 === FIN DEBUGGING ===');
-
-    // Resto del código igual...
-    crearOrden(datosDelPedido, datosDelCliente);
-
-    async function crearOrden(datosPedido, datosCliente) {
-      let numeroOrden = '';
-
-      try {
-        actualizarEstado('Procesando orden...');
-
-        // 1. CREAR DRAFT ORDER con GraphQL
-        const createDraftOrderMutation = `
-        mutation draftOrderCreate($input: DraftOrderInput!) {
-          draftOrderCreate(input: $input) {
-            draftOrder {
-              id
-              name
-              totalPrice
-              lineItems(first: 10) {
-                edges {
-                  node {
-                    title
-                    variant {
-                      title
-                      image {
-                        url
-                      }
-                    }
-                    quantity
-                    originalUnitPrice
-                  }
-                }
-              }
-            }
-            userErrors {
-              field
-              message
-            }
-          }
-        }`;
-
-        const createVariables = {
-          input: {
-            lineItems: datosPedido.items.map((item) => ({
-              variantId: `gid://shopify/ProductVariant/${item.variant_id}`,
-              quantity: item.quantity,
-            })),
-            email: datosCliente.logueado ? datosCliente.email : '',
-            note: `Orden desde web - ${new Date().toISOString()}`,
-          },
-        };
-
-        console.log('📤 Creando Draft Order con GraphQL...');
-        console.log('🔍 Variables:', createVariables);
-
-        const createResponse = await fetch(NETLIFY_FUNCTION_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            query: createDraftOrderMutation,
-            variables: createVariables,
-          }),
-        });
-
-        const createResult = await createResponse.json();
-        console.log('📥 Respuesta Draft Order:', createResult);
-
-        if (!createResult.success || createResult.errors) {
-          console.error('❌ Error creando draft order:', createResult.errors);
-          throw new Error('Error creando draft order: ' + JSON.stringify(createResult.errors));
-        }
-
-        const draftOrderId = createResult.data.draftOrderCreate.draftOrder.id;
-        const draftOrderName = createResult.data.draftOrderCreate.draftOrder.name;
-
-        console.log('✅ Draft Order creado:', draftOrderName);
-
-        // 2. COMPLETAR DRAFT ORDER (convertir a orden real)
-        actualizarEstado('Finalizando orden...');
-
-        const completeDraftOrderMutation = `
-        mutation draftOrderComplete($id: ID!, $paymentPending: Boolean) {
-          draftOrderComplete(id: $id, paymentPending: $paymentPending) {
-            draftOrder {
-              order {
-                id
-                name
-                totalPrice
-                displayFinancialStatus
-                lineItems(first: 10) {
-                  edges {
-                    node {
-                      title
-                      variant {
-                        title
-                        image {
-                          url
-                        }
-                      }
-                      quantity
-                      originalUnitPrice
-                    }
-                  }
-                }
-              }
-            }
-            userErrors {
-              field
-              message
-            }
-          }
-        }`;
-
-        console.log('📤 Completando Draft Order...');
-
-        const completeResponse = await fetch(NETLIFY_FUNCTION_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            query: completeDraftOrderMutation,
-            variables: {
-              id: draftOrderId,
-              paymentPending: true,
-            },
-          }),
-        });
-
-        const completeResult = await completeResponse.json();
-        console.log('📥 Respuesta Complete Order:', completeResult);
-
-        if (
-          completeResult.success &&
-          !completeResult.errors &&
-          completeResult.data.draftOrderComplete.draftOrder.order
-        ) {
-          // Orden real creada exitosamente
-          const order = completeResult.data.draftOrderComplete.draftOrder.order;
-          numeroOrden = order.name;
-          console.log('✅ Orden REAL creada exitosamente:', numeroOrden);
-          console.log('💰 Total:', order.totalPrice);
-          console.log('💳 Estado financiero:', order.displayFinancialStatus);
-
-          // Mostrar productos de la orden
-          if (order.lineItems && order.lineItems.edges) {
-            console.log('🛍️ Productos en la orden:');
-            order.lineItems.edges.forEach((edge, index) => {
-              const item = edge.node;
-              console.log(`  ${index + 1}. ${item.title} - ${item.variant?.title} (${item.quantity}x)`);
-            });
-          }
-
-          actualizarEstado('Orden procesada exitosamente');
-        } else {
-          // Si no se puede completar, usar el draft order
-          console.warn('⚠️ No se pudo completar la orden, usando Draft Order');
-          numeroOrden = draftOrderName;
-          actualizarEstado('Orden registrada como borrador');
-        }
-
-        document.getElementById('numero-orden').textContent = numeroOrden;
-      } catch (error) {
-        console.error('💥 Error completo:', error);
-        console.error('💥 Stack:', error.stack);
-
-        // Generar número de orden de fallback
-        numeroOrden = `LM-${Date.now().toString().slice(-8)}`;
-        document.getElementById('numero-orden').textContent = numeroOrden;
-        actualizarEstado('Error procesando orden - Número temporal asignado');
+      // Calcular totales si no se proporcionan
+      if (total === null) {
+        orderData.total = orderData.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        orderData.total_cents = orderData.items.reduce((sum, item) => sum + (item.price_cents * item.quantity), 0);
+      } else {
+        orderData.total = typeof total === 'number' ? total : (total / 100);
+        orderData.total_cents = typeof total === 'number' ? (total * 100) : total;
       }
 
-      // Continuar con WhatsApp después de 2 segundos
-      setTimeout(() => {
-        document.getElementById('seccion-whatsapp').style.display = 'block';
-        iniciarContadorWhatsApp(numeroOrden);
-      }, 2000);
+      orderData.subtotal = orderData.total;
+      orderData.total_formatted = new Intl.NumberFormat('es-BO', {
+        style: 'currency',
+        currency: 'BOB'
+      }).format(orderData.total);
+
+      return orderData;
     }
 
-    function actualizarEstado(mensaje) {
-      document.getElementById('estado-pedido').innerHTML = `
-          <div class="loading-text">
-            <p>${mensaje}</p>
-          </div>
-        `;
-    }
+    // ========== FUNCIÓN DE CHECKOUT (CORE) ==========
+    async function procesarCheckoutPersonalizado(orderData, options = {}) {
+      const {
+        limpiarCarrito = CONFIG.CART_CLEAR_ENABLED,
+        cerrarDrawer = false,
+        onSuccess = null,
+        onError = null
+      } = options;
 
-    function iniciarContadorWhatsApp(numeroOrden) {
-      const mensajeWhatsApp = mensajeWhatsAppTemplate.replace('{NUMERO_ORDEN}', numeroOrden);
-      const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensajeWhatsApp)}`;
+      try {
+        // Guardar datos del cliente
+        guardarDatosCliente();
 
-      let contador = 5;
-      const elementoContador = document.getElementById('countdown');
-      const barraProgreso = document.getElementById('progress-fill');
+        // Guardar datos del pedido
+        localStorage.setItem('customOrderData', JSON.stringify(orderData));
+        debug.log('💾 Datos guardados en localStorage:', orderData);
 
-      const temporizador = setInterval(() => {
-        contador--;
-        elementoContador.textContent = contador;
-
-        const progreso = ((5 - contador) / 5) * 100;
-        barraProgreso.style.width = progreso + '%';
-
-        if (contador <= 0) {
-          clearInterval(temporizador);
-          window.open(urlWhatsApp, '_blank');
+        // Limpiar carrito si es necesario
+        if (limpiarCarrito) {
+          await limpiarCarritoShopify();
         }
-      }, 1000);
 
-      document.getElementById('whatsapp-ahora').addEventListener('click', function () {
-        clearInterval(temporizador);
-        window.open(urlWhatsApp, '_blank');
-      });
+        // Cerrar drawer si es necesario
+        if (cerrarDrawer) {
+          cerrarMiniCartDrawer();
+        }
+
+        // Callback de éxito
+        if (onSuccess && typeof onSuccess === 'function') {
+          onSuccess(orderData);
+        }
+
+        // Redirigir
+        window.location.href = CONFIG.CHECKOUT_SUCCESS_URL;
+
+      } catch (error) {
+        debug.error('💥 Error en checkout personalizado:', error);
+        
+        if (onError && typeof onError === 'function') {
+          onError(error);
+        } else {
+          // Fallback: redirigir de todas formas si ya se guardaron los datos
+          if (localStorage.getItem('customOrderData')) {
+            window.location.href = CONFIG.CHECKOUT_SUCCESS_URL;
+          }
+        }
+      }
     }
 
-    setTimeout(() => {
-      localStorage.removeItem('customOrderData');
-      localStorage.removeItem('customerData');
-    }, 15000);
-  });
+    // ========== FUNCIONES AUXILIARES ==========
+    async function limpiarCarritoShopify() {
+      try {
+        const response = await fetch('/cart/clear.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        debug.log('✅ Carrito limpiado');
+        return true;
+      } catch (error) {
+        debug.error('❌ Error al limpiar carrito:', error);
+        throw error;
+      }
+    }
+
+    function cerrarMiniCartDrawer() {
+      const drawerToggle = document.querySelector('drawer-toggle[for="HeaderMiniCart"]');
+      if (drawerToggle) {
+        drawerToggle.click();
+        debug.log('✅ Drawer cerrado');
+      }
+    }
+
+    // ========== EXPORTAR FUNCIONES PÚBLICAS ==========
+    window.CustomCheckout = {
+      // Función principal
+      procesar: procesarCheckoutPersonalizado,
+      
+      // Funciones auxiliares
+      obtenerDatosCliente,
+      guardarDatosCliente,
+      construirDatosPedido,
+      construirItemPedido,
+      limpiarCarrito: limpiarCarritoShopify,
+      cerrarDrawer: cerrarMiniCartDrawer,
+      
+      // Configuración
+      config: CONFIG,
+      debug
+    };
+
+    debug.log('✅ Módulo CustomCheckout cargado');
+  })();
 </script>
 
 {% schema %}

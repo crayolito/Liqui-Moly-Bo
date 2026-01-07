@@ -308,13 +308,20 @@
 {% endschema %}
 
 <script>
-  document.getElementById('custom-checkout').addEventListener('click', function() {
-    if ({{ cart.item_count }} === 0) return;
+  document.addEventListener('DOMContentLoaded', function() {
+    const checkoutBtn = document.getElementById('custom-checkout');
+    if (!checkoutBtn) return;
 
-    // Recopilar datos del carrito
-    const orderData = {
-      orderNumber: 'LM' + Date.now(),
-      items: [
+    checkoutBtn.addEventListener('click', async function(e) {
+      e.preventDefault();
+
+      if ({{ cart.item_count }} === 0) {
+        console.warn('⚠️ Carrito vacío');
+        return;
+      }
+
+      // Construir datos del pedido desde el carrito
+      const orderData = window.CustomCheckout.construirDatosPedido([
         {% for item in cart.items %}
         {
           variant_id: {{ item.variant.id }},
@@ -322,52 +329,27 @@
           title: "{{ item.product.title | escape }}",
           variant_title: "{{ item.variant.title | escape }}",
           quantity: {{ item.quantity }},
-          price: {{ item.variant.price }}, // Precio en centavos
-          compare_at_price: {{ item.variant.compare_at_price | default: 0 }},
+          price: {{ item.variant.price | divided_by: 100.0 }},
+          price_cents: {{ item.variant.price }},
+          compare_at_price: {{ item.variant.compare_at_price | default: 0 | divided_by: 100.0 }},
           sku: "{{ item.variant.sku | escape }}",
-          image: "{{ item.variant.image | default: item.product.featured_image | image_url: width: 300 }}",
-          url: "{{ item.product.url }}"
+          image: "{% if item.variant.image %}{{ item.variant.image | image_url: width: 300 }}{% elsif item.product.featured_image %}{{ item.product.featured_image | image_url: width: 300 }}{% endif %}",
+          url: "{{ item.product.url }}",
+          vendor: "{{ item.product.vendor | escape }}",
+          product_type: "{{ item.product.type | escape }}",
+          {% if item.variant.option1 %}option1: "{{ item.variant.option1 | escape }}",{% endif %}
+          {% if item.variant.option2 %}option2: "{{ item.variant.option2 | escape }}",{% endif %}
+          {% if item.variant.option3 %}option3: "{{ item.variant.option3 | escape }}",{% endif %}
+          price_formatted: "{{ item.final_price | money }}"
         }{% unless forloop.last %},{% endunless %}
         {% endfor %}
-      ],
-      total: {{ cart.total_price }},
-      subtotal: "{{ cart.total_price | money }}",
-      timestamp: new Date().toISOString()
-    };
+      ], {{ cart.total_price }});
 
-    // Agregar información del cliente si está logueado
-    {% if customer %}
-    const customerData = {
-      nombre: "{{ customer.first_name | escape }} {{ customer.last_name | escape }}",
-      email: "{{ customer.email | escape }}",
-      telefono: "{{ customer.phone | default: '' | escape }}",
-      direccion: "{% if customer.default_address %}{{ customer.default_address.address1 | escape }}{% if customer.default_address.address2 %}, {{ customer.default_address.address2 | escape }}{% endif %}, {{ customer.default_address.city | escape }}{% endif %}",
-      id: {{ customer.id }},
-      logueado: true
-    };
-
-    // Guardar datos del cliente
-    localStorage.setItem('customerData', JSON.stringify(customerData));
-    {% else %}
-    // Cliente no logueado
-    const customerData = {
-      logueado: false
-    };
-    localStorage.setItem('customerData', JSON.stringify(customerData));
-    {% endif %}
-
-    // Guardar datos del pedido
-    localStorage.setItem('customOrderData', JSON.stringify(orderData));
-
-    // Limpiar carrito
-    fetch('/cart/clear.js', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    }).then(() => {
-      // Redirigir a página de agradecimiento
-      window.location.href = '/pages/checkout-success';
+      // Procesar checkout
+      await window.CustomCheckout.procesar(orderData, {
+        limpiarCarrito: true,
+        cerrarDrawer: false
+      });
     });
   });
 </script>

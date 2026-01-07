@@ -8213,233 +8213,157 @@
 {% endschema %}
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    console.log('🚀 Iniciando sistema de compra directa...');
+  document.addEventListener('DOMContentLoaded', function() {
+    const SELECTOR = '.shopify-payment-button__button';
+    const BIND_DELAYS = [0, 500, 1000, 2000];
+
+    function validarVariante(variant, quantity) {
+      if (!variant.available) {
+        window.CustomCheckout.debug.error('❌ Variante no disponible');
+        return { valida: false, mensaje: 'Lo sentimos, esta variante no está disponible.' };
+      }
+
+      if (variant.inventory_policy !== 'continue' && variant.inventory_quantity <= 0) {
+        window.CustomCheckout.debug.error('❌ Sin inventario');
+        return { valida: false, mensaje: 'Lo sentimos, este producto está agotado.' };
+      }
+
+      if (quantity <= 0) {
+        return { valida: false, mensaje: '❌ La cantidad debe ser mayor a 0.' };
+      }
+
+      if (variant.inventory_policy !== 'continue' && quantity > variant.inventory_quantity) {
+        return { 
+          valida: false, 
+          mensaje: `Solo tenemos ${variant.inventory_quantity} unidades disponibles.` 
+        };
+      }
+
+      return { valida: true };
+    }
+
+    function obtenerDatosProducto(button) {
+      try {
+        const productForm = button.closest('product-form');
+        if (!productForm) return null;
+
+        const form = productForm.querySelector('form');
+        if (!form) return null;
+
+        const productJson = document.querySelector('[data-product-json]');
+        if (!productJson) return null;
+
+        const product = JSON.parse(productJson.textContent);
+        const formData = new FormData(form);
+        const selectedVariantId = formData.get('id');
+        const selectedVariant = product.variants.find(v => v.id == selectedVariantId);
+
+        if (!selectedVariant) return null;
+
+        return {
+          product,
+          variant: selectedVariant,
+          quantity: parseInt(formData.get('quantity')) || 1,
+          formData
+        };
+      } catch (error) {
+        window.CustomCheckout.debug.error('Error obteniendo datos del producto:', error);
+        return null;
+      }
+    }
 
     function bindBuyNowButtons() {
-      // Interceptar todos los botones de "Buy Now"
-      const buyNowButtons = document.querySelectorAll('.shopify-payment-button__button');
-      console.log('📦 Botones "Comprar ahora" encontrados:', buyNowButtons.length);
+      const buttons = document.querySelectorAll(SELECTOR);
+      
+      buttons.forEach(button => {
+        if (button.hasAttribute('data-custom-bound')) return;
+        
+        button.setAttribute('data-custom-bound', 'true');
 
-      buyNowButtons.forEach((button, index) => {
-        if (!button.hasAttribute('data-custom-bound')) {
-          button.setAttribute('data-custom-bound', 'true');
-          console.log(`🔗 Vinculando botón ${index + 1}`);
+        button.addEventListener('click', function(e) {
+          if (!window.CustomCheckout.config.USE_CUSTOM_CHECKOUT) {
+            return; // Comportamiento normal
+          }
 
-          button.addEventListener('click', function (e) {
-            // SOLO interceptar si queremos usar checkout personalizado
-            // Verificar si hay una configuración que indique usar checkout personalizado
-            const useCustomCheckout = true; // Cambiar a false para desactivar
-            
-            if (!useCustomCheckout) {
-              console.log('🔄 Usando checkout normal de Shopify');
-              return; // Permitir comportamiento normal
-            }
+          e.preventDefault();
+          e.stopPropagation();
 
-            e.preventDefault();
-            e.stopPropagation();
-            console.log('🛒 Click en "Comprar ahora" interceptado para checkout personalizado');
+          const datos = obtenerDatosProducto(button);
+          if (!datos) {
+            window.CustomCheckout.debug.warn('⚠️ Fallback a checkout normal');
+            window.location.href = button.href || '#';
+            return;
+          }
 
-            try {
-              // Obtener el formulario del producto
-              const productForm = this.closest('product-form');
-              if (!productForm) {
-                console.error('❌ No se encontró product-form, usando checkout normal');
-                // Permitir comportamiento normal si no encontramos el form
-                window.location.href = this.href || '#';
-                return;
-              }
+          const { product, variant, quantity } = datos;
 
-              const form = productForm.querySelector('form');
-              if (!form) {
-                console.error('❌ No se encontró el formulario, usando checkout normal');
-                window.location.href = this.href || '#';
-                return;
-              }
+          // Validar disponibilidad
+          const validacion = validarVariante(variant, quantity);
+          if (!validacion.valida) {
+            alert(validacion.mensaje);
+            return;
+          }
 
-              const formData = new FormData(form);
-              console.log('📋 FormData obtenido correctamente');
-
-              // Obtener el JSON del producto
-              const productJson = document.querySelector('[data-product-json]');
-              if (!productJson) {
-                console.error('❌ No se encontró [data-product-json], usando checkout normal');
-                window.location.href = this.href || '#';
-                return;
-              }
-
-              const product = JSON.parse(productJson.textContent);
-              console.log('✅ Producto cargado:', product.title);
-
-              // Obtener la variante seleccionada
-              const selectedVariantId = formData.get('id');
-              console.log('🎯 ID de variante seleccionada:', selectedVariantId);
-
-              if (!selectedVariantId) {
-                console.error('❌ No se encontró ID de variante, usando checkout normal');
-                window.location.href = this.href || '#';
-                return;
-              }
-
-              const selectedVariant = product.variants.find(v => v.id == selectedVariantId);
-              if (!selectedVariant) {
-                console.error('❌ No se encontró la variante seleccionada, usando checkout normal');
-                console.log('📋 Variantes disponibles:', product.variants.map(v => ({ id: v.id, title: v.title })));
-                window.location.href = this.href || '#';
-                return;
-              }
-
-              console.log('✅ Variante seleccionada:', selectedVariant.title);
-
-              // === VALIDACIÓN DE DISPONIBILIDAD ===
-              console.log('🔍 Verificando disponibilidad...');
-              console.log('📦 Variante disponible:', selectedVariant.available);
-              console.log('📊 Inventario:', selectedVariant.inventory_quantity);
-              console.log('📋 Política de inventario:', selectedVariant.inventory_policy);
-              
-              // Verificar si la variante está disponible
-              if (!selectedVariant.available) {
-                console.error('❌ Variante no disponible');
-                {% comment %} alert('Lo sentimos, esta variante del producto no está disponible en este momento.'); {% endcomment %}
-                return;
-              }
-              
-              // Verificar inventario si la política no permite continuar sin stock
-              if (selectedVariant.inventory_policy !== 'continue' && selectedVariant.inventory_quantity <= 0) {
-                console.error('❌ Sin inventario disponible');
-                alert('Lo sentimos, este producto está agotado.');
-                return;
-              }
-              
-              // Verificar cantidad solicitada vs inventario disponible
-              const quantity = parseInt(formData.get('quantity')) || 1;
-
-              // Validación adicional de cantidad
-              if (quantity <= 0) {
-                console.error('❌ Cantidad inválida');
-                alert('❌ La cantidad debe ser mayor a 0.');
-                return;
-              }
-              
-              if (selectedVariant.inventory_policy !== 'continue' && quantity > selectedVariant.inventory_quantity) {
-                console.error('❌ Cantidad solicitada mayor al inventario');
-                alert(`Solo tenemos ${selectedVariant.inventory_quantity} unidades disponibles. Por favor, ajusta la cantidad.`);
-                return;
-              }
-              
-              console.log('✅ Producto disponible para compra');
-              console.log('📊 Cantidad solicitada:', quantity);
-
-              // Construir datos completos del pedido
-              const orderData = {
-                orderNumber: 'LM' + Date.now(),
-                items: [
-                  {
-                    variant_id: selectedVariant.id,
-                    product_id: product.id,
-                    title: product.title,
-                    variant_title: selectedVariant.title || 'Default Title',
-                    quantity: quantity,
-                    price: selectedVariant.price / 100, // Convertir centavos a bolivianos
-                    price_cents: selectedVariant.price, // Precio original en centavos
-                    compare_at_price: selectedVariant.compare_at_price ? (selectedVariant.compare_at_price / 100) : 0,
-                    sku: selectedVariant.sku || '',
-                    // MEJORADO: Obtener imagen correctamente
-                    image: selectedVariant.featured_image ? 
-                      selectedVariant.featured_image.url : 
-                      (product.featured_image ? product.featured_image : ''),
-                    url: product.url,
-                    // Información adicional para Shopify
-                    vendor: product.vendor || '',
-                    product_type: product.type || '',
-                    tags: product.tags || [],
-                    // Opciones de la variante (ej: Size: 1l)
-                    options: selectedVariant.options || [],
-                    option1: selectedVariant.option1 || null,
-                    option2: selectedVariant.option2 || null,
-                    option3: selectedVariant.option3 || null,
-                    // Precio formateado para mostrar
-                    price_formatted: new Intl.NumberFormat('es-BO', {
-                      style: 'currency',
-                      currency: 'BOB',
-                    }).format(selectedVariant.price / 100)
-                  },
-                ],
-                total: (selectedVariant.price * quantity) / 100,
-                total_cents: selectedVariant.price * quantity,
-                subtotal: (selectedVariant.price * quantity) / 100,
-                total_formatted: new Intl.NumberFormat('es-BO', {
-                  style: 'currency',
-                  currency: 'BOB',
-                }).format((selectedVariant.price * quantity) / 100),
-                timestamp: new Date().toISOString(),
-              };
-
-              console.log('📦 Datos del pedido completos:', orderData);
-
-              // Agregar información del cliente si está logueado
-              {% if customer %}
-              const customerData = {
-                nombre: "{{ customer.first_name | escape }} {{ customer.last_name | escape }}",
-                email: "{{ customer.email | escape }}",
-                telefono: "{{ customer.phone | default: '' | escape }}",
-                direccion: "{% if customer.default_address %}{{ customer.default_address.address1 | escape }}{% if customer.default_address.address2 %}, {{ customer.default_address.address2 | escape }}{% endif %}, {{ customer.default_address.city | escape }}{% endif %}",
-                id: {{ customer.id }},
-                logueado: true
-              };
-              localStorage.setItem('customerData', JSON.stringify(customerData));
-              console.log('👤 Datos del cliente guardados:', customerData.nombre);
-              {% else %}
-              const customerData = { logueado: false };
-              localStorage.setItem('customerData', JSON.stringify(customerData));
-              console.log('👤 Cliente no logueado');
-              {% endif %}
-
-              // Guardar datos del pedido
-              localStorage.setItem('customOrderData', JSON.stringify(orderData));
-              console.log('💾 Datos guardados en localStorage');
-
-              // Redirigir a página de confirmación
-              console.log('🚀 Redirigiendo a checkout-success...');
-              window.location.href = '/pages/checkout-success';
-
-            } catch (error) {
-              console.error('💥 Error en el proceso de compra:', error);
-              console.log('🔄 Fallback: usando checkout normal de Shopify');
-              // En caso de error, usar checkout normal
-              window.location.href = this.href || '#';
-            }
+          // Construir item del pedido
+          const orderData = window.CustomCheckout.construirDatosPedido({
+            variant_id: variant.id,
+            product_id: product.id,
+            title: product.title,
+            variant_title: variant.title || 'Default Title',
+            quantity: quantity,
+            price: variant.price / 100,
+            price_cents: variant.price,
+            compare_at_price: variant.compare_at_price ? (variant.compare_at_price / 100) : 0,
+            sku: variant.sku || '',
+            image: variant.featured_image?.url || product.featured_image || '',
+            url: product.url,
+            vendor: product.vendor || '',
+            product_type: product.type || '',
+            tags: product.tags || [],
+            options: variant.options || [],
+            option1: variant.option1 || null,
+            option2: variant.option2 || null,
+            option3: variant.option3 || null,
           });
-        }
+
+          // Procesar checkout (sin limpiar carrito porque es compra directa)
+          window.CustomCheckout.procesar(orderData, {
+            limpiarCarrito: false,
+            cerrarDrawer: false
+          });
+        });
       });
     }
 
-    // Ejecutar inmediatamente
-    bindBuyNowButtons();
+    // Inicialización con delays
+    BIND_DELAYS.forEach(delay => {
+      if (delay === 0) {
+        bindBuyNowButtons();
+      } else {
+        setTimeout(bindBuyNowButtons, delay);
+      }
+    });
 
-    // Ejecutar con delays para botones que se cargan dinámicamente
-    setTimeout(bindBuyNowButtons, 500);
-    setTimeout(bindBuyNowButtons, 1000);
-    setTimeout(bindBuyNowButtons, 2000);
-
-    // Observar cambios en el DOM para nuevos botones
+    // Observer optimizado
     const observer = new MutationObserver(function(mutations) {
       let shouldRebind = false;
-      mutations.forEach(function(mutation) {
+      
+      for (const mutation of mutations) {
         if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-          // Verificar si se agregaron botones de compra
-          mutation.addedNodes.forEach(function(node) {
-            if (node.nodeType === 1) { // Element node
-              if (node.querySelector && node.querySelector('.shopify-payment-button__button')) {
-                shouldRebind = true;
-              }
+          for (const node of mutation.addedNodes) {
+            if (node.nodeType === 1 && (
+              node.matches?.(SELECTOR) || 
+              node.querySelector?.(SELECTOR)
+            )) {
+              shouldRebind = true;
+              break;
             }
-          });
+          }
+          if (shouldRebind) break;
         }
-      });
+      }
       
       if (shouldRebind) {
-        console.log('🔄 Detectados nuevos botones, re-vinculando...');
         setTimeout(bindBuyNowButtons, 100);
       }
     });
@@ -8448,7 +8372,5 @@
       childList: true,
       subtree: true
     });
-
-    console.log('✅ Sistema de compra directa inicializado correctamente');
   });
 </script>

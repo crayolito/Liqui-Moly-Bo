@@ -73,136 +73,102 @@
 {%- endif -%}
 
 <script>
-  // Función para manejar el checkout del mini-cart
-  function handleMiniCartCheckout() {
-    console.log('Función handleMiniCartCheckout ejecutada');
+  (function() {
+    'use strict';
 
-    if ({{ cart.item_count }} === 0) {
-      console.log('Carrito vacío, saliendo');
-      return;
-    }
+    const CONFIG = {
+      BUTTON_ID: 'mini-cart-custom-checkout',
+      BIND_DELAYS: [0, 500, 1000],
+      DRAWER_SELECTOR: 'drawer-toggle[for="HeaderMiniCart"]'
+    };
 
-    console.log('Procesando checkout del mini-cart...');
+    function handleMiniCartCheckout() {
+      if ({{ cart.item_count }} === 0) {
+        window.CustomCheckout.debug.warn('⚠️ Carrito vacío');
+        return;
+      }
 
-    // Recopilar datos del carrito
-    const orderData = {
-      orderNumber: 'LM' + Date.now(),
-      items: [
+      // Construir datos del pedido (misma estructura que carrito principal)
+      const orderData = window.CustomCheckout.construirDatosPedido([
         {% for item in cart.items %}
         {
+          variant_id: {{ item.variant.id }},
+          product_id: {{ item.product.id }},
           title: "{{ item.product.title | escape }}",
+          variant_title: "{{ item.variant.title | escape }}",
           quantity: {{ item.quantity }},
-          price: "{{ item.final_price | money }}",
-          variant: "{{ item.variant.title | escape }}"
+          price: {{ item.variant.price | divided_by: 100.0 }},
+          price_cents: {{ item.variant.price }},
+          compare_at_price: {{ item.variant.compare_at_price | default: 0 | divided_by: 100.0 }},
+          sku: "{{ item.variant.sku | escape }}",
+          image: "{% if item.variant.image %}{{ item.variant.image | image_url: width: 300 }}{% elsif item.product.featured_image %}{{ item.product.featured_image | image_url: width: 300 }}{% endif %}",
+          url: "{{ item.product.url }}",
+          vendor: "{{ item.product.vendor | escape }}",
+          product_type: "{{ item.product.type | escape }}",
+          {% if item.variant.option1 %}option1: "{{ item.variant.option1 | escape }}",{% endif %}
+          {% if item.variant.option2 %}option2: "{{ item.variant.option2 | escape }}",{% endif %}
+          {% if item.variant.option3 %}option3: "{{ item.variant.option3 | escape }}",{% endif %}
+          price_formatted: "{{ item.final_price | money }}"
         }{% unless forloop.last %},{% endunless %}
         {% endfor %}
-      ],
-      total: "{{ cart.total_price | money }}",
-      subtotal: "{{ cart.total_price | money }}",
-      timestamp: new Date().toISOString()
-    };
+      ], {{ cart.total_price }});
 
-    console.log('Datos del pedido:', orderData);
-
-    // Agregar información del cliente si está logueado
-    {% if customer %}
-    const customerData = {
-      nombre: "{{ customer.first_name | escape }} {{ customer.last_name | escape }}",
-      email: "{{ customer.email | escape }}",
-      telefono: "{{ customer.phone | default: '' | escape }}",
-      direccion: "{% if customer.default_address %}{{ customer.default_address.address1 | escape }}{% if customer.default_address.address2 %}, {{ customer.default_address.address2 | escape }}{% endif %}, {{ customer.default_address.city | escape }}{% endif %}",
-      id: {{ customer.id }},
-      logueado: true
-    };
-    localStorage.setItem('customerData', JSON.stringify(customerData));
-    {% else %}
-    const customerData = { logueado: false };
-    localStorage.setItem('customerData', JSON.stringify(customerData));
-    {% endif %}
-
-    // Guardar datos del pedido
-    localStorage.setItem('customOrderData', JSON.stringify(orderData));
-
-    // Limpiar carrito
-    fetch('/cart/clear.js', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    }).then(() => {
-      console.log('Carrito limpiado');
-
-      // Cerrar el mini-cart drawer
-      const drawerToggle = document.querySelector('drawer-toggle[for="HeaderMiniCart"]');
-      if (drawerToggle) {
-        drawerToggle.click();
-        console.log('Drawer cerrado');
-      }
-
-      // Redirigir a página de agradecimiento
-      console.log('Redirigiendo a checkout-success');
-      window.location.href = '/pages/checkout-success';
-    }).catch(error => {
-      console.error('Error al limpiar carrito:', error);
-    });
-  }
-
-  // Múltiples formas de asegurar que el evento se vincule
-  document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM cargado, buscando botón mini-cart...');
-
-    function bindMiniCartButton() {
-      const miniCartCheckoutBtn = document.getElementById('mini-cart-custom-checkout');
-      console.log('Botón encontrado:', miniCartCheckoutBtn);
-
-      if (miniCartCheckoutBtn && !miniCartCheckoutBtn.hasAttribute('data-bound')) {
-        miniCartCheckoutBtn.setAttribute('data-bound', 'true');
-        miniCartCheckoutBtn.addEventListener('click', function(e) {
-          e.preventDefault();
-          console.log('Click en botón mini-cart detectado');
-          handleMiniCartCheckout();
-        });
-        console.log('Event listener agregado al botón mini-cart');
-      }
+      // Procesar checkout con cierre de drawer
+      window.CustomCheckout.procesar(orderData, {
+        limpiarCarrito: true,
+        cerrarDrawer: true
+      });
     }
 
-    // Intentar vincular inmediatamente
-    bindMiniCartButton();
+    function bindButton(button) {
+      if (!button || button.hasAttribute('data-bound')) return false;
 
-    // También intentar después de un pequeño delay (por si el mini-cart se carga dinámicamente)
-    setTimeout(bindMiniCartButton, 500);
-    setTimeout(bindMiniCartButton, 1000);
+      button.setAttribute('data-bound', 'true');
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        handleMiniCartCheckout();
+      });
 
-    // Observar cambios en el DOM para cuando se abra el mini-cart
-    const observer = new MutationObserver(function(mutations) {
-      mutations.forEach(function(mutation) {
-        if (mutation.type === 'childList') {
-          bindMiniCartButton();
+      window.CustomCheckout.debug.log('✅ Botón mini-cart vinculado');
+      return true;
+    }
+
+    function initMiniCartCheckout() {
+      const button = document.getElementById(CONFIG.BUTTON_ID);
+      return bindButton(button);
+    }
+
+    // Inicialización
+    document.addEventListener('DOMContentLoaded', function() {
+      // Intentos iniciales con delays
+      CONFIG.BIND_DELAYS.forEach(delay => {
+        if (delay === 0) {
+          initMiniCartCheckout();
+        } else {
+          setTimeout(initMiniCartCheckout, delay);
         }
       });
-    });
 
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
-  });
-
-  // También vincular cuando se abra el mini-cart
-  document.addEventListener('click', function(e) {
-    if (e.target.closest('drawer-toggle[for="HeaderMiniCart"]')) {
-      setTimeout(function() {
-        const miniCartCheckoutBtn = document.getElementById('mini-cart-custom-checkout');
-        if (miniCartCheckoutBtn && !miniCartCheckoutBtn.hasAttribute('data-bound')) {
-          miniCartCheckoutBtn.setAttribute('data-bound', 'true');
-          miniCartCheckoutBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Click en botón mini-cart detectado (desde apertura)');
-            handleMiniCartCheckout();
-          });
-          console.log('Event listener agregado desde apertura del drawer');
+      // Observer para cambios en el DOM
+      const observer = new MutationObserver(function(mutations) {
+        for (const mutation of mutations) {
+          if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+            if (initMiniCartCheckout()) break; // Si se vinculó, salir
+          }
         }
-      }, 100);
-    }
-  });
+      });
+
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+
+      // Vincular cuando se abre el drawer
+      document.addEventListener('click', function(e) {
+        if (e.target.closest(CONFIG.DRAWER_SELECTOR)) {
+          setTimeout(initMiniCartCheckout, 100);
+        }
+      }, { passive: true });
+    });
+  })();
 </script>

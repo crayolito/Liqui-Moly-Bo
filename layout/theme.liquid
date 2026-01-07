@@ -202,6 +202,211 @@
     endif
   %}
 
+  <script>
+    /**
+     * SISTEMA DE ACTUALIZACIÓN AUTOMÁTICA DE TELÉFONO
+     * Se ejecuta cuando el usuario está logueado y tiene teléfono pendiente
+     */
+    document.addEventListener('DOMContentLoaded', function() {
+      {% if customer %}
+        // === CONFIGURACIÓN ===
+        const config = {
+          claveStorage: 'telefono_pendiente_actualizacion',
+          urlNetlify: 'https://api-aux-ferroman.netlify.app/.netlify/functions/crear-orden',
+          tiempoEspera: 3000, // 3 segundos
+          emailUsuarioActual: '{{ customer.email }}',
+          tiempoMensaje: 8000 // 8 segundos
+        };
+    
+        // === VERIFICACIONES INICIALES ===
+        const datosPendientes = localStorage.getItem(config.claveStorage);
+        
+        if (!datosPendientes) {
+          console.log('ℹ️ No hay teléfono pendiente de actualización');
+          return;
+        }
+    
+        const datos = JSON.parse(datosPendientes);
+        
+        // Verificar que sea el usuario correcto
+        if (datos.email !== config.emailUsuarioActual) {
+          console.log('⚠️ Email no coincide - no se actualizará el teléfono');
+          return;
+        }
+    
+        console.log('📱 Iniciando actualización de teléfono para:', datos.email);
+    
+        // === FUNCIONES DE GRAPHQL ===
+        
+        /**
+         * Busca un cliente por email usando GraphQL
+         */
+        async function buscarClientePorEmail(email) {
+          const query = `
+            query buscarCliente($consulta: String!) {
+              customers(first: 1, query: $consulta) {
+                edges {
+                  node {
+                    id
+                    email
+                    phone
+                  }
+                }
+              }
+            }
+          `;
+    
+          const respuesta = await fetch(config.urlNetlify, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              query: query,
+              variables: { consulta: `email:${email}` }
+            })
+          });
+    
+          return await respuesta.json();
+        }
+    
+        /**
+         * Actualiza el teléfono de un cliente usando GraphQL
+         */
+        async function actualizarTelefonoCliente(idCliente, telefono) {
+          const mutation = `
+            mutation actualizarCliente($input: CustomerInput!) {
+              customerUpdate(input: $input) {
+                customer {
+                  id
+                  phone
+                  email
+                }
+                userErrors {
+                  field
+                  message
+                }
+              }
+            }
+          `;
+    
+          const respuesta = await fetch(config.urlNetlify, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              query: mutation,
+              variables: {
+                input: {
+                  id: idCliente,
+                  phone: telefono
+                }
+              }
+            })
+          });
+    
+          return await respuesta.json();
+        }
+    
+        /**
+         * Muestra un mensaje de notificación al usuario
+         */
+        function mostrarNotificacion(tipo, titulo, mensaje) {
+          const estilos = {
+            exito: 'background: #d4edda; color: #155724; border: 1px solid #c3e6cb;',
+            error: 'background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;',
+            info: 'background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb;'
+          };
+    
+          const notificacion = document.createElement('div');
+          notificacion.innerHTML = `
+            <div style="
+              ${estilos[tipo]}
+              padding: 15px; 
+              margin: 20px; 
+              border-radius: 8px; 
+              position: fixed;
+              top: 20px;
+              right: 20px;
+              z-index: 9999;
+              max-width: 400px;
+              box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            ">
+              <strong>${titulo}</strong><br>
+              ${mensaje}
+            </div>
+          `;
+          
+          document.body.appendChild(notificacion);
+          setTimeout(() => notificacion.remove(), config.tiempoMensaje);
+        }
+    
+        // === PROCESO PRINCIPAL ===
+        
+        /**
+         * Ejecuta el proceso completo de actualización
+         */
+        async function ejecutarActualizacionTelefono() {
+          try {
+            console.log('🔍 Buscando cliente en Shopify...');
+            
+            // Buscar cliente
+            const resultadoBusqueda = await buscarClientePorEmail(datos.email);
+            
+            if (!resultadoBusqueda.success || resultadoBusqueda.data.customers.edges.length === 0) {
+              throw new Error('Cliente no encontrado');
+            }
+    
+            const cliente = resultadoBusqueda.data.customers.edges[0].node;
+            console.log('👤 Cliente encontrado:', cliente.id);
+    
+            // Verificar si ya tiene teléfono
+            if (cliente.phone && cliente.phone.trim() !== '') {
+              console.log('📱 El cliente ya tiene teléfono registrado:', cliente.phone);
+              localStorage.removeItem(config.claveStorage);
+              return;
+            }
+    
+            // Actualizar teléfono
+            console.log('📱 Actualizando teléfono...');
+            const resultadoActualizacion = await actualizarTelefonoCliente(cliente.id, datos.telefono);
+    
+            if (resultadoActualizacion.success && resultadoActualizacion.data.customerUpdate.customer) {
+              // Éxito
+              console.log('✅ Teléfono actualizado correctamente');
+              localStorage.removeItem(config.claveStorage);
+              
+              mostrarNotificacion(
+                'exito',
+                '✅ ¡Registro completado!',
+                `Tu número de teléfono ha sido registrado: <strong>${datos.telefono}</strong>`
+              );
+            } else {
+              // Error en la actualización
+              const errores = resultadoActualizacion.data?.customerUpdate?.userErrors || [];
+              console.error('❌ Error actualizando teléfono:', errores);
+              
+              mostrarNotificacion(
+                'error',
+                '❌ Error al registrar teléfono',
+                'No se pudo registrar tu número. Contacta al soporte.'
+              );
+            }
+    
+          } catch (error) {
+            console.error('💥 Error en el proceso:', error);
+            mostrarNotificacion(
+              'error',
+              '❌ Error del sistema',
+              'Hubo un problema técnico. Inténtalo más tarde.'
+            );
+          }
+        }
+    
+        // === INICIAR PROCESO ===
+        setTimeout(ejecutarActualizacionTelefono, config.tiempoEspera);
+    
+      {% endif %}
+    });
+  </script>
+
   <body class="{{ body_class }}">
     <a class="skip-link visually-hidden visually-hidden-focusable" href="#MainContent">
       {{- 'accessibility.link_messages.skip_to_text' | t -}}
