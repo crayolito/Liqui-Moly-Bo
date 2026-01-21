@@ -527,65 +527,6 @@
         "hide_placeholders": false
       }
     },
-    "menus_desplegables_M4UTiM": {
-      "type": "menus-desplegables",
-      "blocks": {
-        "menu_BmxXrm": {
-          "type": "menu",
-          "settings": {
-            "menu_seleccionado": "menu-header-dev",
-            "titulo_personalizado": "",
-            "mostrar_icono": false,
-            "icon": "store"
-          }
-        },
-        "menu_axypT6": {
-          "type": "menu",
-          "settings": {
-            "menu_seleccionado": "footer",
-            "titulo_personalizado": "",
-            "mostrar_icono": false,
-            "icon": "box"
-          }
-        },
-        "menu_49hUaN": {
-          "type": "menu",
-          "settings": {
-            "menu_seleccionado": "main-menu",
-            "titulo_personalizado": "",
-            "mostrar_icono": false,
-            "icon": "truck"
-          }
-        },
-        "menu_UbiiGL": {
-          "type": "menu",
-          "settings": {
-            "menu_seleccionado": "categor-as",
-            "titulo_personalizado": "",
-            "mostrar_icono": false,
-            "icon": "phone"
-          }
-        }
-      },
-      "block_order": [
-        "menu_BmxXrm",
-        "menu_axypT6",
-        "menu_49hUaN",
-        "menu_UbiiGL"
-      ],
-      "name": "Menús Desplegables",
-      "settings": {
-        "mostrar_titulo": true,
-        "heading": "",
-        "heading_size": "md",
-        "heading_alignment": "center",
-        "narrow": false,
-        "color_scheme": "",
-        "spacing_top": 20,
-        "spacing_bottom": 20,
-        "heading_tag": "h2"
-      }
-    },
     "features_qh7R3E": {
       "type": "features",
       "blocks": {
@@ -648,7 +589,6 @@
     "collection_grid_DHqATT",
     "dual_images_ftDgYx",
     "featured_collection_v1_cqFibQ",
-    "menus_desplegables_M4UTiM",
     "features_qh7R3E"
   ]
 }
