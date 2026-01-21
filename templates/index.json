@@ -396,7 +396,7 @@
       "type": "featured-collection-v2",
       "name": "Featured Collection V2",
       "settings": {
-        "heading": "PRODUCTOS PATROCINADOS",
+        "heading": "<strong>PRODUCTOS DESTACADOS</strong>",
         "heading_size": "md",
         "subheading": "",
         "collection": "mantenimiento-1",
@@ -461,7 +461,7 @@
       "type": "featured-collection-v1",
       "name": "Featured Collection V1",
       "settings": {
-        "heading": "LOS MAS VENDIDOS",
+        "heading": "<strong>LOS MAS VENDIDOS</strong>",
         "heading_size": "md",
         "subheading": "",
         "collection": "productos-mas-vendidos",
@@ -499,7 +499,7 @@
       "type": "collection-grid",
       "name": "t:sections.collections_grid.preset.name",
       "settings": {
-        "heading": "Categorías destacadas",
+        "heading": "<strong>COLECCIONES</strong>",
         "heading_size": "md",
         "subheading": "",
         "link_title": "",
