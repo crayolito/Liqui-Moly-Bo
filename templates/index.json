@@ -374,45 +374,6 @@
         "hide_if_empty": false
       }
     },
-    "featured_collection_v1_fxRN7V": {
-      "type": "featured-collection-v1",
-      "name": "Featured Collection V1",
-      "settings": {
-        "heading": "ARTÍCULOS POPULARES",
-        "heading_size": "md",
-        "subheading": "",
-        "collection": "lubricantes",
-        "products_to_show": 12,
-        "products": [],
-        "show_vendor": true,
-        "show_stock": true,
-        "show_rating": false,
-        "product_image_fit": "contain",
-        "show_collection": false,
-        "collection_image": "shopify://shop_images/05479d88-62f7-46c5-ac56-523510f0c19c___ae3bfcc4ea2e76015c1c542ccdda3093.webp",
-        "collection_overlay_background": "linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8) 100%)",
-        "collection_title": "",
-        "collection_description": "",
-        "hide_collection_description": false,
-        "hide_collection_title": false,
-        "hide_collection_button": false,
-        "collection_text_color": "#ffffff",
-        "collection_button_text": "",
-        "collection_button_color_scheme": "",
-        "collection_box_align": "bottom-left",
-        "layout": "grid",
-        "columns": "5",
-        "stack_on_mobile": true,
-        "mobile_columns": "2",
-        "color_scheme": "",
-        "spacing_top": 20,
-        "spacing_bottom": 20,
-        "heading_tag": "h2",
-        "show_on_desktop": true,
-        "show_on_mobile": true,
-        "hide_placeholders": false
-      }
-    },
     "features_qh7R3E": {
       "type": "features",
       "blocks": {
@@ -685,7 +646,6 @@
     "countdown_banner_64DMBC",
     "simple_collection_list_NgEQ3P",
     "collection-list-1",
-    "featured_collection_v1_fxRN7V",
     "features_qh7R3E",
     "media_with_text_VVw63K",
     "featured_collection_v2_xPFzRn",
