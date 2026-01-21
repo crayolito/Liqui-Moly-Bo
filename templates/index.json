@@ -430,38 +430,6 @@
         "hide_placeholders": false
       }
     },
-    "collection_grid_DHqATT": {
-      "type": "collection-grid",
-      "name": "t:sections.collections_grid.preset.name",
-      "settings": {
-        "heading": "Categorías destacadas",
-        "heading_size": "md",
-        "subheading": "",
-        "link_title": "",
-        "link_url": "shopify://collections",
-        "collections": [
-          "ofertas",
-          "productos-mas-vendidos",
-          "mantenimiento-1",
-          "motos-utv-atv-kart",
-          "limpieza-y-cuidado",
-          "aditivos",
-          "aceites-de-motor"
-        ],
-        "show_image": true,
-        "columns": 5,
-        "stack_on_mobile": true,
-        "mobile_columns": "1",
-        "content_color_scheme": "",
-        "color_scheme": "",
-        "spacing_top": 20,
-        "spacing_bottom": 20,
-        "heading_tag": "h2",
-        "show_on_desktop": true,
-        "show_on_mobile": true,
-        "hide_placeholders": false
-      }
-    },
     "dual_images_ftDgYx": {
       "type": "dual-images",
       "name": "Imágenes Duales",
@@ -518,6 +486,38 @@
         "columns": "4",
         "stack_on_mobile": false,
         "mobile_columns": "1",
+        "color_scheme": "",
+        "spacing_top": 20,
+        "spacing_bottom": 20,
+        "heading_tag": "h2",
+        "show_on_desktop": true,
+        "show_on_mobile": true,
+        "hide_placeholders": false
+      }
+    },
+    "collection_grid_DHqATT": {
+      "type": "collection-grid",
+      "name": "t:sections.collections_grid.preset.name",
+      "settings": {
+        "heading": "Categorías destacadas",
+        "heading_size": "md",
+        "subheading": "",
+        "link_title": "",
+        "link_url": "shopify://collections",
+        "collections": [
+          "ofertas",
+          "productos-mas-vendidos",
+          "mantenimiento-1",
+          "motos-utv-atv-kart",
+          "limpieza-y-cuidado",
+          "aditivos",
+          "aceites-de-motor"
+        ],
+        "show_image": true,
+        "columns": 5,
+        "stack_on_mobile": true,
+        "mobile_columns": "1",
+        "content_color_scheme": "",
         "color_scheme": "",
         "spacing_top": 20,
         "spacing_bottom": 20,
@@ -586,9 +586,9 @@
     "collection-list-1",
     "media_with_text_VVw63K",
     "featured_collection_v2_xPFzRn",
-    "collection_grid_DHqATT",
     "dual_images_ftDgYx",
     "featured_collection_v1_cqFibQ",
+    "collection_grid_DHqATT",
     "features_qh7R3E"
   ]
 }
