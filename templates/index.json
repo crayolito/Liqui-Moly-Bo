@@ -595,7 +595,7 @@
             "icon": "check",
             "image": "shopify://shop_images/Footer_beratung_medium_gray_700px.svg",
             "title": "Asistencia técnica personalizada",
-            "text": ""
+            "text": "<p>Sus interlocutores estarán encantados de ayudarle.</p>"
           }
         },
         "feature_9rpRzN": {
@@ -604,7 +604,7 @@
             "icon": "check",
             "image": "shopify://shop_images/Footer_Made_in_Germany_medium_gray_700px_83c60f7d-e42b-40b8-8705-3f45ee314357.svg",
             "title": "Calidad Hecha en Alemania",
-            "text": ""
+            "text": "<p>         De primera calidad gracias a investigación y desarrollo en Alemania.</p>"
           }
         },
         "feature_NTy4FF": {
@@ -613,7 +613,7 @@
             "icon": "check",
             "image": "shopify://shop_images/Footer_Produkte_medium_gray_700px_0f2f91ab-5015-4323-975e-61d67c951f4f.svg",
             "title": "Diversidad de Productos",
-            "text": ""
+            "text": "<p>Con más de 4000 artículos, es uno de los pocos proveedores de gama completa del          mundo.</p>"
           }
         }
       },
