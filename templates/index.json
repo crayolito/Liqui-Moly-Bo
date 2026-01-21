@@ -464,7 +464,7 @@
         "heading": "LOS MAS VENDIDOS",
         "heading_size": "md",
         "subheading": "",
-        "collection": "motos-utv-atv-kart",
+        "collection": "productos-mas-vendidos",
         "products_to_show": 12,
         "products": [],
         "show_vendor": true,
