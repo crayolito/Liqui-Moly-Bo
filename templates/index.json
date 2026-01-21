@@ -374,57 +374,6 @@
         "hide_if_empty": false
       }
     },
-    "features_qh7R3E": {
-      "type": "features",
-      "blocks": {
-        "feature_NF8g7g": {
-          "type": "feature",
-          "settings": {
-            "icon": "check",
-            "image": "shopify://shop_images/Footer_beratung_medium_gray_700px.svg",
-            "title": "Asistencia técnica personalizada",
-            "text": ""
-          }
-        },
-        "feature_9rpRzN": {
-          "type": "feature",
-          "settings": {
-            "icon": "check",
-            "image": "shopify://shop_images/Footer_Made_in_Germany_medium_gray_700px_83c60f7d-e42b-40b8-8705-3f45ee314357.svg",
-            "title": "Calidad Hecha en Alemania",
-            "text": ""
-          }
-        },
-        "feature_NTy4FF": {
-          "type": "feature",
-          "settings": {
-            "icon": "check",
-            "image": "shopify://shop_images/Footer_Produkte_medium_gray_700px_0f2f91ab-5015-4323-975e-61d67c951f4f.svg",
-            "title": "Diversidad de Productos",
-            "text": ""
-          }
-        }
-      },
-      "block_order": [
-        "feature_NF8g7g",
-        "feature_9rpRzN",
-        "feature_NTy4FF"
-      ],
-      "name": "t:sections.features.presets.name",
-      "settings": {
-        "inline": false,
-        "stack_on_mobile": true,
-        "auto_rotate": false,
-        "icon_size": "large",
-        "content_color_scheme": "background-1",
-        "color_scheme": "background-1",
-        "spacing_top": 2,
-        "spacing_bottom": 0,
-        "show_on_desktop": true,
-        "show_on_mobile": true,
-        "hide_if_empty": false
-      }
-    },
     "media_with_text_VVw63K": {
       "type": "media-with-text",
       "name": "t:sections.media_with_text.presets.name",
@@ -636,6 +585,57 @@
         "spacing_bottom": 20,
         "heading_tag": "h2"
       }
+    },
+    "features_qh7R3E": {
+      "type": "features",
+      "blocks": {
+        "feature_NF8g7g": {
+          "type": "feature",
+          "settings": {
+            "icon": "check",
+            "image": "shopify://shop_images/Footer_beratung_medium_gray_700px.svg",
+            "title": "Asistencia técnica personalizada",
+            "text": ""
+          }
+        },
+        "feature_9rpRzN": {
+          "type": "feature",
+          "settings": {
+            "icon": "check",
+            "image": "shopify://shop_images/Footer_Made_in_Germany_medium_gray_700px_83c60f7d-e42b-40b8-8705-3f45ee314357.svg",
+            "title": "Calidad Hecha en Alemania",
+            "text": ""
+          }
+        },
+        "feature_NTy4FF": {
+          "type": "feature",
+          "settings": {
+            "icon": "check",
+            "image": "shopify://shop_images/Footer_Produkte_medium_gray_700px_0f2f91ab-5015-4323-975e-61d67c951f4f.svg",
+            "title": "Diversidad de Productos",
+            "text": ""
+          }
+        }
+      },
+      "block_order": [
+        "feature_NF8g7g",
+        "feature_9rpRzN",
+        "feature_NTy4FF"
+      ],
+      "name": "t:sections.features.presets.name",
+      "settings": {
+        "inline": false,
+        "stack_on_mobile": true,
+        "auto_rotate": false,
+        "icon_size": "large",
+        "content_color_scheme": "background-1",
+        "color_scheme": "background-1",
+        "spacing_top": 2,
+        "spacing_bottom": 0,
+        "show_on_desktop": true,
+        "show_on_mobile": true,
+        "hide_if_empty": false
+      }
     }
   },
   "order": [
@@ -643,12 +643,12 @@
     "countdown_banner_64DMBC",
     "simple_collection_list_NgEQ3P",
     "collection-list-1",
-    "features_qh7R3E",
     "media_with_text_VVw63K",
     "featured_collection_v2_xPFzRn",
     "collection_grid_DHqATT",
     "dual_images_ftDgYx",
     "featured_collection_v1_cqFibQ",
-    "menus_desplegables_M4UTiM"
+    "menus_desplegables_M4UTiM",
+    "features_qh7R3E"
   ]
 }
