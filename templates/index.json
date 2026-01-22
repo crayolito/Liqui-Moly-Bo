@@ -399,7 +399,7 @@
         "heading": "<strong>PRODUCTOS DESTACADOS</strong>",
         "heading_size": "md",
         "subheading": "",
-        "collection": "mantenimiento-1",
+        "collection": "productos-destacados",
         "products_to_show": 12,
         "products": [],
         "show_vendor": false,
