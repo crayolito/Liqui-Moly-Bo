@@ -81,35 +81,6 @@
         "hide_if_empty": false
       }
     },
-    "countdown_banner_64DMBC": {
-      "type": "countdown-banner",
-      "name": "t:sections.countdown_banner.presets.name",
-      "settings": {
-        "background_image": "shopify://shop_images/Captura_de_pantalla_2026-01-06_100144.jpg",
-        "overlay_background": "",
-        "heading": "",
-        "heading_size": "md",
-        "text": "",
-        "button_label": "",
-        "link": "",
-        "button_type_link": false,
-        "end_date": "",
-        "end_time": "",
-        "hide_on_expiration": false,
-        "expiration_message": "",
-        "full_width": false,
-        "mobile_background_image": "shopify://shop_images/700ef777-8d54-47fe-a98d-d5bd5fee75c0.jpg",
-        "mobile_heading_size": "md",
-        "button_type_link_mobile": false,
-        "color_scheme": "background-1",
-        "spacing_top": 20,
-        "spacing_bottom": 20,
-        "heading_tag": "h2",
-        "show_on_desktop": true,
-        "show_on_mobile": true,
-        "hide_if_empty": false
-      }
-    },
     "simple_collection_list_NgEQ3P": {
       "type": "simple-collection-list",
       "blocks": {
@@ -581,7 +552,6 @@
   },
   "order": [
     "slideshow_WXrdKP",
-    "countdown_banner_64DMBC",
     "simple_collection_list_NgEQ3P",
     "collection-list-1",
     "media_with_text_VVw63K",
