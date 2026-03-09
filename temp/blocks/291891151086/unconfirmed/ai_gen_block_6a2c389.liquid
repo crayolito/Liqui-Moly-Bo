@@ -1,6 +1,1164 @@
+{% doc %}
+  @prompt
+    Create a custom section for the wd40collection template that visually matches the existing Liqui Moly header.
+    
+    It should include:
+    - WD-40 logo on the left
+    - search bar in the center
+    - phone number and email
+    - currency selector
+    - account and cart icons
+    - a second blue navigation bar below with clickable menu items
+    
+    Style it to look as close as possible to the current Liqui Moly header layout, spacing, and proportions, but using WD-40 branding.
+    
+    Important:
+    - do not modify the global Shopify header
+    - create this only as a custom section inside the wd40collection template
+    - keep it fully clickable and editable, necesito que sea responsive, necesito que el menu en la version mobile se comprima tipo lista desplegable, Upgrade the WD-40 custom header section so it behaves like the original main Shopify header.
+    
+    Requirements:
+    
+    * Keep the WD-40 logo on the left.
+    * Make the logo clickable and link to /collections/wd-40.
+    * Use a real Shopify search connected to store products.
+    * Keep currency selector fully connected to Shopify markets.
+    * Keep account icon connected to /account.
+    * Keep cart icon connected to /cart and show real cart count.
+    * Replace manual menu links with a real Shopify navigation menu selector.
+    * Allow dropdown submenus exactly like the original Liqui Moly header.
+    * Support desktop dropdown navigation and mobile responsive hamburger menu.
+    * Keep same responsive behavior as the original Shopify header.
+    * Use same spacing, proportions and interaction quality as the original store header.
+    * Apply only to wd40collection template.
+    * Do not modify the global main header.
+    * Keep all settings editable inside theme customizer.
+    
+    Navigation should support:
+    
+    * Inicio
+    * Productos
+    * Acerca de
+    * Contacto
+    
+    Productos must support dropdown subcategories.
+    , necesito el menu que es lo mas importante
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .wd40-custom-header-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    background-color: {{ block.settings.header_background }};
+    position: relative;
+    z-index: 100;
+  }
+
+  .wd40-header-top-{{ ai_gen_id }} {
+    background-color: {{ block.settings.top_bar_background }};
+    padding: {{ block.settings.top_bar_padding }}px 0;
+    border-bottom: 1px solid {{ block.settings.border_color }};
+  }
+
+  .wd40-header-container-{{ ai_gen_id }} {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+  }
+
+  .wd40-logo-section-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    width: {{ block.settings.logo_width }}px;
+  }
+
+  .wd40-logo-section-{{ ai_gen_id }} a {
+    display: block;
+  }
+
+  .wd40-logo-section-{{ ai_gen_id }} img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .wd40-logo-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 60px;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+  }
+
+  .wd40-logo-placeholder-{{ ai_gen_id }} svg {
+    width: 50px;
+    height: 50px;
+    opacity: 0.3;
+  }
+
+  .wd40-search-section-{{ ai_gen_id }} {
+    flex-grow: 1;
+    max-width: 500px;
+  }
+
+  .wd40-search-form-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+  }
+
+  .wd40-search-input-{{ ai_gen_id }} {
+    width: 100%;
+    padding: 12px 45px 12px 15px;
+    border: 1px solid {{ block.settings.search_border_color }};
+    border-radius: {{ block.settings.search_border_radius }}px;
+    background-color: {{ block.settings.search_background }};
+    color: {{ block.settings.search_text_color }};
+    font-size: 14px;
+  }
+
+  .wd40-search-input-{{ ai_gen_id }}::placeholder {
+    color: {{ block.settings.search_placeholder_color }};
+  }
+
+  .wd40-search-button-{{ ai_gen_id }} {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: {{ block.settings.search_icon_color }};
+  }
+
+  .wd40-search-button-{{ ai_gen_id }} svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .wd40-contact-section-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
+  }
+
+  .wd40-contact-item-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: {{ block.settings.contact_text_color }};
+    text-decoration: none;
+    font-size: 14px;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+  }
+
+  .wd40-contact-item-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.nav_background }};
+  }
+
+  .wd40-contact-item-{{ ai_gen_id }} svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .wd40-icons-section-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-shrink: 0;
+  }
+
+  .wd40-currency-selector-{{ ai_gen_id }} {
+    padding: 8px 12px;
+    border: 1px solid {{ block.settings.currency_border_color }};
+    border-radius: {{ block.settings.currency_border_radius }}px;
+    background-color: {{ block.settings.currency_background }};
+    color: {{ block.settings.currency_text_color }};
+    font-size: 14px;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+  }
+
+  .wd40-currency-selector-{{ ai_gen_id }}:hover {
+    border-color: {{ block.settings.nav_background }};
+  }
+
+  .wd40-icon-link-{{ ai_gen_id }} {
+    color: {{ block.settings.icon_color }};
+    text-decoration: none;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    transition: color 0.2s ease;
+  }
+
+  .wd40-icon-link-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.nav_background }};
+  }
+
+  .wd40-icon-link-{{ ai_gen_id }} svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .wd40-cart-count-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: {{ block.settings.cart_badge_background }};
+    color: {{ block.settings.cart_badge_text }};
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: bold;
+  }
+
+  .wd40-nav-bar-{{ ai_gen_id }} {
+    background-color: {{ block.settings.nav_background }};
+    padding: 0;
+    position: relative;
+  }
+
+  .wd40-nav-container-{{ ai_gen_id }} {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+  }
+
+  .wd40-mobile-menu-toggle-{{ ai_gen_id }} {
+    display: none;
+    background: none;
+    border: none;
+    color: {{ block.settings.nav_text_color }};
+    padding: {{ block.settings.nav_link_padding }}px 0;
+    cursor: pointer;
+    align-items: center;
+    gap: 8px;
+    font-size: {{ block.settings.nav_font_size }}px;
+    font-weight: {{ block.settings.nav_font_weight }};
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .wd40-mobile-menu-toggle-{{ ai_gen_id }} svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .wd40-nav-menu-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .wd40-nav-item-{{ ai_gen_id }} {
+    margin: 0;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .wd40-nav-link-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: {{ block.settings.nav_link_padding }}px 20px;
+    color: {{ block.settings.nav_text_color }};
+    text-decoration: none;
+    font-size: {{ block.settings.nav_font_size }}px;
+    font-weight: {{ block.settings.nav_font_weight }};
+    transition: background-color 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .wd40-nav-link-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.nav_hover_background }};
+    color: {{ block.settings.nav_hover_text_color }};
+  }
+
+  .wd40-nav-link-{{ ai_gen_id }} svg {
+    width: 12px;
+    height: 12px;
+    transition: transform 0.2s ease;
+  }
+
+  .wd40-nav-item-{{ ai_gen_id }}.has-dropdown:hover .wd40-nav-link-{{ ai_gen_id }} svg {
+    transform: rotate(180deg);
+  }
+
+  .wd40-dropdown-{{ ai_gen_id }} {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: {{ block.settings.dropdown_background }};
+    min-width: 220px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    list-style: none;
+    margin: 0;
+    padding: 8px 0;
+    z-index: 1000;
+  }
+
+  .wd40-nav-item-{{ ai_gen_id }}.has-dropdown:hover .wd40-dropdown-{{ ai_gen_id }} {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .wd40-dropdown-item-{{ ai_gen_id }} {
+    margin: 0;
+  }
+
+  .wd40-dropdown-link-{{ ai_gen_id }} {
+    display: block;
+    padding: 10px 20px;
+    color: {{ block.settings.dropdown_text_color }};
+    text-decoration: none;
+    font-size: {{ block.settings.nav_font_size | minus: 1 }}px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .wd40-dropdown-link-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.dropdown_hover_background }};
+    color: {{ block.settings.dropdown_hover_text_color }};
+  }
+
+  @media screen and (max-width: 990px) {
+    .wd40-header-top-{{ ai_gen_id }} {
+      padding: {{ block.settings.top_bar_padding | minus: 4 }}px 0;
+    }
+
+    .wd40-header-container-{{ ai_gen_id }} {
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 0 15px;
+    }
+
+    .wd40-logo-section-{{ ai_gen_id }} {
+      width: {{ block.settings.logo_width | times: 0.8 }}px;
+    }
+
+    .wd40-search-section-{{ ai_gen_id }} {
+      order: 3;
+      flex-basis: 100%;
+      max-width: 100%;
+    }
+
+    .wd40-contact-section-{{ ai_gen_id }} {
+      display: none;
+    }
+
+    .wd40-icons-section-{{ ai_gen_id }} {
+      gap: 8px;
+    }
+
+    .wd40-currency-selector-{{ ai_gen_id }} {
+      padding: 6px 8px;
+      font-size: 13px;
+    }
+
+    .wd40-nav-container-{{ ai_gen_id }} {
+      padding: 0 15px;
+    }
+
+    .wd40-mobile-menu-toggle-{{ ai_gen_id }} {
+      display: flex;
+    }
+
+    .wd40-nav-menu-{{ ai_gen_id }} {
+      display: none;
+      flex-direction: column;
+      gap: 0;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background-color: {{ block.settings.nav_background }};
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .wd40-nav-menu-{{ ai_gen_id }}.active {
+      display: flex;
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    .wd40-nav-item-{{ ai_gen_id }} {
+      width: 100%;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .wd40-nav-item-{{ ai_gen_id }}:last-child {
+      border-bottom: none;
+    }
+
+    .wd40-nav-link-{{ ai_gen_id }} {
+      padding: {{ block.settings.nav_link_padding }}px 15px;
+      font-size: {{ block.settings.nav_font_size }}px;
+      white-space: normal;
+      justify-content: space-between;
+    }
+
+    .wd40-dropdown-{{ ai_gen_id }} {
+      position: static;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      box-shadow: none;
+      background-color: rgba(0, 0, 0, 0.15);
+      padding: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .wd40-nav-item-{{ ai_gen_id }}.has-dropdown.mobile-open .wd40-dropdown-{{ ai_gen_id }} {
+      max-height: 500px;
+      padding: 8px 0;
+    }
+
+    .wd40-dropdown-link-{{ ai_gen_id }} {
+      padding: 12px 15px 12px 35px;
+      font-size: {{ block.settings.nav_font_size }}px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .wd40-header-top-{{ ai_gen_id }} {
+      padding: {{ block.settings.top_bar_padding | minus: 6 }}px 0;
+    }
+
+    .wd40-header-container-{{ ai_gen_id }} {
+      gap: 10px;
+      padding: 0 12px;
+    }
+
+    .wd40-logo-section-{{ ai_gen_id }} {
+      width: {{ block.settings.logo_width | times: 0.6 }}px;
+    }
+
+    .wd40-logo-placeholder-{{ ai_gen_id }} {
+      height: 45px;
+    }
+
+    .wd40-logo-placeholder-{{ ai_gen_id }} svg {
+      width: 35px;
+      height: 35px;
+    }
+
+    .wd40-search-input-{{ ai_gen_id }} {
+      padding: 10px 40px 10px 12px;
+      font-size: 13px;
+    }
+
+    .wd40-icons-section-{{ ai_gen_id }} {
+      gap: 6px;
+    }
+
+    .wd40-currency-selector-{{ ai_gen_id }} {
+      padding: 5px 6px;
+      font-size: 11px;
+    }
+
+    .wd40-icon-link-{{ ai_gen_id }} {
+      padding: 6px;
+    }
+
+    .wd40-icon-link-{{ ai_gen_id }} svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .wd40-cart-count-{{ ai_gen_id }} {
+      width: 16px;
+      height: 16px;
+      font-size: 10px;
+    }
+
+    .wd40-nav-container-{{ ai_gen_id }} {
+      padding: 0 12px;
+    }
+
+    .wd40-mobile-menu-toggle-{{ ai_gen_id }} {
+      padding: {{ block.settings.nav_link_padding | minus: 2 }}px 0;
+      font-size: {{ block.settings.nav_font_size | minus: 1 }}px;
+    }
+
+    .wd40-mobile-menu-toggle-{{ ai_gen_id }} svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .wd40-nav-link-{{ ai_gen_id }} {
+      padding: {{ block.settings.nav_link_padding | minus: 2 }}px 12px;
+      font-size: {{ block.settings.nav_font_size | minus: 1 }}px;
+    }
+
+    .wd40-dropdown-link-{{ ai_gen_id }} {
+      padding: 10px 12px 10px 30px;
+      font-size: {{ block.settings.nav_font_size | minus: 1 }}px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .wd40-header-container-{{ ai_gen_id }} {
+      gap: 8px;
+      padding: 0 10px;
+    }
+
+    .wd40-logo-section-{{ ai_gen_id }} {
+      width: {{ block.settings.logo_width | times: 0.5 }}px;
+    }
+
+    .wd40-search-input-{{ ai_gen_id }} {
+      padding: 8px 35px 8px 10px;
+      font-size: 12px;
+    }
+
+    .wd40-search-button-{{ ai_gen_id }} svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .wd40-currency-selector-{{ ai_gen_id }} {
+      font-size: 10px;
+      padding: 4px 5px;
+    }
+
+    .wd40-icon-link-{{ ai_gen_id }} {
+      padding: 4px;
+    }
+
+    .wd40-icon-link-{{ ai_gen_id }} svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .wd40-nav-container-{{ ai_gen_id }} {
+      padding: 0 10px;
+    }
+
+    .wd40-mobile-menu-toggle-{{ ai_gen_id }} {
+      padding: {{ block.settings.nav_link_padding | minus: 4 }}px 0;
+      font-size: {{ block.settings.nav_font_size | minus: 2 }}px;
+    }
+
+    .wd40-nav-link-{{ ai_gen_id }} {
+      padding: {{ block.settings.nav_link_padding | minus: 4 }}px 10px;
+      font-size: {{ block.settings.nav_font_size | minus: 2 }}px;
+    }
+
+    .wd40-dropdown-link-{{ ai_gen_id }} {
+      padding: 8px 10px 8px 25px;
+      font-size: {{ block.settings.nav_font_size | minus: 2 }}px;
+    }
+  }
+{% endstyle %}
+
+<wd40-custom-header-{{ ai_gen_id }} class="wd40-custom-header-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="wd40-header-top-{{ ai_gen_id }}">
+    <div class="wd40-header-container-{{ ai_gen_id }}">
+      <div class="wd40-logo-section-{{ ai_gen_id }}">
+        {% if block.settings.logo %}
+          <a href="/collections/wd-40">
+            <img
+              src="{{ block.settings.logo | image_url: width: 400 }}"
+              alt="{{ block.settings.logo.alt | default: 'WD-40' }}"
+              width="{{ block.settings.logo.width }}"
+              height="{{ block.settings.logo.height }}"
+              loading="lazy"
+            >
+          </a>
+        {% else %}
+          <a href="/collections/wd-40">
+            <div class="wd40-logo-placeholder-{{ ai_gen_id }}">
+              {{ 'image' | placeholder_svg_tag }}
+            </div>
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="wd40-search-section-{{ ai_gen_id }}">
+        <form action="{{ routes.search_url }}" method="get" class="wd40-search-form-{{ ai_gen_id }}" role="search">
+          <input
+            type="search"
+            name="q"
+            class="wd40-search-input-{{ ai_gen_id }}"
+            placeholder="{{ block.settings.search_placeholder }}"
+            value="{{ search.terms | escape }}"
+            aria-label="Buscar productos"
+          >
+          <button type="submit" class="wd40-search-button-{{ ai_gen_id }}" aria-label="Buscar">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+
+      <div class="wd40-contact-section-{{ ai_gen_id }}">
+        {% if block.settings.phone_number != blank %}
+          <a href="tel:{{ block.settings.phone_number }}" class="wd40-contact-item-{{ ai_gen_id }}">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span>{{ block.settings.phone_number }}</span>
+          </a>
+        {% endif %}
+
+        {% if block.settings.email_address != blank %}
+          <a href="mailto:{{ block.settings.email_address }}" class="wd40-contact-item-{{ ai_gen_id }}">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+            </svg>
+            <span>{{ block.settings.email_address }}</span>
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="wd40-icons-section-{{ ai_gen_id }}">
+        {% if block.settings.show_currency_selector %}
+          <select class="wd40-currency-selector-{{ ai_gen_id }}" aria-label="Selector de moneda">
+            <option value="BOB" {% if cart.currency.iso_code == 'BOB' %}selected{% endif %}>BOB</option>
+            <option value="USD" {% if cart.currency.iso_code == 'USD' %}selected{% endif %}>USD</option>
+            <option value="EUR" {% if cart.currency.iso_code == 'EUR' %}selected{% endif %}>EUR</option>
+          </select>
+        {% endif %}
+
+        {% if block.settings.show_account_icon %}
+          <a href="{{ routes.account_url }}" class="wd40-icon-link-{{ ai_gen_id }}" aria-label="Cuenta">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </a>
+        {% endif %}
+
+        {% if block.settings.show_cart_icon %}
+          <a href="{{ routes.cart_url }}" class="wd40-icon-link-{{ ai_gen_id }}" aria-label="Carrito">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+            <span class="wd40-cart-count-{{ ai_gen_id }}">{{ cart.item_count }}</span>
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  {% if block.settings.show_navigation and block.settings.menu != blank %}
+    <div class="wd40-nav-bar-{{ ai_gen_id }}">
+      <div class="wd40-nav-container-{{ ai_gen_id }}">
+        <button 
+          class="wd40-mobile-menu-toggle-{{ ai_gen_id }}" 
+          aria-label="Toggle menu"
+          aria-expanded="false"
+        >
+          <span>{{ block.settings.menu_toggle_text }}</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+
+        <ul class="wd40-nav-menu-{{ ai_gen_id }}">
+          {% for link in linklists[block.settings.menu].links %}
+            <li class="wd40-nav-item-{{ ai_gen_id }} {% if link.links != blank %}has-dropdown{% endif %}">
+              <a href="{{ link.url }}" class="wd40-nav-link-{{ ai_gen_id }}">
+                {{ link.title }}
+                {% if link.links != blank %}
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                {% endif %}
+              </a>
+              
+              {% if link.links != blank %}
+                <ul class="wd40-dropdown-{{ ai_gen_id }}">
+                  {% for child_link in link.links %}
+                    <li class="wd40-dropdown-item-{{ ai_gen_id }}">
+                      <a href="{{ child_link.url }}" class="wd40-dropdown-link-{{ ai_gen_id }}">
+                        {{ child_link.title }}
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endif %}
+</wd40-custom-header-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class WD40CustomHeader{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.setupCurrencySelector();
+        this.setupCartUpdate();
+        this.setupMobileMenu();
+      }
+
+      setupCurrencySelector() {
+        const currencySelector = this.querySelector('.wd40-currency-selector-{{ ai_gen_id }}');
+        if (currencySelector) {
+          currencySelector.addEventListener('change', function(e) {
+            const newCurrency = e.target.value;
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/cart/update';
+            
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'currency';
+            input.value = newCurrency;
+            
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+          });
+        }
+      }
+
+      setupCartUpdate() {
+        const cartCount = this.querySelector('.wd40-cart-count-{{ ai_gen_id }}');
+        if (cartCount) {
+          document.addEventListener('cart:updated', function(event) {
+            if (event.detail && event.detail.cart) {
+              cartCount.textContent = event.detail.cart.item_count;
+            }
+          });
+
+          fetch('/cart.js')
+            .then(function(response) { return response.json(); })
+            .then(function(cart) {
+              cartCount.textContent = cart.item_count;
+            })
+            .catch(function(error) {
+              console.error('Error fetching cart:', error);
+            });
+        }
+      }
+
+      setupMobileMenu() {
+        const menuToggle = this.querySelector('.wd40-mobile-menu-toggle-{{ ai_gen_id }}');
+        const navMenu = this.querySelector('.wd40-nav-menu-{{ ai_gen_id }}');
+        
+        if (menuToggle && navMenu) {
+          menuToggle.addEventListener('click', function() {
+            const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+            menuToggle.setAttribute('aria-expanded', !isExpanded);
+            navMenu.classList.toggle('active');
+          });
+
+          const navItems = navMenu.querySelectorAll('.wd40-nav-item-{{ ai_gen_id }}.has-dropdown');
+          navItems.forEach(function(item) {
+            const link = item.querySelector('.wd40-nav-link-{{ ai_gen_id }}');
+            
+            link.addEventListener('click', function(e) {
+              if (window.innerWidth <= 990) {
+                e.preventDefault();
+                item.classList.toggle('mobile-open');
+              }
+            });
+          });
+
+          const navLinks = navMenu.querySelectorAll('.wd40-dropdown-link-{{ ai_gen_id }}');
+          navLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+              if (window.innerWidth <= 990) {
+                navMenu.classList.remove('active');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                navItems.forEach(function(item) {
+                  item.classList.remove('mobile-open');
+                });
+              }
+            });
+          });
+
+          window.addEventListener('resize', function() {
+            if (window.innerWidth > 990) {
+              navMenu.classList.remove('active');
+              menuToggle.setAttribute('aria-expanded', 'false');
+              navItems.forEach(function(item) {
+                item.classList.remove('mobile-open');
+              });
+            }
+          });
+
+          document.addEventListener('click', function(e) {
+            if (window.innerWidth <= 990 && 
+                !e.target.closest('.wd40-nav-bar-{{ ai_gen_id }}')) {
+              navMenu.classList.remove('active');
+              menuToggle.setAttribute('aria-expanded', 'false');
+              navItems.forEach(function(item) {
+                item.classList.remove('mobile-open');
+              });
+            }
+          });
+        }
+      }
+    }
+
+    customElements.define('wd40-custom-header-{{ ai_gen_id }}', WD40CustomHeader{{ ai_gen_id }});
+  })();
+</script>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "WD-40 custom header",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 80,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "label": "Logo width",
+      "default": 150
+    },
+    {
+      "type": "header",
+      "content": "Top bar style"
+    },
+    {
+      "type": "color",
+      "id": "top_bar_background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "header_background",
+      "label": "Header background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#dfdfdf"
+    },
+    {
+      "type": "range",
+      "id": "top_bar_padding",
+      "min": 10,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Padding",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Search bar"
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Placeholder text",
+      "default": "Buscar productos..."
+    },
+    {
+      "type": "color",
+      "id": "search_background",
+      "label": "Background",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "color",
+      "id": "search_text_color",
+      "label": "Text color",
+      "default": "#232323"
+    },
+    {
+      "type": "color",
+      "id": "search_placeholder_color",
+      "label": "Placeholder color",
+      "default": "#999999"
+    },
+    {
+      "type": "color",
+      "id": "search_border_color",
+      "label": "Border color",
+      "default": "#dfdfdf"
+    },
+    {
+      "type": "color",
+      "id": "search_icon_color",
+      "label": "Icon color",
+      "default": "#676767"
+    },
+    {
+      "type": "range",
+      "id": "search_border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Contact information"
+    },
+    {
+      "type": "text",
+      "id": "phone_number",
+      "label": "Phone number"
+    },
+    {
+      "type": "text",
+      "id": "email_address",
+      "label": "Email address"
+    },
+    {
+      "type": "color",
+      "id": "contact_text_color",
+      "label": "Text color",
+      "default": "#676767"
+    },
+    {
+      "type": "header",
+      "content": "Icons"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_currency_selector",
+      "label": "Show currency selector",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account_icon",
+      "label": "Show account icon",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart_icon",
+      "label": "Show cart icon",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#232323"
+    },
+    {
+      "type": "color",
+      "id": "currency_background",
+      "label": "Currency background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "currency_text_color",
+      "label": "Currency text",
+      "default": "#232323"
+    },
+    {
+      "type": "color",
+      "id": "currency_border_color",
+      "label": "Currency border",
+      "default": "#dfdfdf"
+    },
+    {
+      "type": "range",
+      "id": "currency_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Currency border radius",
+      "default": 4
+    },
+    {
+      "type": "color",
+      "id": "cart_badge_background",
+      "label": "Cart badge background",
+      "default": "#004f9d"
+    },
+    {
+      "type": "color",
+      "id": "cart_badge_text",
+      "label": "Cart badge text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Navigation bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_navigation",
+      "label": "Show navigation",
+      "default": true
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "info": "Select a menu with items and submenus"
+    },
+    {
+      "type": "text",
+      "id": "menu_toggle_text",
+      "label": "Mobile menu toggle text",
+      "default": "Menú"
+    },
+    {
+      "type": "color",
+      "id": "nav_background",
+      "label": "Background",
+      "default": "#004f9d"
+    },
+    {
+      "type": "color",
+      "id": "nav_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "nav_hover_background",
+      "label": "Hover background",
+      "default": "#003d7a"
+    },
+    {
+      "type": "color",
+      "id": "nav_hover_text_color",
+      "label": "Hover text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "nav_link_padding",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Link padding",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "nav_font_size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "nav_font_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "header",
+      "content": "Dropdown menu"
+    },
+    {
+      "type": "color",
+      "id": "dropdown_background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "dropdown_text_color",
+      "label": "Text color",
+      "default": "#232323"
+    },
+    {
+      "type": "color",
+      "id": "dropdown_hover_background",
+      "label": "Hover background",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "color",
+      "id": "dropdown_hover_text_color",
+      "label": "Hover text color",
+      "default": "#004f9d"
+    }
+  ],
+  "presets": [
+    {
+      "name": "WD-40 custom header"
+    }
+  ]
+}
 {% endschema %}
