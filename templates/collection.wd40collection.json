@@ -44,7 +44,7 @@
             "link_font_size": 16,
             "link_font_weight": "600",
             "max_width": 1200,
-            "padding_vertical": 15,
+            "padding_vertical": 10,
             "nav_spacing": 30,
             "link_padding_vertical": 8,
             "link_padding_horizontal": 16,
@@ -176,6 +176,112 @@
         "show_on_mobile": true,
         "hide_if_empty": false
       }
+    },
+    "1773088612141be27a": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_6a2c389_zHBMgy": {
+          "type": "ai_gen_block_6a2c389",
+          "settings": {
+            "logo_width": 150,
+            "top_bar_background": "#ffffff",
+            "header_background": "#0568ff",
+            "border_color": "#dfdfdf",
+            "top_bar_padding": 20,
+            "search_placeholder": "Buscar productos...",
+            "search_background": "#ffffff",
+            "search_text_color": "#232323",
+            "search_placeholder_color": "#999999",
+            "search_border_color": "#dfdfdf",
+            "search_icon_color": "#676767",
+            "search_border_radius": 4,
+            "phone_number": "",
+            "email_address": "",
+            "contact_text_color": "#676767",
+            "show_currency_selector": true,
+            "show_account_icon": true,
+            "show_cart_icon": true,
+            "icon_color": "#232323",
+            "currency_background": "#0066cc",
+            "currency_text_color": "#232323",
+            "currency_border_color": "#dfdfdf",
+            "currency_border_radius": 4,
+            "cart_badge_background": "#004f9d",
+            "cart_badge_text": "#0066cc",
+            "show_navigation": true,
+            "menu": "",
+            "menu_toggle_text": "Menú",
+            "nav_background": "#004f9d",
+            "nav_text_color": "#0066cc",
+            "nav_hover_background": "#003d7a",
+            "nav_hover_text_color": "#0066cc",
+            "nav_link_padding": 16,
+            "nav_font_size": 16,
+            "nav_font_weight": "500",
+            "dropdown_background": "#0066cc",
+            "dropdown_text_color": "#232323",
+            "dropdown_hover_background": "#0066cc",
+            "dropdown_hover_text_color": "#004f9d"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_6a2c389_zHBMgy"
+      ],
+      "settings": {
+        "full_width": true,
+        "spacing_top": 60,
+        "spacing_bottom": 60,
+        "show_on_desktop": true,
+        "show_on_mobile": true
+      }
+    },
+    "17730904109ca61147": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_cf6e1c6_cfVKf3": {
+          "type": "ai_gen_block_cf6e1c6",
+          "settings": {
+            "logo": "shopify://shop_images/WD40_social_media_1024x1024-1.png",
+            "logo_text": "WD-40",
+            "logo_width": 150,
+            "search_placeholder": "Search products...",
+            "search_bg_color": "#ffffff",
+            "search_text_color": "#232323",
+            "search_placeholder_color": "#999999",
+            "search_border_color": "#dfdfdf",
+            "search_icon_color": "#676767",
+            "search_border_radius": 4,
+            "phone_number": "",
+            "email": "",
+            "contact_text_color": "#676767",
+            "menu": "main-menu",
+            "nav_bg_color": "#004f9d",
+            "nav_text_color": "#ffffff",
+            "nav_hover_color": "#ffffff",
+            "nav_hover_bg": "#003d7a",
+            "nav_font_size": 14,
+            "top_bar_bg_color": "#ffffff",
+            "border_color": "#dfdfdf",
+            "icon_color": "#232323",
+            "button_border_radius": 4,
+            "cart_badge_bg": "#e21919",
+            "cart_badge_text": "#ffffff"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_cf6e1c6_cfVKf3"
+      ],
+      "settings": {
+        "full_width": false,
+        "spacing_top": 60,
+        "spacing_bottom": 60,
+        "show_on_desktop": true,
+        "show_on_mobile": true
+      }
     }
   },
   "order": [
@@ -183,6 +289,8 @@
     "17730873745d9eb93f",
     "main-collection-subcollections",
     "main-collection-product-grid",
-    "multicolumn_AqzdkX"
+    "multicolumn_AqzdkX",
+    "1773088612141be27a",
+    "17730904109ca61147"
   ]
 }
