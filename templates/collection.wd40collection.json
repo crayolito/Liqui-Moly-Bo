@@ -13,9 +13,9 @@
       "type": "main-collection-banner",
       "settings": {
         "show_collection_title": true,
-        "show_collection_description": false,
+        "show_collection_description": true,
         "show_collection_image": true,
-        "collection_description_fullwidth": false,
+        "collection_description_fullwidth": true,
         "description_lines_to_show": 0,
         "overlay_opacity": 80,
         "color_scheme": "background-1"
