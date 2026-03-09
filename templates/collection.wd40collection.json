@@ -21,6 +21,49 @@
         "color_scheme": "background-1"
       }
     },
+    "17730873745d9eb93f": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_e9905d0_YCff36": {
+          "type": "ai_gen_block_e9905d0",
+          "settings": {
+            "logo": "shopify://shop_images/png-clipart-wd-40-logo-lubricant-aerosol-spray-others-blue-text.png",
+            "logo_height": 55,
+            "nav_item_1_text": "Inicio",
+            "nav_item_1_url": "shopify://collections/wd-40",
+            "nav_item_2_text": "Productos",
+            "nav_item_2_url": "",
+            "nav_item_3_text": "Contacto",
+            "nav_item_3_url": "",
+            "background_color": "#287dff",
+            "border_color": "#287dff",
+            "border_width": 3,
+            "link_color": "#FFFFFF",
+            "link_hover_color": "#FFD100",
+            "link_hover_bg": "#287dff",
+            "link_font_size": 16,
+            "link_font_weight": "600",
+            "max_width": 1200,
+            "padding_vertical": 15,
+            "nav_spacing": 30,
+            "link_padding_vertical": 8,
+            "link_padding_horizontal": 16,
+            "link_border_radius": 4
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_e9905d0_YCff36"
+      ],
+      "settings": {
+        "full_width": true,
+        "spacing_top": 60,
+        "spacing_bottom": 60,
+        "show_on_desktop": true,
+        "show_on_mobile": true
+      }
+    },
     "main-collection-subcollections": {
       "type": "main-collection-subcollections",
       "settings": {
@@ -76,11 +119,70 @@
         "side_menu": "",
         "side_menu_expand_on_arrow": false
       }
+    },
+    "multicolumn_AqzdkX": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_TiwjwF": {
+          "type": "column",
+          "settings": {
+            "image_width": 550,
+            "title": "Column",
+            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "column_jMWdNM": {
+          "type": "column",
+          "settings": {
+            "image_width": 550,
+            "title": "Column",
+            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "column_JQNU8c": {
+          "type": "column",
+          "settings": {
+            "image_width": 550,
+            "title": "Column",
+            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "column_TiwjwF",
+        "column_jMWdNM",
+        "column_JQNU8c"
+      ],
+      "name": "t:sections.multicolumn.presets.name",
+      "settings": {
+        "title": "",
+        "heading_size": "md",
+        "subtitle": "",
+        "button_label": "",
+        "button_link": "",
+        "columns": 3,
+        "column_alignment": "left",
+        "color_scheme": "",
+        "spacing_top": 60,
+        "spacing_bottom": 60,
+        "heading_tag": "h2",
+        "show_on_desktop": true,
+        "show_on_mobile": true,
+        "hide_if_empty": false
+      }
     }
   },
   "order": [
     "main-collection-banner",
+    "17730873745d9eb93f",
     "main-collection-subcollections",
-    "main-collection-product-grid"
+    "main-collection-product-grid",
+    "multicolumn_AqzdkX"
   ]
 }
