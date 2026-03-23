@@ -47,6 +47,17 @@
             "show_bottom_divider": false
           }
         },
+        "custom_liquid_aERG3U": {
+          "type": "custom_liquid",
+          "settings": {
+            "title": "",
+            "icon": "",
+            "custom_liquid": "<ul style=\"list-style: none; padding: 0; margin: 0;\">\n  <li style=\"margin-bottom: 8px;\">\n    <span style=\"color: #007bff; font-weight: bold;\">✔</span>\n    Máxima protección del motor\n  </li>\n  <li style=\"margin-bottom: 8px;\">\n    <span style=\"color: #007bff; font-weight: bold;\">✔</span>\n    Menor desgaste y mayor duración\n  </li>\n  <li style=\"margin-bottom: 8px;\">\n    <span style=\"color: #007bff; font-weight: bold;\">✔</span>\n    Motor más limpio y eficiente\n  </li>\n  <li style=\"margin-bottom: 8px;\">\n    <span style=\"color: #007bff; font-weight: bold;\">✔</span>\n    Cambios suaves y mejor rendimiento\n  </li>\n</ul>",
+            "position": "left",
+            "expanded": false,
+            "show_bottom_divider": false
+          }
+        },
         "stock_bar": {
           "type": "stock_bar",
           "disabled": true,
@@ -95,6 +106,17 @@
             "show_bottom_divider": false
           }
         },
+        "extra": {
+          "type": "extra",
+          "disabled": true,
+          "settings": {
+            "text": "<p>Got questions?</p><p>Feel free to <a href=\"#\" title=\"Contact Us\">get in touch</a></p>",
+            "show_facebook": false,
+            "show_twitter": false,
+            "show_linkedin": true,
+            "show_bottom_divider": false
+          }
+        },
         "info_box": {
           "type": "info_box",
           "settings": {
@@ -107,15 +129,12 @@
             "show_bottom_divider": false
           }
         },
-        "extra": {
-          "type": "extra",
-          "disabled": true,
+        "description": {
+          "type": "description",
           "settings": {
-            "text": "<p>Got questions?</p><p>Feel free to <a href=\"#\" title=\"Contact Us\">get in touch</a></p>",
-            "show_facebook": false,
-            "show_twitter": false,
-            "show_linkedin": true,
-            "show_bottom_divider": false
+            "title": "Description",
+            "icon": "info",
+            "expanded": false
           }
         },
         "extra_jp3Dwx": {
@@ -138,14 +157,6 @@
             "phone_number": "+591 78008717",
             "color_scheme": "background-2",
             "show_bottom_divider": false
-          }
-        },
-        "description": {
-          "type": "description",
-          "settings": {
-            "title": "Description",
-            "icon": "info",
-            "expanded": false
           }
         },
         "details": {
@@ -199,16 +210,17 @@
         "title",
         "text",
         "price",
+        "custom_liquid_aERG3U",
         "stock_bar",
         "variants",
         "buy_buttons",
         "complementary",
         "availability",
-        "info_box",
         "extra",
+        "info_box",
+        "description",
         "extra_jp3Dwx",
         "contact_details",
-        "description",
         "details",
         "expandable-1",
         "expandable-2",
@@ -218,7 +230,7 @@
         "hide_variants": true,
         "arrow_navigation": false,
         "thumbnail_navigation": false,
-        "image_zoom_type": "lightbox_zoom_hover",
+        "image_zoom_type": "none",
         "image_ratio": "adapt",
         "image_disclaimer": "",
         "collapse_other_expandables": false
