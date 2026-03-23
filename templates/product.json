@@ -26,6 +26,17 @@
             "show_bottom_divider": true
           }
         },
+        "custom_liquid_QeVdzV": {
+          "type": "custom_liquid",
+          "settings": {
+            "title": "",
+            "icon": "",
+            "custom_liquid": "",
+            "position": "left",
+            "expanded": false,
+            "show_bottom_divider": false
+          }
+        },
         "text": {
           "type": "text",
           "settings": {
@@ -52,7 +63,7 @@
           "settings": {
             "title": "",
             "icon": "",
-            "custom_liquid": "<ul style=\"list-style: none; padding: 0; margin: 0;\">\n  <li style=\"margin-bottom: 8px;\">\n    <span style=\"color: #007bff; font-weight: bold;\">✔</span>\n    Máxima protección del motor\n  </li>\n  <li style=\"margin-bottom: 8px;\">\n    <span style=\"color: #007bff; font-weight: bold;\">✔</span>\n    Menor desgaste y mayor duración\n  </li>\n  <li style=\"margin-bottom: 8px;\">\n    <span style=\"color: #007bff; font-weight: bold;\">✔</span>\n    Motor más limpio y eficiente\n  </li>\n  <li style=\"margin-bottom: 8px;\">\n    <span style=\"color: #007bff; font-weight: bold;\">✔</span>\n    Cambios suaves y mejor rendimiento\n  </li>\n</ul>",
+            "custom_liquid": "<ul style=\"list-style: none; padding: 0; margin: 0;\">\n  <li style=\"margin-bottom: 8px;\">\n    <span style=\"color: #007bff; font-weight: bold;\">✔</span>\n    Lubrica y protege el motor en todo momento\n  </li>\n  <li style=\"margin-bottom: 8px;\">\n    <span style=\"color: #007bff; font-weight: bold;\">✔</span>\n    Reduce el desgaste y alarga la vida del motor\n  </li>\n  <li style=\"margin-bottom: 8px;\">\n    <span style=\"color: #007bff; font-weight: bold;\">✔</span>\n    Mejora el rendimiento y la respuesta\n  </li>\n  <li style=\"margin-bottom: 8px;\">\n    <span style=\"color: #007bff; font-weight: bold;\">✔</span>\n    Permite cambios de marcha suaves\n  </li>\n</ul>",
             "position": "left",
             "expanded": false,
             "show_bottom_divider": false
@@ -86,6 +97,17 @@
             "show_add_to_cart": true,
             "show_buy_now": true,
             "show_gift_card_recipient": false,
+            "show_bottom_divider": false
+          }
+        },
+        "custom_liquid_KX4MNz": {
+          "type": "custom_liquid",
+          "settings": {
+            "title": "",
+            "icon": "",
+            "custom_liquid": "",
+            "position": "left",
+            "expanded": false,
             "show_bottom_divider": false
           }
         },
@@ -208,12 +230,14 @@
       },
       "block_order": [
         "title",
+        "custom_liquid_QeVdzV",
         "text",
         "price",
         "custom_liquid_aERG3U",
         "stock_bar",
         "variants",
         "buy_buttons",
+        "custom_liquid_KX4MNz",
         "complementary",
         "availability",
         "extra",
