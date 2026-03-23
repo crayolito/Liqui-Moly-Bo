@@ -1,6 +1,1047 @@
+{% doc %}
+  @prompt
+    Crea una sección para product page en Shopify compatible con el tema Athens.
+    
+    Objetivo:
+    mostrar beneficios clave del producto de forma clara y persuasiva para aumentar conversión.
+    
+    Requisitos:
+    - Debe ser 100% funcional y editable desde el editor de Shopify
+    - No hardcodear el contenido
+    - Los beneficios deben configurarse como bloques editables
+    - Cada bloque debe incluir:
+      - ícono o símbolo
+      - texto corto
+    - Debe permitir agregar, editar, reordenar y eliminar beneficios
+    - Diseño limpio, visual y fácil de escanear
+    - Compatible con product template
+    - No usar ningún form de Shopify en esta sección
+    - No romper compatibilidad con el tema Athens
+    
+    Estilo:
+    - visual automotriz premium
+    - pensado para ecommerce tipo lubricantes, aditivos y aceites
+    - ideal para mostrar 4 beneficios rápidos debajo del precio o en una sección independiente
+    
+    Ejemplo de beneficios:
+    - Máxima protección del motor
+    - Menor desgaste y mayor duración
+    - Motor más limpio y eficiente
+    - Mejor rendimiento
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-product-benefits-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: 40px 0;
+  }
+
+  .ai-product-benefits-container-{{ ai_gen_id }} {
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .ai-product-benefits-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: repeat({{ block.settings.columns_desktop }}, 1fr);
+    gap: {{ block.settings.spacing }}px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .ai-product-benefits-item-{{ ai_gen_id }} {
+    display: flex;
+    align-items: {{ block.settings.alignment }};
+    gap: {{ block.settings.icon_text_spacing }}px;
+    padding: {{ block.settings.item_padding }}px;
+    background-color: {{ block.settings.item_background }};
+    border: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    transition: all 0.3s ease;
+  }
+
+  .ai-product-benefits-item-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.item_hover_background }};
+    border-color: {{ block.settings.border_hover_color }};
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .ai-product-benefits-icon-wrapper-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: {{ block.settings.icon_background }};
+    border-radius: {{ block.settings.icon_border_radius }}px;
+  }
+
+  .ai-product-benefits-icon-{{ ai_gen_id }} {
+    width: calc({{ block.settings.icon_size }}px * 0.6);
+    height: calc({{ block.settings.icon_size }}px * 0.6);
+    color: {{ block.settings.icon_color }};
+  }
+
+  .ai-product-benefits-text-{{ ai_gen_id }} {
+    flex: 1;
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.text_size }}px;
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-product-benefits-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat({{ block.settings.columns_tablet }}, 1fr);
+      gap: {{ block.settings.spacing | times: 0.8 }}px;
+    }
+
+    .ai-product-benefits-item-{{ ai_gen_id }} {
+      padding: {{ block.settings.item_padding | times: 0.8 }}px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-product-benefits-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat({{ block.settings.columns_mobile }}, 1fr);
+      gap: {{ block.settings.spacing | times: 0.7 }}px;
+    }
+
+    .ai-product-benefits-container-{{ ai_gen_id }} {
+      width: 100%;
+    }
+
+    .ai-product-benefits-item-{{ ai_gen_id }} {
+      padding: {{ block.settings.item_padding | times: 0.7 }}px;
+    }
+
+    .ai-product-benefits-icon-wrapper-{{ ai_gen_id }} {
+      width: {{ block.settings.icon_size | times: 0.85 }}px;
+      height: {{ block.settings.icon_size | times: 0.85 }}px;
+    }
+
+    .ai-product-benefits-icon-{{ ai_gen_id }} {
+      width: calc({{ block.settings.icon_size | times: 0.85 }}px * 0.6);
+      height: calc({{ block.settings.icon_size | times: 0.85 }}px * 0.6);
+    }
+
+    .ai-product-benefits-text-{{ ai_gen_id }} {
+      font-size: {{ block.settings.text_size | times: 0.9 }}px;
+    }
+  }
+{% endstyle %}
+
+<product-benefits-{{ ai_gen_id }} class="ai-product-benefits-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-product-benefits-container-{{ ai_gen_id }}">
+    <ul class="ai-product-benefits-grid-{{ ai_gen_id }}">
+      {% if block.settings.benefit_1_text != blank %}
+        <li class="ai-product-benefits-item-{{ ai_gen_id }}">
+          <div class="ai-product-benefits-icon-wrapper-{{ ai_gen_id }}">
+            {% case block.settings.benefit_1_icon %}
+              {% when 'shield' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              {% when 'check' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              {% when 'star' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+              {% when 'zap' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+              {% when 'award' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="8" r="7"></circle>
+                  <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                </svg>
+              {% when 'droplet' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+                </svg>
+              {% when 'settings' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M12 1v6m0 6v6m5.2-13.2l-4.2 4.2m-2 2l-4.2 4.2m13.2-5.2l-6 0m-6 0l-6 0m13.2 5.2l-4.2-4.2m-2-2l-4.2-4.2"></path>
+                </svg>
+              {% when 'trending_up' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                  <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+              {% when 'clock' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              {% when 'heart' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+            {% endcase %}
+          </div>
+          <p class="ai-product-benefits-text-{{ ai_gen_id }}">{{ block.settings.benefit_1_text }}</p>
+        </li>
+      {% endif %}
+
+      {% if block.settings.benefit_2_text != blank %}
+        <li class="ai-product-benefits-item-{{ ai_gen_id }}">
+          <div class="ai-product-benefits-icon-wrapper-{{ ai_gen_id }}">
+            {% case block.settings.benefit_2_icon %}
+              {% when 'shield' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              {% when 'check' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              {% when 'star' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+              {% when 'zap' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+              {% when 'award' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="8" r="7"></circle>
+                  <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                </svg>
+              {% when 'droplet' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+                </svg>
+              {% when 'settings' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M12 1v6m0 6v6m5.2-13.2l-4.2 4.2m-2 2l-4.2 4.2m13.2-5.2l-6 0m-6 0l-6 0m13.2 5.2l-4.2-4.2m-2-2l-4.2-4.2"></path>
+                </svg>
+              {% when 'trending_up' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                  <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+              {% when 'clock' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              {% when 'heart' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+            {% endcase %}
+          </div>
+          <p class="ai-product-benefits-text-{{ ai_gen_id }}">{{ block.settings.benefit_2_text }}</p>
+        </li>
+      {% endif %}
+
+      {% if block.settings.benefit_3_text != blank %}
+        <li class="ai-product-benefits-item-{{ ai_gen_id }}">
+          <div class="ai-product-benefits-icon-wrapper-{{ ai_gen_id }}">
+            {% case block.settings.benefit_3_icon %}
+              {% when 'shield' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              {% when 'check' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              {% when 'star' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+              {% when 'zap' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+              {% when 'award' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="8" r="7"></circle>
+                  <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                </svg>
+              {% when 'droplet' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+                </svg>
+              {% when 'settings' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M12 1v6m0 6v6m5.2-13.2l-4.2 4.2m-2 2l-4.2 4.2m13.2-5.2l-6 0m-6 0l-6 0m13.2 5.2l-4.2-4.2m-2-2l-4.2-4.2"></path>
+                </svg>
+              {% when 'trending_up' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                  <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+              {% when 'clock' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              {% when 'heart' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+            {% endcase %}
+          </div>
+          <p class="ai-product-benefits-text-{{ ai_gen_id }}">{{ block.settings.benefit_3_text }}</p>
+        </li>
+      {% endif %}
+
+      {% if block.settings.benefit_4_text != blank %}
+        <li class="ai-product-benefits-item-{{ ai_gen_id }}">
+          <div class="ai-product-benefits-icon-wrapper-{{ ai_gen_id }}">
+            {% case block.settings.benefit_4_icon %}
+              {% when 'shield' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              {% when 'check' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              {% when 'star' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+              {% when 'zap' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+              {% when 'award' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="8" r="7"></circle>
+                  <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                </svg>
+              {% when 'droplet' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+                </svg>
+              {% when 'settings' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M12 1v6m0 6v6m5.2-13.2l-4.2 4.2m-2 2l-4.2 4.2m13.2-5.2l-6 0m-6 0l-6 0m13.2 5.2l-4.2-4.2m-2-2l-4.2-4.2"></path>
+                </svg>
+              {% when 'trending_up' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                  <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+              {% when 'clock' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              {% when 'heart' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+            {% endcase %}
+          </div>
+          <p class="ai-product-benefits-text-{{ ai_gen_id }}">{{ block.settings.benefit_4_text }}</p>
+        </li>
+      {% endif %}
+
+      {% if block.settings.benefit_5_text != blank %}
+        <li class="ai-product-benefits-item-{{ ai_gen_id }}">
+          <div class="ai-product-benefits-icon-wrapper-{{ ai_gen_id }}">
+            {% case block.settings.benefit_5_icon %}
+              {% when 'shield' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              {% when 'check' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              {% when 'star' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+              {% when 'zap' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+              {% when 'award' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="8" r="7"></circle>
+                  <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                </svg>
+              {% when 'droplet' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+                </svg>
+              {% when 'settings' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M12 1v6m0 6v6m5.2-13.2l-4.2 4.2m-2 2l-4.2 4.2m13.2-5.2l-6 0m-6 0l-6 0m13.2 5.2l-4.2-4.2m-2-2l-4.2-4.2"></path>
+                </svg>
+              {% when 'trending_up' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                  <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+              {% when 'clock' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              {% when 'heart' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+            {% endcase %}
+          </div>
+          <p class="ai-product-benefits-text-{{ ai_gen_id }}">{{ block.settings.benefit_5_text }}</p>
+        </li>
+      {% endif %}
+
+      {% if block.settings.benefit_6_text != blank %}
+        <li class="ai-product-benefits-item-{{ ai_gen_id }}">
+          <div class="ai-product-benefits-icon-wrapper-{{ ai_gen_id }}">
+            {% case block.settings.benefit_6_icon %}
+              {% when 'shield' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              {% when 'check' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              {% when 'star' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+              {% when 'zap' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+              {% when 'award' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="8" r="7"></circle>
+                  <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                </svg>
+              {% when 'droplet' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+                </svg>
+              {% when 'settings' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M12 1v6m0 6v6m5.2-13.2l-4.2 4.2m-2 2l-4.2 4.2m13.2-5.2l-6 0m-6 0l-6 0m13.2 5.2l-4.2-4.2m-2-2l-4.2-4.2"></path>
+                </svg>
+              {% when 'trending_up' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                  <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+              {% when 'clock' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              {% when 'heart' %}
+                <svg class="ai-product-benefits-icon-{{ ai_gen_id }}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+            {% endcase %}
+          </div>
+          <p class="ai-product-benefits-text-{{ ai_gen_id }}">{{ block.settings.benefit_6_text }}</p>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+</product-benefits-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ProductBenefits{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.style.display = 'block';
+      }
+    }
+
+    customElements.define('product-benefits-{{ ai_gen_id }}', ProductBenefits{{ ai_gen_id }});
+  })();
+</script>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "Beneficios del producto",
+  "tag": null,
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Diseño"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Ancho en escritorio",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columnas en escritorio",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "columns_tablet",
+      "label": "Columnas en tablet",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Columnas en móvil",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alineación",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Arriba"
+        },
+        {
+          "value": "center",
+          "label": "Centro"
+        },
+        {
+          "value": "flex-end",
+          "label": "Abajo"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "spacing",
+      "label": "Espaciado entre items",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Estilo de items"
+    },
+    {
+      "type": "range",
+      "id": "item_padding",
+      "label": "Padding interno",
+      "min": 8,
+      "max": 32,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "item_background",
+      "label": "Fondo",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "item_hover_background",
+      "label": "Fondo al pasar cursor",
+      "default": "#f8f8f8"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Grosor de borde",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Color de borde",
+      "default": "#dfdfdf"
+    },
+    {
+      "type": "color",
+      "id": "border_hover_color",
+      "label": "Color de borde al pasar cursor",
+      "default": "#004f9d"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Radio de borde",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Iconos"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Tamaño de ícono",
+      "min": 32,
+      "max": 64,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Color de ícono",
+      "default": "#004f9d"
+    },
+    {
+      "type": "color",
+      "id": "icon_background",
+      "label": "Fondo de ícono",
+      "default": "#f0f6ff"
+    },
+    {
+      "type": "range",
+      "id": "icon_border_radius",
+      "label": "Radio de borde de ícono",
+      "min": 0,
+      "max": 32,
+      "step": 4,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "icon_text_spacing",
+      "label": "Espacio entre ícono y texto",
+      "min": 8,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Texto"
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "label": "Tamaño de texto",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color de texto",
+      "default": "#232323"
+    },
+    {
+      "type": "header",
+      "content": "Beneficio 1"
+    },
+    {
+      "type": "select",
+      "id": "benefit_1_icon",
+      "label": "Ícono",
+      "options": [
+        {
+          "value": "shield",
+          "label": "Escudo (Protección)"
+        },
+        {
+          "value": "check",
+          "label": "Check (Verificado)"
+        },
+        {
+          "value": "star",
+          "label": "Estrella (Calidad)"
+        },
+        {
+          "value": "zap",
+          "label": "Rayo (Potencia)"
+        },
+        {
+          "value": "award",
+          "label": "Premio (Excelencia)"
+        },
+        {
+          "value": "droplet",
+          "label": "Gota (Lubricación)"
+        },
+        {
+          "value": "settings",
+          "label": "Engranaje (Rendimiento)"
+        },
+        {
+          "value": "trending_up",
+          "label": "Tendencia (Mejora)"
+        },
+        {
+          "value": "clock",
+          "label": "Reloj (Duración)"
+        },
+        {
+          "value": "heart",
+          "label": "Corazón (Cuidado)"
+        }
+      ],
+      "default": "shield"
+    },
+    {
+      "type": "text",
+      "id": "benefit_1_text",
+      "label": "Texto",
+      "default": "Máxima protección del motor"
+    },
+    {
+      "type": "header",
+      "content": "Beneficio 2"
+    },
+    {
+      "type": "select",
+      "id": "benefit_2_icon",
+      "label": "Ícono",
+      "options": [
+        {
+          "value": "shield",
+          "label": "Escudo (Protección)"
+        },
+        {
+          "value": "check",
+          "label": "Check (Verificado)"
+        },
+        {
+          "value": "star",
+          "label": "Estrella (Calidad)"
+        },
+        {
+          "value": "zap",
+          "label": "Rayo (Potencia)"
+        },
+        {
+          "value": "award",
+          "label": "Premio (Excelencia)"
+        },
+        {
+          "value": "droplet",
+          "label": "Gota (Lubricación)"
+        },
+        {
+          "value": "settings",
+          "label": "Engranaje (Rendimiento)"
+        },
+        {
+          "value": "trending_up",
+          "label": "Tendencia (Mejora)"
+        },
+        {
+          "value": "clock",
+          "label": "Reloj (Duración)"
+        },
+        {
+          "value": "heart",
+          "label": "Corazón (Cuidado)"
+        }
+      ],
+      "default": "clock"
+    },
+    {
+      "type": "text",
+      "id": "benefit_2_text",
+      "label": "Texto",
+      "default": "Menor desgaste y mayor duración"
+    },
+    {
+      "type": "header",
+      "content": "Beneficio 3"
+    },
+    {
+      "type": "select",
+      "id": "benefit_3_icon",
+      "label": "Ícono",
+      "options": [
+        {
+          "value": "shield",
+          "label": "Escudo (Protección)"
+        },
+        {
+          "value": "check",
+          "label": "Check (Verificado)"
+        },
+        {
+          "value": "star",
+          "label": "Estrella (Calidad)"
+        },
+        {
+          "value": "zap",
+          "label": "Rayo (Potencia)"
+        },
+        {
+          "value": "award",
+          "label": "Premio (Excelencia)"
+        },
+        {
+          "value": "droplet",
+          "label": "Gota (Lubricación)"
+        },
+        {
+          "value": "settings",
+          "label": "Engranaje (Rendimiento)"
+        },
+        {
+          "value": "trending_up",
+          "label": "Tendencia (Mejora)"
+        },
+        {
+          "value": "clock",
+          "label": "Reloj (Duración)"
+        },
+        {
+          "value": "heart",
+          "label": "Corazón (Cuidado)"
+        }
+      ],
+      "default": "droplet"
+    },
+    {
+      "type": "text",
+      "id": "benefit_3_text",
+      "label": "Texto",
+      "default": "Motor más limpio y eficiente"
+    },
+    {
+      "type": "header",
+      "content": "Beneficio 4"
+    },
+    {
+      "type": "select",
+      "id": "benefit_4_icon",
+      "label": "Ícono",
+      "options": [
+        {
+          "value": "shield",
+          "label": "Escudo (Protección)"
+        },
+        {
+          "value": "check",
+          "label": "Check (Verificado)"
+        },
+        {
+          "value": "star",
+          "label": "Estrella (Calidad)"
+        },
+        {
+          "value": "zap",
+          "label": "Rayo (Potencia)"
+        },
+        {
+          "value": "award",
+          "label": "Premio (Excelencia)"
+        },
+        {
+          "value": "droplet",
+          "label": "Gota (Lubricación)"
+        },
+        {
+          "value": "settings",
+          "label": "Engranaje (Rendimiento)"
+        },
+        {
+          "value": "trending_up",
+          "label": "Tendencia (Mejora)"
+        },
+        {
+          "value": "clock",
+          "label": "Reloj (Duración)"
+        },
+        {
+          "value": "heart",
+          "label": "Corazón (Cuidado)"
+        }
+      ],
+      "default": "zap"
+    },
+    {
+      "type": "text",
+      "id": "benefit_4_text",
+      "label": "Texto",
+      "default": "Mejor rendimiento"
+    },
+    {
+      "type": "header",
+      "content": "Beneficio 5"
+    },
+    {
+      "type": "select",
+      "id": "benefit_5_icon",
+      "label": "Ícono",
+      "options": [
+        {
+          "value": "shield",
+          "label": "Escudo (Protección)"
+        },
+        {
+          "value": "check",
+          "label": "Check (Verificado)"
+        },
+        {
+          "value": "star",
+          "label": "Estrella (Calidad)"
+        },
+        {
+          "value": "zap",
+          "label": "Rayo (Potencia)"
+        },
+        {
+          "value": "award",
+          "label": "Premio (Excelencia)"
+        },
+        {
+          "value": "droplet",
+          "label": "Gota (Lubricación)"
+        },
+        {
+          "value": "settings",
+          "label": "Engranaje (Rendimiento)"
+        },
+        {
+          "value": "trending_up",
+          "label": "Tendencia (Mejora)"
+        },
+        {
+          "value": "clock",
+          "label": "Reloj (Duración)"
+        },
+        {
+          "value": "heart",
+          "label": "Corazón (Cuidado)"
+        }
+      ],
+      "default": "star"
+    },
+    {
+      "type": "text",
+      "id": "benefit_5_text",
+      "label": "Texto"
+    },
+    {
+      "type": "header",
+      "content": "Beneficio 6"
+    },
+    {
+      "type": "select",
+      "id": "benefit_6_icon",
+      "label": "Ícono",
+      "options": [
+        {
+          "value": "shield",
+          "label": "Escudo (Protección)"
+        },
+        {
+          "value": "check",
+          "label": "Check (Verificado)"
+        },
+        {
+          "value": "star",
+          "label": "Estrella (Calidad)"
+        },
+        {
+          "value": "zap",
+          "label": "Rayo (Potencia)"
+        },
+        {
+          "value": "award",
+          "label": "Premio (Excelencia)"
+        },
+        {
+          "value": "droplet",
+          "label": "Gota (Lubricación)"
+        },
+        {
+          "value": "settings",
+          "label": "Engranaje (Rendimiento)"
+        },
+        {
+          "value": "trending_up",
+          "label": "Tendencia (Mejora)"
+        },
+        {
+          "value": "clock",
+          "label": "Reloj (Duración)"
+        },
+        {
+          "value": "heart",
+          "label": "Corazón (Cuidado)"
+        }
+      ],
+      "default": "award"
+    },
+    {
+      "type": "text",
+      "id": "benefit_6_text",
+      "label": "Texto"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Beneficios del producto"
+    }
+  ]
+}
 {% endschema %}
