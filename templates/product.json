@@ -319,12 +319,30 @@
         "show_on_desktop": true,
         "show_on_mobile": true
       }
+    },
+    "custom_liquid_prKNfy": {
+      "type": "custom-liquid",
+      "name": "t:sections.custom_liquid.preset.name",
+      "settings": {
+        "title": "Your title",
+        "heading_size": "md",
+        "subtitle": "",
+        "full_width": false,
+        "liquid": "Write or copy/paste Liquid code",
+        "color_scheme": "",
+        "spacing_top": 60,
+        "spacing_bottom": 60,
+        "heading_tag": "h2",
+        "show_on_desktop": true,
+        "show_on_mobile": true
+      }
     }
   },
   "order": [
     "main-product",
     "bulk-order",
     "product-recommendations",
-    "recently-viewed-products"
+    "recently-viewed-products",
+    "custom_liquid_prKNfy"
   ]
 }
