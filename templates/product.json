@@ -9,6 +9,40 @@
  */
 {
   "sections": {
+    "1774301457fc72044e": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_0822a3b_Y8YPP6": {
+          "type": "ai_gen_block_0822a3b",
+          "settings": {
+            "title_font": "var(--font-heading-family)",
+            "title_size": 32,
+            "price_size": 24,
+            "image_border_radius": 8,
+            "show_benefits": true,
+            "benefit_icon_color": "#004f9d",
+            "benefit_1": "Envío gratis en compras mayores a Bs 200",
+            "benefit_2": "Garantía de calidad certificada",
+            "benefit_3": "Atención personalizada",
+            "benefit_4": "",
+            "show_buy_now": true,
+            "show_whatsapp": true,
+            "whatsapp_number": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_0822a3b_Y8YPP6"
+      ],
+      "settings": {
+        "full_width": false,
+        "spacing_top": 60,
+        "spacing_bottom": 60,
+        "show_on_desktop": true,
+        "show_on_mobile": true
+      }
+    },
     "main-product": {
       "type": "main-product",
       "blocks": {
@@ -339,6 +373,7 @@
     }
   },
   "order": [
+    "1774301457fc72044e",
     "main-product",
     "bulk-order",
     "product-recommendations",
