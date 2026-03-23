@@ -101,7 +101,6 @@
     },
     "announcement-bar-secondary": {
       "type": "announcement-bar-secondary",
-      "disabled": true,
       "settings": {
         "text": "",
         "link": "",
@@ -176,6 +175,7 @@
       "blocks": {
         "ai_gen_block_e96b101_84hyhk": {
           "type": "ai_gen_block_e96b101",
+          "disabled": true,
           "settings": {
             "custom_title": "",
             "show_stock": true,
@@ -207,9 +207,9 @@
             "primary_button_bg": "#004f9d",
             "primary_button_text_color": "#ffffff",
             "primary_button_hover_bg": "#003d7a",
-            "secondary_button_bg": "#25D366",
+            "secondary_button_bg": "#25d366",
             "secondary_button_text_color": "#ffffff",
-            "secondary_button_border": "#25D366",
+            "secondary_button_border": "#25d366",
             "secondary_button_hover_bg": "#1ebe57",
             "secondary_button_hover_border": "#1ebe57",
             "button_text_size": 16,
