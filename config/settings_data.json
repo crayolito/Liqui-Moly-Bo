@@ -251,6 +251,13 @@
           "colors_aux_border": "#dfdfdf"
         }
       }
+    },
+    "blocks": {
+      "pagefly-page-builder": {
+        "type": "shopify://apps/pagefly-page-builder/blocks/app-embed/83e179f7-59a0-4589-8c66-c0dddf959200",
+        "disabled": false,
+        "settings": {}
+      }
     }
   },
   "installed_preset_name": "Athens",
