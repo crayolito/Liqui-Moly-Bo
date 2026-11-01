@@ -23,7 +23,7 @@
         {%- when 'page' -%}
           <span class="breadcrumb-separator">{{ separator }}</span>
           <span class="breadcrumb-item">{{ page.title }}</span>
-        {%- when 'collection' and collection.handle -%}
+        {%- when 'collection' -%}
           <span class="breadcrumb-separator">{{ separator }}</span>
           <span class="breadcrumb-item">{{ collection.title | link_to: collection.url }}</span>
           {%- if current_tags -%}
@@ -104,7 +104,7 @@
     					"position": 2,
     					"name": {{ page.title | json }}
     				}
-    			{%- when 'collection' and collection.handle -%}
+    			{%- when 'collection' -%}
     				{%- if current_tags -%}
     					{
     						"@type": "ListItem",
@@ -173,3 +173,16 @@
     }
   </script>
 {%- endunless -%}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{%- when 'collection' and collection.handle -%}"
+  to: "{%- when 'collection' -%}"
+  position: 967..992
+- from: "{%- when 'collection' and collection.handle -%}"
+  to: "{%- when 'collection' -%}"
+  position: 4115..4140
+{% endcomment %}
